@@ -1,33 +1,45 @@
-import * as React from "react"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import Avatar from "@mui/material/Avatar"
+import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
 import CssBaseline from "@mui/material/CssBaseline"
-import TextField from "@mui/material/TextField"
+import Grid from "@mui/material/Grid"
 import Link from "@mui/material/Link"
 import Paper from "@mui/material/Paper"
-import Box from "@mui/material/Box"
-import Grid from "@mui/material/Grid"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
+import * as React from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Container } from "@mui/system"
+import { toast } from "react-toastify"
+
+interface props {
+  type: String
+}
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme()
 
-export default function Login() {
+export default function Otp(props: props) {
   const nav = useNavigate()
+  const [showOtp, setShowOtp] = useState(false)
+  const [newPasswordInput, setNewPasswordInput] = useState(false)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    })
   }
 
+  const check = () => {
+    toast.success("Otp Resent SuccessFully!!!")
+    setShowOtp(true)
+  }
+  const checkotp = () => {
+    toast.success("Otp Sent SuccessFully!!!")
+    setShowOtp(true)
+  }
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -62,7 +74,7 @@ export default function Login() {
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
-                Sign in
+                OTP
               </Typography>
               <Box
                 component="form"
@@ -74,35 +86,55 @@ export default function Login() {
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id="uniqueid"
+                  label="Email or Phone"
+                  name="uniqueid"
                   autoFocus
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
+                {showOtp ? (
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="OTP"
+                    label="OTP"
+                    name="OTP"
+                    autoFocus
+                  />
+                ) : (
+                  ""
+                )}
+                {props.type === "forgetpassword" && showOtp ? (
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="newPassword"
+                    label="New Password"
+                    name="newPassword"
+                    autoFocus
+                  />
+                ) : (
+                  ""
+                )}
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
+                  onClick={() => {
+                    setShowOtp(true)
+                    checkotp()
+                  }}
                   sx={{ mt: 3, mb: 2 }}
                   style={{ backgroundColor: "#0C7075" }}
                 >
-                  Sign In
+                  {showOtp ? "Submit" : "Send OTP"}
                 </Button>
+
                 <Grid container>
                   <Grid item xs>
                     <Link
-                      onClick={() => nav("/auth/forget-password")}
+                      onClick={() => check()}
                       style={{
                         color: "#0C7075",
                         fontSize: "15px",
@@ -110,36 +142,23 @@ export default function Login() {
                       }}
                       variant="body2"
                     >
-                      Forgot password?
+                      Resend OTP
                     </Link>
                   </Grid>
                   <Grid item>
                     <Link
-                      onClick={() => nav("/auth/login-by-otp")}
+                      onClick={() => nav("/auth/login")}
                       style={{
                         color: "#0C7075",
                         fontSize: "15px",
                         cursor: "pointer",
                       }}
                     >
-                      {"Sign In with OTP"}
+                      {"Login with password"}
                     </Link>
                   </Grid>
                 </Grid>
               </Box>
-
-              <Grid item style={{ padding: "20px", fontSize: "15px" }}>
-                <Link
-                  onClick={() => nav("/auth/signup")}
-                  style={{
-                    color: "#0C7075",
-                    fontSize: "15px",
-                    cursor: "pointer",
-                  }}
-                >
-                  {"Don't Have an Account ? Register Here"}
-                </Link>
-              </Grid>
             </Box>
           </Grid>
         </Box>

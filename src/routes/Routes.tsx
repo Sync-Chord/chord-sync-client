@@ -4,7 +4,7 @@ import PrivateRoutes from "./PrivateRoutes"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 const Routes = () => {
-  const user = {}
+  const user = null
 
   return (
     <Suspense fallback={<div>Loading.....</div>}>
