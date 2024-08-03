@@ -6,26 +6,29 @@ import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { Container } from "@mui/system";
-
+import { border, Container } from "@mui/system";
+import validation from "../../../utils/validation";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Login() {
   const nav = useNavigate();
+  const [error, setError] = useState<Record<string, string>>({});
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    setError(validation({ uniqueId, password }));
+
+    console.log(error);
   };
 
   return (
@@ -48,7 +51,12 @@ export default function Login() {
             component={Paper}
             elevation={6}
             square
-            style={{ borderRadius: "15px" }}
+            style={{
+              borderRadius: "15px",
+              // backdropFilter: "blur(16px) saturate(180%)",
+              // WebkitBackdropFilter: "blur(16px) saturate(180%)",
+              // backgroundColor: "rgba(30,30,30,0.75)",
+            }}
           >
             <Box
               sx={{
@@ -68,19 +76,28 @@ export default function Login() {
               <Box
                 component="form"
                 noValidate
-                onSubmit={handleSubmit}
+                onSubmit={loginSubmit}
                 sx={{ mt: 1 }}
               >
                 <TextField
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
+                  id="uniqueId"
                   label="Email Address"
-                  name="email"
+                  name="uniqueId"
                   autoComplete="email"
                   autoFocus
+                  style={styles.text_field}
                 />
+                {error.uniqueId ? (
+                  <Typography style={{ color: "red" }}>
+                    {" "}
+                    {error.uniqueId}{" "}
+                  </Typography>
+                ) : (
+                  <></>
+                )}
                 <TextField
                   margin="normal"
                   required
@@ -91,6 +108,13 @@ export default function Login() {
                   id="password"
                   autoComplete="current-password"
                 />
+                {error.password ? (
+                  <Typography style={{ color: "red" }}>
+                    {error.password}
+                  </Typography>
+                ) : (
+                  <></>
+                )}
                 <Button
                   type="submit"
                   fullWidth
@@ -148,3 +172,7 @@ export default function Login() {
     </ThemeProvider>
   );
 }
+
+const styles = {
+  text_field: { border: "solid 1px red" },
+};

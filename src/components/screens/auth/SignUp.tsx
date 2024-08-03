@@ -12,19 +12,29 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
+import validation from "../../../utils/validation";
+import { useState } from "react";
+import { color } from "@mui/system";
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
   const nav = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //validation
+  const [error, setError] = useState<Record<string, string>>({});
+
+  const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      uniqueId: data.get("uniqueId"),
-      password: data.get("password"),
-    });
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    const otp = data.get("OTP")?.toString() ?? null;
+    const name = data.get("name")?.toString() ?? null;
+
+    setError(validation({ name, uniqueId, password, otp }));
+
+    console.log(error);
   };
 
   return (
@@ -67,7 +77,7 @@ export default function SignUp() {
               <Box
                 component="form"
                 noValidate
-                onSubmit={handleSubmit}
+                onSubmit={signUpSubmit}
                 sx={{ mt: 3 }}
               >
                 <Grid container spacing={2}>
@@ -81,6 +91,14 @@ export default function SignUp() {
                       label="Name"
                       autoFocus
                     />
+                    {error.name ? (
+                      <Typography style={{ color: "red" }}>
+                        {" "}
+                        {error.name}{" "}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
@@ -91,6 +109,14 @@ export default function SignUp() {
                       name="uniqueId"
                       autoComplete="uniqueId"
                     />
+                    {error.uniqueId ? (
+                      <Typography style={{ color: "red" }}>
+                        {" "}
+                        {error.uniqueId}{" "}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
@@ -102,6 +128,14 @@ export default function SignUp() {
                       id="password"
                       autoComplete="new-password"
                     />
+                    {error.password ? (
+                      <Typography style={{ color: "red" }}>
+                        {" "}
+                        {error.password}{" "}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                 </Grid>
                 <Button

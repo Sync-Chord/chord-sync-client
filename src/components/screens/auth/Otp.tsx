@@ -10,17 +10,16 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { borderRadius } from "@mui/system";
 import * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import validation from "../../../utils/validation";
 
 interface props {
   type: String;
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Otp(props: props) {
@@ -41,6 +40,22 @@ export default function Otp(props: props) {
     toast.success("Otp Sent SuccessFully!!!");
     setShowOtp(true);
   };
+
+  //validation
+  const [error, setError] = useState<Record<string, string>>({});
+
+  const otpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    const otp = data.get("OTP")?.toString() ?? null;
+
+    setError(validation({ uniqueId, password, otp }));
+
+    console.log(error);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -81,18 +96,26 @@ export default function Otp(props: props) {
               <Box
                 component="form"
                 noValidate
-                onSubmit={handleSubmit}
+                onSubmit={otpSubmit}
                 sx={{ mt: 1 }}
               >
                 <TextField
                   margin="normal"
                   required
                   fullWidth
-                  id="uniqueid"
+                  id="uniqueId"
                   label="Email or Phone"
-                  name="uniqueid"
+                  name="uniqueId"
                   autoFocus
                 />
+                {error.uniqueId ? (
+                  <Typography style={{ color: "red" }}>
+                    {" "}
+                    {error.uniqueId}{" "}
+                  </Typography>
+                ) : (
+                  <></>
+                )}
                 {showOtp ? (
                   <TextField
                     margin="normal"
@@ -106,6 +129,14 @@ export default function Otp(props: props) {
                 ) : (
                   ""
                 )}
+                {error.uniqueId ? (
+                  <Typography style={{ color: "red" }}>
+                    {" "}
+                    {error.otp}{" "}
+                  </Typography>
+                ) : (
+                  <></>
+                )}
                 {props.type === "forgetpassword" && showOtp ? (
                   <TextField
                     margin="normal"
@@ -118,6 +149,14 @@ export default function Otp(props: props) {
                   />
                 ) : (
                   ""
+                )}
+                {error.password ? (
+                  <Typography style={{ color: "red" }}>
+                    {" "}
+                    {error.password}{" "}
+                  </Typography>
+                ) : (
+                  <></>
                 )}
                 <Button
                   type="submit"
