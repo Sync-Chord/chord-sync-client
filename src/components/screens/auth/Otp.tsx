@@ -51,8 +51,13 @@ export default function Otp(props: props) {
     const password = data.get("password")?.toString() ?? null;
     const otp = data.get("OTP")?.toString() ?? null;
 
-    setError(validation({ uniqueId, password, otp }));
+    const errors = validation({ uniqueId, password, otp });
+    setError(errors);
 
+    if (Object.keys(errors).length > 0) {
+      // Validation failed, prevent form submission
+      return false;
+    }
     console.log(error);
   };
 
