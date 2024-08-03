@@ -1,35 +1,35 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { useState } from "react";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
-import { border, Container } from "@mui/system";
-import validation from "../../../utils/validation";
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import CssBaseline from "@mui/material/CssBaseline"
+import Grid from "@mui/material/Grid"
+import Link from "@mui/material/Link"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { Container } from "@mui/system"
+import * as React from "react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import image from "../../../assests/images/logo.png"
+import validation from "../../../utils/validation"
+import CustomTextField from "../../common/CustomTextField"
+
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme()
 
 export default function Login() {
-  const nav = useNavigate();
-  const [error, setError] = useState<Record<string, string>>({});
+  const nav = useNavigate()
+  const [error, setError] = useState<Record<string, string>>({})
 
   const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const uniqueId = data.get("uniqueId")?.toString() ?? null;
-    const password = data.get("password")?.toString() ?? null;
-    setError(validation({ uniqueId, password }));
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    const uniqueId = data.get("uniqueId")?.toString() ?? null
+    const password = data.get("password")?.toString() ?? null
+    setError(validation({ uniqueId, password }))
 
-    console.log(error);
-  };
+    console.log(error)
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -67,11 +67,15 @@ export default function Login() {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "#0C7075" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign in
+              <img
+                src={image}
+                style={{ width: "9rem", padding: "1rem" }}
+                alt="logo"
+              />
+
+              <Typography sx={{ fontSize: "25px" }}>Hello!</Typography>
+              <Typography sx={{ fontSize: "15px" }}>
+                Login to your account !
               </Typography>
               <Box
                 component="form"
@@ -79,16 +83,11 @@ export default function Login() {
                 onSubmit={loginSubmit}
                 sx={{ mt: 1 }}
               >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
+                <CustomTextField
                   id="uniqueId"
-                  label="Email Address"
+                  autofous={true}
                   name="uniqueId"
-                  autoComplete="email"
-                  autoFocus
-                  style={styles.text_field}
+                  label="Email or Phone"
                 />
                 {error.uniqueId ? (
                   <Typography style={{ color: "red" }}>
@@ -98,15 +97,11 @@ export default function Login() {
                 ) : (
                   <></>
                 )}
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
+                <CustomTextField
+                  id="password"
+                  autofous={false}
                   name="password"
                   label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
                 />
                 {error.password ? (
                   <Typography style={{ color: "red" }}>
@@ -120,7 +115,7 @@ export default function Login() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  style={{ backgroundColor: "#0C7075" }}
+                  style={{ backgroundColor: "#27AE60" }}
                 >
                   Sign In
                 </Button>
@@ -129,8 +124,8 @@ export default function Login() {
                     <Link
                       onClick={() => nav("/auth/forget-password")}
                       style={{
-                        color: "#0C7075",
-                        fontSize: "15px",
+                        color: "#767A8A",
+                        fontSize: "14px",
                         cursor: "pointer",
                       }}
                       variant="body2"
@@ -142,8 +137,8 @@ export default function Login() {
                     <Link
                       onClick={() => nav("/auth/login-by-otp")}
                       style={{
-                        color: "#0C7075",
-                        fontSize: "15px",
+                        color: "#767A8A",
+                        fontSize: "14px",
                         cursor: "pointer",
                       }}
                     >
@@ -157,8 +152,8 @@ export default function Login() {
                 <Link
                   onClick={() => nav("/auth/signup")}
                   style={{
-                    color: "#0C7075",
-                    fontSize: "15px",
+                    color: "#767A8A",
+                    fontSize: "14px",
                     cursor: "pointer",
                   }}
                 >
@@ -170,9 +165,5 @@ export default function Login() {
         </Box>
       </Container>
     </ThemeProvider>
-  );
+  )
 }
-
-const styles = {
-  text_field: { border: "solid 1px red" },
-};
