@@ -1,65 +1,57 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import validation from "../../../utils/validation";
-
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import CssBaseline from "@mui/material/CssBaseline"
+import Grid from "@mui/material/Grid"
+import Link from "@mui/material/Link"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import * as React from "react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import image from "../../../assests/images/logo.png"
+import validation from "../../../utils/validation"
+import CustomTextField from "../../common/CustomTextField"
 interface props {
-  type: String;
+  type: String
 }
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme()
 
 export default function Otp(props: props) {
-  const nav = useNavigate();
-  const [showOtp, setShowOtp] = useState(false);
-  const [newPasswordInput, setNewPasswordInput] = useState(false);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-  };
+  const nav = useNavigate()
+  const [showOtp, setShowOtp] = useState(false)
 
   const check = () => {
-    toast.success("Otp Resent SuccessFully!!!");
-    setShowOtp(true);
-  };
+    toast.success("Otp Resent SuccessFully!!!")
+    setShowOtp(true)
+  }
   const checkotp = () => {
-    toast.success("Otp Sent SuccessFully!!!");
-    setShowOtp(true);
-  };
+    toast.success("Otp Sent SuccessFully!!!")
+    setShowOtp(true)
+  }
 
   //validation
-  const [error, setError] = useState<Record<string, string>>({});
+  const [error, setError] = useState<Record<string, string>>({})
 
   const otpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const uniqueId = data.get("uniqueId")?.toString() ?? null;
-    const password = data.get("password")?.toString() ?? null;
-    const otp = data.get("OTP")?.toString() ?? null;
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    const uniqueId = data.get("uniqueId")?.toString() ?? null
+    const password = data.get("password")?.toString() ?? null
+    const otp = data.get("OTP")?.toString() ?? null
 
-    const errors = validation({ uniqueId, password, otp });
-    setError(errors);
+    const errors = validation({ uniqueId, password, otp })
+    setError(errors)
 
     if (Object.keys(errors).length > 0) {
       // Validation failed, prevent form submission
-      return false;
+      return false
     }
-    console.log(error);
-  };
+    console.log(error)
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -92,26 +84,29 @@ export default function Otp(props: props) {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "#0C7075" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                OTP
+              <img
+                src={image}
+                style={{ width: "9rem", padding: "1rem" }}
+                alt="logo"
+              />
+              <Typography sx={{ fontSize: "25px" }}>Hello!</Typography>
+              <Typography sx={{ fontSize: "15px" }}>
+                {props.type === "forgetpassword"
+                  ? "Reset your password !"
+                  : "Sign in with otp"}
               </Typography>
+
               <Box
                 component="form"
                 noValidate
                 onSubmit={otpSubmit}
                 sx={{ mt: 1 }}
               >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
+                <CustomTextField
+                  autofous={true}
                   id="uniqueId"
-                  label="Email or Phone"
                   name="uniqueId"
-                  autoFocus
+                  label="Email or Phone"
                 />
                 {error.uniqueId ? (
                   <Typography style={{ color: "red" }}>
@@ -122,14 +117,11 @@ export default function Otp(props: props) {
                   <></>
                 )}
                 {showOtp ? (
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="OTP"
+                  <CustomTextField
+                    id="otp"
+                    autofous={false}
+                    name="otp"
                     label="OTP"
-                    name="OTP"
-                    autoFocus
                   />
                 ) : (
                   ""
@@ -143,14 +135,11 @@ export default function Otp(props: props) {
                   <></>
                 )}
                 {props.type === "forgetpassword" && showOtp ? (
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="newPassword"
+                  <CustomTextField
+                    autofous={false}
+                    id="newpassword"
+                    name="newpassword"
                     label="New Password"
-                    name="newPassword"
-                    autoFocus
                   />
                 ) : (
                   ""
@@ -168,11 +157,11 @@ export default function Otp(props: props) {
                   fullWidth
                   variant="contained"
                   onClick={() => {
-                    setShowOtp(true);
-                    checkotp();
+                    setShowOtp(true)
+                    checkotp()
                   }}
                   sx={{ mt: 3, mb: 2 }}
-                  style={{ backgroundColor: "#0C7075" }}
+                  style={{ backgroundColor: "#27AE60" }}
                 >
                   {showOtp ? "Submit" : "Send OTP"}
                 </Button>
@@ -182,7 +171,7 @@ export default function Otp(props: props) {
                     <Link
                       onClick={() => check()}
                       style={{
-                        color: "#0C7075",
+                        color: "#767A8A",
                         fontSize: "15px",
                         cursor: "pointer",
                       }}
@@ -195,7 +184,7 @@ export default function Otp(props: props) {
                     <Link
                       onClick={() => nav("/auth/login")}
                       style={{
-                        color: "#0C7075",
+                        color: "#767A8A",
                         fontSize: "15px",
                         cursor: "pointer",
                       }}
@@ -210,5 +199,5 @@ export default function Otp(props: props) {
         </Box>
       </Container>
     </ThemeProvider>
-  );
+  )
 }

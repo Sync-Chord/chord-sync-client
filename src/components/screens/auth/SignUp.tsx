@@ -1,41 +1,39 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
-import Paper from "@mui/material/Paper";
-import validation from "../../../utils/validation";
-import { useState } from "react";
-import { color } from "@mui/system";
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import CssBaseline from "@mui/material/CssBaseline"
+import Grid from "@mui/material/Grid"
+import Link from "@mui/material/Link"
+import Paper from "@mui/material/Paper"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import Typography from "@mui/material/Typography"
+import * as React from "react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import image from "../../../assests/images/logo.png"
+import validation from "../../../utils/validation"
+import CustomTextField from "../../common/CustomTextField"
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme()
 
 export default function SignUp() {
-  const nav = useNavigate();
+  const nav = useNavigate()
 
   //validation
-  const [error, setError] = useState<Record<string, string>>({});
+  const [error, setError] = useState<Record<string, string>>({})
 
   const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const uniqueId = data.get("uniqueId")?.toString() ?? null;
-    const password = data.get("password")?.toString() ?? null;
-    const otp = data.get("OTP")?.toString() ?? null;
-    const name = data.get("name")?.toString() ?? null;
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    const uniqueId = data.get("uniqueId")?.toString() ?? null
+    const password = data.get("password")?.toString() ?? null
+    const otp = data.get("OTP")?.toString() ?? null
+    const name = data.get("name")?.toString() ?? null
 
-    setError(validation({ name, uniqueId, password, otp }));
+    setError(validation({ name, uniqueId, password, otp }))
 
-    console.log(error);
-  };
+    console.log(error)
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -68,11 +66,15 @@ export default function SignUp() {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "#0C7075" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign up
+              <img
+                src={image}
+                style={{ width: "9rem", padding: "1rem" }}
+                alt="logo"
+              />
+
+              <Typography sx={{ fontSize: "25px" }}>Hello!</Typography>
+              <Typography sx={{ fontSize: "15px" }}>
+                Register your account !
               </Typography>
               <Box
                 component="form"
@@ -82,14 +84,11 @@ export default function SignUp() {
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <TextField
-                      autoComplete="given-name"
-                      name="name"
-                      required
-                      fullWidth
+                    <CustomTextField
                       id="name"
+                      autofous={true}
+                      name="name"
                       label="Name"
-                      autoFocus
                     />
                     {error.name ? (
                       <Typography style={{ color: "red" }}>
@@ -101,13 +100,11 @@ export default function SignUp() {
                     )}
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
+                    <CustomTextField
                       id="uniqueId"
-                      label="Email or Phone"
+                      autofous={false}
                       name="uniqueId"
-                      autoComplete="uniqueId"
+                      label="Email or Phone"
                     />
                     {error.uniqueId ? (
                       <Typography style={{ color: "red" }}>
@@ -119,14 +116,11 @@ export default function SignUp() {
                     )}
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
+                    <CustomTextField
+                      id="password"
+                      autofous={false}
                       name="password"
                       label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
                     />
                     {error.password ? (
                       <Typography style={{ color: "red" }}>
@@ -143,7 +137,7 @@ export default function SignUp() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  style={{ backgroundColor: "#0C7075" }}
+                  style={{ backgroundColor: "#27AE60" }}
                 >
                   Sign Up
                 </Button>
@@ -152,7 +146,7 @@ export default function SignUp() {
                     <Link
                       onClick={() => nav("/auth/login")}
                       style={{
-                        color: "#0C7075",
+                        color: "#767A8A",
                         fontSize: "15px",
                         cursor: "pointer",
                       }}
@@ -167,5 +161,5 @@ export default function SignUp() {
         </Box>
       </Container>
     </ThemeProvider>
-  );
+  )
 }
