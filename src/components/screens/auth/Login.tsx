@@ -1,35 +1,35 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import CssBaseline from "@mui/material/CssBaseline"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Paper from "@mui/material/Paper"
-import Typography from "@mui/material/Typography"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import { Container } from "@mui/system"
-import * as React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import image from "../../../assests/images/logo.png"
-import validation from "../../../utils/validation"
-import CustomTextField from "../../common/CustomTextField"
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Container } from "@mui/system";
+import * as React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import image from "../../../assests/images/logo.png";
+import validation from "../../../utils/validation";
+import CustomTextField from "../../common/CustomTextField";
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
 export default function Login() {
-  const nav = useNavigate()
-  const [error, setError] = useState<Record<string, string>>({})
+  const nav = useNavigate();
+  const [error, setError] = useState<Record<string, string>>({});
 
   const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const uniqueId = data.get("uniqueId")?.toString() ?? null
-    const password = data.get("password")?.toString() ?? null
-    setError(validation({ uniqueId, password }))
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    setError(validation({ uniqueId, password }));
 
-    console.log(error)
-  }
+    console.log(error);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -53,9 +53,6 @@ export default function Login() {
             square
             style={{
               borderRadius: "15px",
-              // backdropFilter: "blur(16px) saturate(180%)",
-              // WebkitBackdropFilter: "blur(16px) saturate(180%)",
-              // backgroundColor: "rgba(30,30,30,0.75)",
             }}
           >
             <Box
@@ -165,5 +162,5 @@ export default function Login() {
         </Box>
       </Container>
     </ThemeProvider>
-  )
+  );
 }

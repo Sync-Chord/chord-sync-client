@@ -1,13 +1,14 @@
-import React, { Suspense } from "react"
-import PublicRoutes from "./PublicRoutes"
-import PrivateRoutes from "./PrivateRoutes"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import React, { Suspense } from "react";
+import PublicRoutes from "./PublicRoutes";
+import PrivateRoutes from "./PrivateRoutes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loader from "../components/common/Loader";
 const Routes = () => {
-  const user = null
+  const user = null;
 
   return (
-    <Suspense fallback={<div>Loading.....</div>}>
+    <Suspense fallback={<Loader />}>
       <ToastContainer
         pauseOnFocusLoss={false}
         position="top-center"
@@ -17,7 +18,7 @@ const Routes = () => {
 
       {user ? <PrivateRoutes /> : <PublicRoutes />}
     </Suspense>
-  )
-}
+  );
+};
 
-export default Routes
+export default Routes;
