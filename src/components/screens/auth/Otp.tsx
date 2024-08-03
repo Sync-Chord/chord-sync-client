@@ -1,45 +1,46 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import Avatar from "@mui/material/Avatar"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import CssBaseline from "@mui/material/CssBaseline"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Paper from "@mui/material/Paper"
-import TextField from "@mui/material/TextField"
-import Typography from "@mui/material/Typography"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import * as React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { borderRadius } from "@mui/system";
+import * as React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface props {
-  type: String
+  type: String;
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
 export default function Otp(props: props) {
-  const nav = useNavigate()
-  const [showOtp, setShowOtp] = useState(false)
-  const [newPasswordInput, setNewPasswordInput] = useState(false)
+  const nav = useNavigate();
+  const [showOtp, setShowOtp] = useState(false);
+  const [newPasswordInput, setNewPasswordInput] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-  }
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+  };
 
   const check = () => {
-    toast.success("Otp Resent SuccessFully!!!")
-    setShowOtp(true)
-  }
+    toast.success("Otp Resent SuccessFully!!!");
+    setShowOtp(true);
+  };
   const checkotp = () => {
-    toast.success("Otp Sent SuccessFully!!!")
-    setShowOtp(true)
-  }
+    toast.success("Otp Sent SuccessFully!!!");
+    setShowOtp(true);
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -60,6 +61,7 @@ export default function Otp(props: props) {
             component={Paper}
             elevation={6}
             square
+            style={{ borderRadius: "15px" }}
           >
             <Box
               sx={{
@@ -122,8 +124,8 @@ export default function Otp(props: props) {
                   fullWidth
                   variant="contained"
                   onClick={() => {
-                    setShowOtp(true)
-                    checkotp()
+                    setShowOtp(true);
+                    checkotp();
                   }}
                   sx={{ mt: 3, mb: 2 }}
                   style={{ backgroundColor: "#0C7075" }}
@@ -164,5 +166,5 @@ export default function Otp(props: props) {
         </Box>
       </Container>
     </ThemeProvider>
-  )
+  );
 }
