@@ -99,6 +99,7 @@ export default function Login() {
                   autofous={false}
                   name="password"
                   label="Password"
+                  // type="password"
                 />
                 {error.password ? (
                   <Typography style={{ color: "red" }}>
