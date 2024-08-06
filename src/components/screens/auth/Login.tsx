@@ -13,23 +13,24 @@ import { useNavigate } from "react-router-dom";
 import image from "../../../assests/images/logo.png";
 import validation from "../../../utils/validation";
 import CustomTextField from "../../common/CustomTextField";
+import VisibilityIcon from "@mui/icons-material/Visibility"
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme()
 
 export default function Login() {
-  const nav = useNavigate();
-  const [error, setError] = useState<Record<string, string>>({});
-
+  const nav = useNavigate()
+  const [error, setError] = useState<Record<string, string>>({})
+  const [showPassword, setShowPassword] = useState(false)
   const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const uniqueId = data.get("uniqueId")?.toString() ?? null;
-    const password = data.get("password")?.toString() ?? null;
-    setError(validation({ uniqueId, password }));
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    const uniqueId = data.get("uniqueId")?.toString() ?? null
+    const password = data.get("password")?.toString() ?? null
+    setError(validation({ uniqueId, password }))
 
-    console.log(error);
-  };
+    console.log(error)
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -82,7 +83,7 @@ export default function Login() {
               >
                 <CustomTextField
                   id="uniqueId"
-                  autofous={true}
+                  autofocus={true}
                   name="uniqueId"
                   label="Email or Phone"
                 />
@@ -96,10 +97,20 @@ export default function Login() {
                 )}
                 <CustomTextField
                   id="password"
-                  autofous={false}
+                  autofocus={false}
                   name="password"
                   label="Password"
+                  type={showPassword ? "text" : "password"}
+                  icon={
+                    <VisibilityIcon
+                      style={{ color: "#A8A196" }}
+                      cursor="pointer"
+                      onMouseOut={() => setShowPassword(false)}
+                      onMouseOver={() => setShowPassword(true)}
+                    />
+                  }
                 />
+
                 {error.password ? (
                   <Typography style={{ color: "red" }}>
                     {error.password}
@@ -162,5 +173,5 @@ export default function Login() {
         </Box>
       </Container>
     </ThemeProvider>
-  );
+  )
 }
