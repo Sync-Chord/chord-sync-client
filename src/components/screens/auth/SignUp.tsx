@@ -1,39 +1,40 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import CssBaseline from "@mui/material/CssBaseline"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Paper from "@mui/material/Paper"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import Typography from "@mui/material/Typography"
-import * as React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import image from "../../../assests/images/logo.png"
-import validation from "../../../utils/validation"
-import CustomTextField from "../../common/CustomTextField"
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import image from "../../../assests/images/logo.png";
+import validation from "../../../utils/validation";
+import CustomTextField from "../../common/CustomTextField";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const nav = useNavigate()
+  const nav = useNavigate();
 
   //validation
-  const [error, setError] = useState<Record<string, string>>({})
-
+  const [error, setError] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
   const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const uniqueId = data.get("uniqueId")?.toString() ?? null
-    const password = data.get("password")?.toString() ?? null
-    const otp = data.get("OTP")?.toString() ?? null
-    const name = data.get("name")?.toString() ?? null
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    const otp = data.get("OTP")?.toString() ?? null;
+    const name = data.get("name")?.toString() ?? null;
 
-    setError(validation({ name, uniqueId, password, otp }))
+    setError(validation({ name, uniqueId, password, otp }));
 
-    console.log(error)
-  }
+    console.log(error);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -86,7 +87,7 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <CustomTextField
                       id="name"
-                      autofous={true}
+                      autofocus={true}
                       name="name"
                       label="Name"
                     />
@@ -102,7 +103,7 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <CustomTextField
                       id="uniqueId"
-                      autofous={false}
+                      autofocus={false}
                       name="uniqueId"
                       label="Email or Phone"
                     />
@@ -118,9 +119,18 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <CustomTextField
                       id="password"
-                      autofous={false}
+                      autofocus={false}
                       name="password"
                       label="Password"
+                      type={showPassword ? "text" : "password"}
+                      icon={
+                        <VisibilityIcon
+                          style={{ color: "#A8A196" }}
+                          cursor="pointer"
+                          onMouseOut={() => setShowPassword(false)}
+                          onMouseOver={() => setShowPassword(true)}
+                        />
+                      }
                     />
                     {error.password ? (
                       <Typography style={{ color: "red" }}>
@@ -161,5 +171,5 @@ export default function SignUp() {
         </Box>
       </Container>
     </ThemeProvider>
-  )
+  );
 }

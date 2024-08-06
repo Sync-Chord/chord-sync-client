@@ -1,57 +1,57 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import CssBaseline from "@mui/material/CssBaseline"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Paper from "@mui/material/Paper"
-import Typography from "@mui/material/Typography"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import * as React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
-import image from "../../../assests/images/logo.png"
-import validation from "../../../utils/validation"
-import CustomTextField from "../../common/CustomTextField"
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import * as React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import image from "../../../assests/images/logo.png";
+import validation from "../../../utils/validation";
+import CustomTextField from "../../common/CustomTextField";
 interface props {
-  type: String
+  type: String;
 }
 
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
 export default function Otp(props: props) {
-  const nav = useNavigate()
-  const [showOtp, setShowOtp] = useState(false)
+  const nav = useNavigate();
+  const [showOtp, setShowOtp] = useState(false);
 
   const check = () => {
-    toast.success("Otp Resent SuccessFully!!!")
-    setShowOtp(true)
-  }
+    toast.success("Otp Resent SuccessFully!!!");
+    setShowOtp(true);
+  };
   const checkotp = () => {
-    toast.success("Otp Sent SuccessFully!!!")
-    setShowOtp(true)
-  }
+    toast.success("Otp Sent SuccessFully!!!");
+    setShowOtp(true);
+  };
 
   //validation
-  const [error, setError] = useState<Record<string, string>>({})
+  const [error, setError] = useState<Record<string, string>>({});
 
   const otpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const uniqueId = data.get("uniqueId")?.toString() ?? null
-    const password = data.get("password")?.toString() ?? null
-    const otp = data.get("OTP")?.toString() ?? null
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    const otp = data.get("OTP")?.toString() ?? null;
 
-    const errors = validation({ uniqueId, password, otp })
-    setError(errors)
+    const errors = validation({ uniqueId, password, otp });
+    setError(errors);
 
     if (Object.keys(errors).length > 0) {
       // Validation failed, prevent form submission
-      return false
+      return false;
     }
-    console.log(error)
-  }
+    console.log(error);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -103,7 +103,7 @@ export default function Otp(props: props) {
                 sx={{ mt: 1 }}
               >
                 <CustomTextField
-                  autofous={true}
+                  autofocus={true}
                   id="uniqueId"
                   name="uniqueId"
                   label="Email or Phone"
@@ -119,7 +119,7 @@ export default function Otp(props: props) {
                 {showOtp ? (
                   <CustomTextField
                     id="otp"
-                    autofous={false}
+                    autofocus={false}
                     name="otp"
                     label="OTP"
                   />
@@ -136,10 +136,11 @@ export default function Otp(props: props) {
                 )}
                 {props.type === "forgetpassword" && showOtp ? (
                   <CustomTextField
-                    autofous={false}
+                    autofocus={false}
                     id="newpassword"
                     name="newpassword"
                     label="New Password"
+                    type="password"
                   />
                 ) : (
                   ""
@@ -157,8 +158,8 @@ export default function Otp(props: props) {
                   fullWidth
                   variant="contained"
                   onClick={() => {
-                    setShowOtp(true)
-                    checkotp()
+                    setShowOtp(true);
+                    checkotp();
                   }}
                   sx={{ mt: 3, mb: 2 }}
                   style={{ backgroundColor: "#27AE60" }}
@@ -199,5 +200,5 @@ export default function Otp(props: props) {
         </Box>
       </Container>
     </ThemeProvider>
-  )
+  );
 }

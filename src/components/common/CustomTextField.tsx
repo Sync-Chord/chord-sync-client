@@ -1,12 +1,13 @@
-import React from "react"
-import TextField from "@mui/material/TextField"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-
+import TextField from "@mui/material/TextField";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import InputAdornment from "@mui/material/InputAdornment";
 interface Props {
-  id: string
-  name: string
-  label: string
-  autofous: boolean
+  id: string;
+  name: string;
+  label: string;
+  autofocus: boolean;
+  type?: string;
+  icon?: React.ReactNode;
 }
 
 export const theme = createTheme({
@@ -38,7 +39,7 @@ export const theme = createTheme({
       },
     },
   },
-})
+});
 
 const CustomTextField = (props: Props) => {
   return (
@@ -50,10 +51,16 @@ const CustomTextField = (props: Props) => {
         id={props.id}
         label={props.label}
         name={props.name}
-        autoFocus={props.autofous}
+        autoFocus={props.autofocus}
+        type={props.type}
+        InputProps={{
+          endAdornment: props.icon ? (
+            <InputAdornment position="end">{props.icon}</InputAdornment>
+          ) : null,
+        }}
       />
     </ThemeProvider>
-  )
-}
+  );
+};
 
-export default CustomTextField
+export default CustomTextField;
