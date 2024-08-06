@@ -23,9 +23,8 @@ const validation = (data: Data) => {
   }
 
   // password validation
-  
   if (data.password && (!passwordRegex.test(data.password))) {
-    error["password"] = "Password should contain at least one lowercase letter, one uppercase letter, one number, and one special character, and should be between 6 and 10 characters";
+    error["password"] = "Password should conatain 1caps,1num";
   }
 
   // otp validation of 6 numbers

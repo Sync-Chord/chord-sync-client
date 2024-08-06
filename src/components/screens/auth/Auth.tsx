@@ -21,6 +21,7 @@ const Auth = () => {
         <Route path="login" element={<Login />} />
         <Route path="*" element={<Navigate to="/auth/login" />} />
         <Route path="login-by-otp" element={<Otp type="login" />} />
+        <Route path="verify-otp/:token" element={<Otp type="verifyotp" />} />
         <Route path="forget-password" element={<Otp type="forgetpassword" />} />
       </Routes>
     </>

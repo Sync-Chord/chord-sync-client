@@ -13,26 +13,72 @@ import { useNavigate } from "react-router-dom"
 import image from "../../../assests/images/logo.png"
 import validation from "../../../utils/validation"
 import CustomTextField from "../../common/CustomTextField"
+import {
+  loading_reducer,
+  success_reducer,
+  error_reducer,
+  remover_error_reducer,
+  remover_loading_reducer,
+} from "../../../redux/authReducer"
+import { useDispatch, useSelector } from "react-redux"
+import Auth from "../../../apis/auth"
+import { toast } from "react-toastify"
+import Loader from "../../common/Loader"
 
 const defaultTheme = createTheme()
 
 export default function SignUp() {
+  //redux
+  const { loading, error } = useSelector((state: any) => state.auth)
+
+  //toasts
+  if (error) {
+    toast.error(error)
+  }
+
+  //constants
   const nav = useNavigate()
+  const dispatch = useDispatch()
 
-  //validation
-  const [error, setError] = useState<Record<string, string>>({})
+  //states
+  const [err, setError] = useState<Record<string, string>>({})
 
+  //functions
   const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     const data = new FormData(event.currentTarget)
+
     const uniqueId = data.get("uniqueId")?.toString() ?? null
     const password = data.get("password")?.toString() ?? null
-    const otp = data.get("OTP")?.toString() ?? null
     const name = data.get("name")?.toString() ?? null
 
-    setError(validation({ name, uniqueId, password, otp }))
+    const validationErrors = validation({ name, uniqueId, password })
+    setError(validationErrors)
 
-    console.log(error)
+    if (
+      validationErrors.name ||
+      validationErrors.uniqueId ||
+      validationErrors.password
+    ) {
+      return
+    }
+
+    dispatch(loading_reducer())
+    Auth.generate_otp_register({ unique_id: uniqueId, password, name })
+      .then((res: any) => {
+        if (res.status !== 200) {
+          throw new Error(res.data.message)
+        } else {
+          dispatch(remover_error_reducer())
+          dispatch(remover_loading_reducer())
+          nav(`/auth/verify-otp/${res?.data?.data}`)
+          toast.success("Otp Sent Successfully")
+        }
+      })
+      .catch((err) => {
+        dispatch(error_reducer(err.message))
+      })
   }
 
   return (
@@ -90,10 +136,10 @@ export default function SignUp() {
                       name="name"
                       label="Name"
                     />
-                    {error.name ? (
+                    {err.name ? (
                       <Typography style={{ color: "red" }}>
                         {" "}
-                        {error.name}{" "}
+                        {err.name}{" "}
                       </Typography>
                     ) : (
                       <></>
@@ -106,10 +152,10 @@ export default function SignUp() {
                       name="uniqueId"
                       label="Email or Phone"
                     />
-                    {error.uniqueId ? (
+                    {err.uniqueId ? (
                       <Typography style={{ color: "red" }}>
                         {" "}
-                        {error.uniqueId}{" "}
+                        {err.uniqueId}{" "}
                       </Typography>
                     ) : (
                       <></>
@@ -122,25 +168,29 @@ export default function SignUp() {
                       name="password"
                       label="Password"
                     />
-                    {error.password ? (
+                    {err.password ? (
                       <Typography style={{ color: "red" }}>
                         {" "}
-                        {error.password}{" "}
+                        {err.password}{" "}
                       </Typography>
                     ) : (
                       <></>
                     )}
                   </Grid>
                 </Grid>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  style={{ backgroundColor: "#27AE60" }}
-                >
-                  Sign Up
-                </Button>
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    style={{ backgroundColor: "#27AE60" }}
+                  >
+                    Sign Up
+                  </Button>
+                )}
                 <Grid container justifyContent="flex-end">
                   <Grid item>
                     <Link

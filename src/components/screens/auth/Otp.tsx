@@ -14,6 +14,18 @@ import { toast } from "react-toastify"
 import image from "../../../assests/images/logo.png"
 import validation from "../../../utils/validation"
 import CustomTextField from "../../common/CustomTextField"
+import { useParams } from "react-router-dom"
+import {
+  error_reducer,
+  loading_reducer,
+  remover_error_reducer,
+  remover_loading_reducer,
+  success_reducer,
+} from "../../../redux/authReducer"
+import { useDispatch, UseDispatch, useSelector } from "react-redux"
+import Auth from "../../../apis/auth"
+import Loader from "../../common/Loader"
+
 interface props {
   type: String
 }
@@ -21,36 +33,74 @@ interface props {
 const defaultTheme = createTheme()
 
 export default function Otp(props: props) {
+  const { loading, error } = useSelector((state: any) => state.auth)
+
+  if (error) {
+    toast.error(error)
+  }
+
+  const { token } = useParams()
   const nav = useNavigate()
+  const dispatch = useDispatch()
   const [showOtp, setShowOtp] = useState(false)
+  const [newToken, setNewToken] = useState(token)
 
-  const check = () => {
-    toast.success("Otp Resent SuccessFully!!!")
-    setShowOtp(true)
-  }
-  const checkotp = () => {
-    toast.success("Otp Sent SuccessFully!!!")
-    setShowOtp(true)
-  }
+  const [err, setError] = useState<Record<string, string>>({})
 
-  //validation
-  const [error, setError] = useState<Record<string, string>>({})
-
-  const otpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleVerifyOtp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     const data = new FormData(event.currentTarget)
-    const uniqueId = data.get("uniqueId")?.toString() ?? null
-    const password = data.get("password")?.toString() ?? null
-    const otp = data.get("OTP")?.toString() ?? null
 
-    const errors = validation({ uniqueId, password, otp })
-    setError(errors)
-
-    if (Object.keys(errors).length > 0) {
-      // Validation failed, prevent form submission
-      return false
+    if (!newToken) {
+      nav("/auth/signup")
+    } else {
+      const otp = data.get("otp")?.toString() ?? null
+      setError(validation({ otp }))
+      if (err.otp) {
+        return
+      }
+      dispatch(loading_reducer())
+      Auth.register_user({
+        otp,
+        token: newToken,
+      })
+        .then((res: any) => {
+          if (res.status !== 200) {
+            throw new Error(res.data.message)
+          } else {
+            dispatch(success_reducer(res?.data?.data))
+            nav("/home")
+            toast.success("User Registered Successfully")
+          }
+        })
+        .catch((err) => {
+          dispatch(error_reducer(err.message))
+        })
     }
-    console.log(error)
+  }
+
+  const handleResendOtp = () => {
+    if (!newToken) {
+      nav("/auth/signup")
+    } else {
+      dispatch(loading_reducer())
+      Auth.resendOtp({
+        token: newToken,
+      })
+        .then((res: any) => {
+          if (res.status !== 200) {
+            throw new Error(res.data.message)
+          } else {
+            setNewToken(res?.data?.data)
+            dispatch(remover_loading_reducer())
+            toast.success("Otp Resent Successfully")
+          }
+        })
+        .catch((err) => {
+          dispatch(error_reducer(err.message))
+        })
+    }
   }
 
   return (
@@ -89,111 +139,156 @@ export default function Otp(props: props) {
                 style={{ width: "9rem", padding: "1rem" }}
                 alt="logo"
               />
-              <Typography sx={{ fontSize: "25px" }}>Hello!</Typography>
-              <Typography sx={{ fontSize: "15px" }}>
-                {props.type === "forgetpassword"
-                  ? "Reset your password !"
-                  : "Sign in with otp"}
-              </Typography>
+              {props.type === "verifyotp" ? (
+                <>
+                  <Typography sx={{ fontSize: "25px" }}>Hello!</Typography>
+                  <Typography sx={{ fontSize: "15px" }}>Verify Otp</Typography>
+                  <Box
+                    component="form"
+                    noValidate
+                    onSubmit={handleVerifyOtp}
+                    sx={{ mt: 1 }}
+                  >
+                    <CustomTextField
+                      autofous={true}
+                      id="otp"
+                      name="otp"
+                      label="OTP"
+                    />
+                    {err.otp ? (
+                      <Typography style={{ color: "red" }}>
+                        {err.otp}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
+                    {loading ? (
+                      <Loader />
+                    ) : (
+                      <>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          sx={{ mt: 3, mb: 2 }}
+                          style={{ backgroundColor: "#27AE60" }}
+                        >
+                          Submit OTP
+                        </Button>
+                        <Button
+                          onClick={handleResendOtp}
+                          fullWidth
+                          variant="contained"
+                          sx={{ mt: 3, mb: 2 }}
+                          style={{ backgroundColor: "#27AE60" }}
+                        >
+                          Resend OTP
+                        </Button>
+                      </>
+                    )}
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Typography sx={{ fontSize: "25px" }}>Hello!</Typography>
+                  <Typography sx={{ fontSize: "15px" }}>
+                    {props.type === "forgetpassword"
+                      ? "Reset your password !"
+                      : "Sign in with otp"}
+                  </Typography>
 
-              <Box
-                component="form"
-                noValidate
-                onSubmit={otpSubmit}
-                sx={{ mt: 1 }}
-              >
-                <CustomTextField
-                  autofous={true}
-                  id="uniqueId"
-                  name="uniqueId"
-                  label="Email or Phone"
-                />
-                {error.uniqueId ? (
-                  <Typography style={{ color: "red" }}>
-                    {" "}
-                    {error.uniqueId}{" "}
-                  </Typography>
-                ) : (
-                  <></>
-                )}
-                {showOtp ? (
-                  <CustomTextField
-                    id="otp"
-                    autofous={false}
-                    name="otp"
-                    label="OTP"
-                  />
-                ) : (
-                  ""
-                )}
-                {error.uniqueId ? (
-                  <Typography style={{ color: "red" }}>
-                    {" "}
-                    {error.otp}{" "}
-                  </Typography>
-                ) : (
-                  <></>
-                )}
-                {props.type === "forgetpassword" && showOtp ? (
-                  <CustomTextField
-                    autofous={false}
-                    id="newpassword"
-                    name="newpassword"
-                    label="New Password"
-                  />
-                ) : (
-                  ""
-                )}
-                {error.password ? (
-                  <Typography style={{ color: "red" }}>
-                    {" "}
-                    {error.password}{" "}
-                  </Typography>
-                ) : (
-                  <></>
-                )}
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  onClick={() => {
-                    setShowOtp(true)
-                    checkotp()
-                  }}
-                  sx={{ mt: 3, mb: 2 }}
-                  style={{ backgroundColor: "#27AE60" }}
-                >
-                  {showOtp ? "Submit" : "Send OTP"}
-                </Button>
+                  <Box component="form" noValidate sx={{ mt: 1 }}>
+                    <CustomTextField
+                      autofous={true}
+                      id="uniqueId"
+                      name="uniqueId"
+                      label="Email or Phone"
+                    />
+                    {err.uniqueId ? (
+                      <Typography style={{ color: "red" }}>
+                        {err.uniqueId}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
+                    {showOtp ? (
+                      <CustomTextField
+                        id="otp"
+                        autofous={false}
+                        name="otp"
+                        label="OTP"
+                      />
+                    ) : (
+                      ""
+                    )}
+                    {err.uniqueId ? (
+                      <Typography style={{ color: "red" }}>
+                        {" "}
+                        {err.otp}{" "}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
+                    {props.type === "forgetpassword" && showOtp ? (
+                      <CustomTextField
+                        autofous={false}
+                        id="newpassword"
+                        name="newpassword"
+                        label="New Password"
+                      />
+                    ) : (
+                      ""
+                    )}
+                    {err.password ? (
+                      <Typography style={{ color: "red" }}>
+                        {" "}
+                        {err.password}{" "}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      onClick={() => {
+                        setShowOtp(true)
+                      }}
+                      sx={{ mt: 3, mb: 2 }}
+                      style={{ backgroundColor: "#27AE60" }}
+                    >
+                      {showOtp ? "Submit" : "Send OTP"}
+                    </Button>
 
-                <Grid container>
-                  <Grid item xs>
-                    <Link
-                      onClick={() => check()}
-                      style={{
-                        color: "#767A8A",
-                        fontSize: "15px",
-                        cursor: "pointer",
-                      }}
-                      variant="body2"
-                    >
-                      Resend OTP
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Link
-                      onClick={() => nav("/auth/login")}
-                      style={{
-                        color: "#767A8A",
-                        fontSize: "15px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {"Login with password"}
-                    </Link>
-                  </Grid>
-                </Grid>
-              </Box>
+                    <Grid container>
+                      <Grid item xs>
+                        <Link
+                          style={{
+                            color: "#767A8A",
+                            fontSize: "15px",
+                            cursor: "pointer",
+                          }}
+                          variant="body2"
+                        >
+                          Resend OTP
+                        </Link>
+                      </Grid>
+                      <Grid item>
+                        <Link
+                          onClick={() => nav("/auth/login")}
+                          style={{
+                            color: "#767A8A",
+                            fontSize: "15px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {"Login with password"}
+                        </Link>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </>
+              )}
             </Box>
           </Grid>
         </Box>

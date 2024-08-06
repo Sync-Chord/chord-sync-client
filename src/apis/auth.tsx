@@ -3,8 +3,8 @@ import axios from "axios";
 import default_catch from "../utils/error";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000/auth",
-});
+  baseURL: "http://localhost:3001/auth",
+})
 
 class Auth {
   // for login
@@ -13,26 +13,40 @@ class Auth {
       instance
         .post("/login", payload)
         .then((response) => {
-          resolve(response);
+          resolve(response)
         })
         .catch((err) => {
-          default_catch(err, resolve);
-        });
-    });
+          default_catch(err, resolve)
+        })
+    })
   }
 
-  // for sign up
-  static register(payload: any) {
+  // generating otp during register
+  static generate_otp_register(payload: any) {
     return new Promise((resolve) => {
       instance
-        .post("/signup", payload)
+        .post("/generate_otp_register", payload)
         .then((response) => {
-          resolve(response);
+          resolve(response)
         })
         .catch((err) => {
-          default_catch(err, resolve);
-        });
-    });
+          default_catch(err, resolve)
+        })
+    })
+  }
+
+  // registering user in database
+  static register_user(payload: any) {
+    return new Promise((resolve) => {
+      instance
+        .post("/register_user", payload)
+        .then((response) => {
+          resolve(response)
+        })
+        .catch((err) => {
+          default_catch(err, resolve)
+        })
+    })
   }
   //for forget password / change url to  and verify otp pending
   static forgetPassword(payload: any) {
@@ -40,12 +54,12 @@ class Auth {
       instance
         .post("/sign_in_by_otp", payload)
         .then((response) => {
-          resolve(response);
+          resolve(response)
         })
         .catch((err) => {
-          default_catch(err, resolve);
-        });
-    });
+          default_catch(err, resolve)
+        })
+    })
   }
 
   // to resend otp
@@ -54,12 +68,12 @@ class Auth {
       instance
         .post("/resend_otp", payload)
         .then((response) => {
-          resolve(response);
+          resolve(response)
         })
         .catch((err) => {
-          default_catch(err, resolve);
-        });
-    });
+          default_catch(err, resolve)
+        })
+    })
   }
 }
 
