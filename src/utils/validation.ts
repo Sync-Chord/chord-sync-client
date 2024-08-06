@@ -6,7 +6,9 @@ interface Data {
 }
 
 const email_regex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
-const phone_number_regex = /^(\+?\d{1,2}\s?)?(\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{10}$/;
+//  /^(\+91|\+91\-|0)?[789]\d{9}$/  
+//  /^(\+?\d{1,2}\s?)?(\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{4}$/
+const phone_number_regex = /^[0]?[6789]\d{9}$/;// only 10 digit number
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/;
 
 const validation = (data: Data) => {
@@ -18,14 +20,16 @@ const validation = (data: Data) => {
   }
 
   //email or phone validation
-  if (data.uniqueId && (!email_regex.test(data.uniqueId) && !phone_number_regex.test(data.uniqueId))) {
+  if (data.uniqueId){ 
+    if(!email_regex.test(data.uniqueId)) {
+      if(!phone_number_regex.test(data.uniqueId)) {
     error["uniqueId"] = "Invalid phone or email";
-  }
+  }}}
 
   // password validation
   
   if (data.password && (!passwordRegex.test(data.password))) {
-    error["password"] = "Password should contain at least one lowercase letter, one uppercase letter, one number, and one special character, and should be between 6 and 10 characters";
+    error["password"] = "Password should contain at least one caps,lower,number and special character";
   }
 
   // otp validation of 6 numbers
