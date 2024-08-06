@@ -1,86 +1,87 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import CssBaseline from "@mui/material/CssBaseline"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Paper from "@mui/material/Paper"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import Typography from "@mui/material/Typography"
-import * as React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import image from "../../../assests/images/logo.png"
-import validation from "../../../utils/validation"
-import CustomTextField from "../../common/CustomTextField"
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import image from "../../../assests/images/logo.png";
+import validation from "../../../utils/validation";
+import CustomTextField from "../../common/CustomTextField";
 import {
   loading_reducer,
   success_reducer,
   error_reducer,
   remover_error_reducer,
   remover_loading_reducer,
-} from "../../../redux/authReducer"
-import { useDispatch, useSelector } from "react-redux"
-import Auth from "../../../apis/auth"
-import { toast } from "react-toastify"
-import Loader from "../../common/Loader"
-import VisibilityIcon from "@mui/icons-material/Visibility"
+} from "../../../redux/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import Auth from "../../../apis/auth";
+import { toast } from "react-toastify";
+import Loader from "../../common/Loader";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
-export default function SignUp() {
+const SignUp = () => {
   //redux
-  const { loading, error } = useSelector((state: any) => state.auth)
+  const { loading, error } = useSelector((state: any) => state.auth);
 
   //toasts
   if (error) {
-    toast.error(error)
+    toast.error(error);
   }
 
   //constants
-  const nav = useNavigate()
-  const dispatch = useDispatch()
+  const nav = useNavigate();
+  const dispatch = useDispatch();
 
   //states
-  const [err, setError] = useState<Record<string, string>>({})
-  const [showPassword, setShowPassword] = useState(false)
+  const [err, setError] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
+
   //functions
   const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const data = new FormData(event.currentTarget)
+    const data = new FormData(event.currentTarget);
 
-    const uniqueId = data.get("uniqueId")?.toString() ?? null
-    const password = data.get("password")?.toString() ?? null
-    const name = data.get("name")?.toString() ?? null
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+    const name = data.get("name")?.toString() ?? null;
 
-    const validationErrors = validation({ name, uniqueId, password })
-    setError(validationErrors)
+    const validationErrors = validation({ name, uniqueId, password });
+    setError(validationErrors);
 
     if (
       validationErrors.name ||
       validationErrors.uniqueId ||
       validationErrors.password
     ) {
-      return
+      return;
     }
 
-    dispatch(loading_reducer())
+    dispatch(loading_reducer());
     Auth.generate_otp_register({ unique_id: uniqueId, password, name })
       .then((res: any) => {
         if (res.status !== 200) {
-          throw new Error(res.data.message)
+          throw new Error(res.data.message);
         } else {
-          dispatch(remover_error_reducer())
-          dispatch(remover_loading_reducer())
-          nav(`/auth/verify-otp/${res?.data?.data}`)
-          toast.success("Otp Sent Successfully")
+          dispatch(remover_error_reducer());
+          dispatch(remover_loading_reducer());
+          nav(`/auth/verify-otp/${res?.data?.data}`);
+          toast.success("Otp Sent Successfully");
         }
       })
       .catch((err) => {
-        dispatch(error_reducer(err.message))
-      })
-  }
+        dispatch(error_reducer(err.message));
+      });
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -180,8 +181,7 @@ export default function SignUp() {
                     />
                     {err.password ? (
                       <Typography style={{ color: "red" }}>
-                        {" "}
-                        {err.password}{" "}
+                        {err.password}
                       </Typography>
                     ) : (
                       <></>
@@ -221,5 +221,7 @@ export default function SignUp() {
         </Box>
       </Container>
     </ThemeProvider>
-  )
-}
+  );
+};
+
+export default SignUp;

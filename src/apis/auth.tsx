@@ -4,21 +4,21 @@ import default_catch from "../utils/error";
 
 const instance = axios.create({
   baseURL: "http://localhost:3001/auth",
-})
+});
 
 class Auth {
   // for login
-  static login(payload: any) {
+  static sign_in(payload: any) {
     return new Promise((resolve) => {
       instance
-        .post("/login", payload)
+        .post("/sign_in", payload)
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
 
   // generating otp during register
@@ -27,12 +27,40 @@ class Auth {
       instance
         .post("/generate_otp_register", payload)
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
+          default_catch(err, resolve);
+        });
+    });
+  }
+
+  // generating otp during login
+  static generate_otp_sign_in(payload: any) {
+    return new Promise((resolve) => {
+      instance
+        .post("/generate_otp_sign_in", payload)
+        .then((response) => {
+          resolve(response);
         })
-    })
+        .catch((err) => {
+          default_catch(err, resolve);
+        });
+    });
+  }
+
+  //sign_in_by_otp
+  static sign_in_by_otp(payload: any) {
+    return new Promise((resolve) => {
+      instance
+        .post("/sign_in_by_otp", payload)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((err) => {
+          default_catch(err, resolve);
+        });
+    });
   }
 
   // registering user in database
@@ -41,12 +69,12 @@ class Auth {
       instance
         .post("/register_user", payload)
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
   //for forget password / change url to  and verify otp pending
   static forgetPassword(payload: any) {
@@ -54,12 +82,12 @@ class Auth {
       instance
         .post("/sign_in_by_otp", payload)
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
 
   // to resend otp
@@ -68,12 +96,12 @@ class Auth {
       instance
         .post("/resend_otp", payload)
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
 }
 
