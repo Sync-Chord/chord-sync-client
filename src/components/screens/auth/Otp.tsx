@@ -150,7 +150,7 @@ export default function Otp(props: props) {
                     sx={{ mt: 1 }}
                   >
                     <CustomTextField
-                      autofous={true}
+                      autofocus={true}
                       id="otp"
                       name="otp"
                       label="OTP"
@@ -199,7 +199,7 @@ export default function Otp(props: props) {
 
                   <Box component="form" noValidate sx={{ mt: 1 }}>
                     <CustomTextField
-                      autofous={true}
+                      autofocus={true}
                       id="uniqueId"
                       name="uniqueId"
                       label="Email or Phone"
@@ -214,7 +214,7 @@ export default function Otp(props: props) {
                     {showOtp ? (
                       <CustomTextField
                         id="otp"
-                        autofous={false}
+                        autofocus={false}
                         name="otp"
                         label="OTP"
                       />
@@ -231,7 +231,7 @@ export default function Otp(props: props) {
                     )}
                     {props.type === "forgetpassword" && showOtp ? (
                       <CustomTextField
-                        autofous={false}
+                        autofocus={false}
                         id="newpassword"
                         name="newpassword"
                         label="New Password"

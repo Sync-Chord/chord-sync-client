@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux"
 import Auth from "../../../apis/auth"
 import { toast } from "react-toastify"
 import Loader from "../../common/Loader"
+import VisibilityIcon from "@mui/icons-material/Visibility"
 
 const defaultTheme = createTheme()
 
@@ -42,7 +43,7 @@ export default function SignUp() {
 
   //states
   const [err, setError] = useState<Record<string, string>>({})
-
+  const [showPassword, setShowPassword] = useState(false)
   //functions
   const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -132,7 +133,7 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <CustomTextField
                       id="name"
-                      autofous={true}
+                      autofocus={true}
                       name="name"
                       label="Name"
                     />
@@ -148,7 +149,7 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <CustomTextField
                       id="uniqueId"
-                      autofous={false}
+                      autofocus={false}
                       name="uniqueId"
                       label="Email or Phone"
                     />
@@ -164,9 +165,18 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <CustomTextField
                       id="password"
-                      autofous={false}
+                      autofocus={false}
                       name="password"
                       label="Password"
+                      type={showPassword ? "text" : "password"}
+                      icon={
+                        <VisibilityIcon
+                          style={{ color: "#A8A196" }}
+                          cursor="pointer"
+                          onMouseOut={() => setShowPassword(false)}
+                          onMouseOver={() => setShowPassword(true)}
+                        />
+                      }
                     />
                     {err.password ? (
                       <Typography style={{ color: "red" }}>
