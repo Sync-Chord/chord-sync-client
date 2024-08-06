@@ -8,6 +8,7 @@ const PrivateRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="home" element={<Home />} />
+        <Route path="*" element={<Home />} />
         {/* <Route path="Signup" element={<SignUp />} />
         <Route path="forgetpassword" element={<ForgetPassword />} />
         <Route path="otp" element={<Otp />} /> */}
