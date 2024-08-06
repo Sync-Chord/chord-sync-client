@@ -1,107 +1,166 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import CssBaseline from "@mui/material/CssBaseline"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Paper from "@mui/material/Paper"
-import Typography from "@mui/material/Typography"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import * as React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
-import image from "../../../assests/images/logo.png"
-import validation from "../../../utils/validation"
-import CustomTextField from "../../common/CustomTextField"
-import { useParams } from "react-router-dom"
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import * as React from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Auth from "../../../apis/auth";
+import image from "../../../assests/images/logo.png";
 import {
   error_reducer,
   loading_reducer,
   remover_error_reducer,
   remover_loading_reducer,
   success_reducer,
-} from "../../../redux/authReducer"
-import { useDispatch, UseDispatch, useSelector } from "react-redux"
-import Auth from "../../../apis/auth"
-import Loader from "../../common/Loader"
+} from "../../../redux/authReducer";
+import validation from "../../../utils/validation";
+import CustomTextField from "../../common/CustomTextField";
+import Loader from "../../common/Loader";
 
 interface props {
-  type: String
+  type: String;
 }
 
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
-export default function Otp(props: props) {
-  const { loading, error } = useSelector((state: any) => state.auth)
+const Otp = (props: props) => {
+  const { loading, error } = useSelector((state: any) => state.auth);
 
   if (error) {
-    toast.error(error)
+    toast.error(error);
   }
 
-  const { token } = useParams()
-  const nav = useNavigate()
-  const dispatch = useDispatch()
-  const [showOtp, setShowOtp] = useState(false)
-  const [newToken, setNewToken] = useState(token)
+  const { token } = useParams();
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  const [showOtp, setShowOtp] = useState(false);
+  const [newToken, setNewToken] = useState(token);
 
-  const [err, setError] = useState<Record<string, string>>({})
+  const [err, setError] = useState<Record<string, string>>({});
 
   const handleVerifyOtp = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const data = new FormData(event.currentTarget)
+    const data = new FormData(event.currentTarget);
 
     if (!newToken) {
-      nav("/auth/signup")
+      nav("/auth/signup");
     } else {
-      const otp = data.get("otp")?.toString() ?? null
-      setError(validation({ otp }))
+      const otp = data.get("otp")?.toString() ?? null;
+      setError(validation({ otp }));
       if (err.otp) {
-        return
+        return;
       }
-      dispatch(loading_reducer())
+      dispatch(loading_reducer());
       Auth.register_user({
         otp,
         token: newToken,
       })
         .then((res: any) => {
           if (res.status !== 200) {
-            throw new Error(res.data.message)
+            throw new Error(res.data.message);
           } else {
-            dispatch(success_reducer(res?.data?.data))
-            nav("/home")
-            toast.success("User Registered Successfully")
+            dispatch(success_reducer(res?.data?.data));
+            nav("/home");
+            toast.success("User Registered Successfully");
           }
         })
         .catch((err) => {
-          dispatch(error_reducer(err.message))
-        })
+          dispatch(error_reducer(err.message));
+        });
     }
-  }
+  };
+
+  const sendOtp = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+
+    const validationErrors = validation({ uniqueId });
+    setError(validationErrors);
+
+    if (validationErrors.uniqueId) {
+      return;
+    }
+
+    dispatch(loading_reducer());
+    Auth.generate_otp_sign_in({ unique_id: uniqueId })
+      .then((res: any) => {
+        if (res.status !== 200) {
+          throw new Error(res.data.message);
+        } else {
+          dispatch(remover_error_reducer());
+          dispatch(remover_loading_reducer());
+          toast.success("Otp Sent Successfully");
+          setNewToken(res?.data?.data);
+          setShowOtp(true);
+        }
+      })
+      .catch((err) => {
+        dispatch(error_reducer(err.message));
+      });
+  };
+
+  const verifySignOtp = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const otp = data.get("otp")?.toString() ?? null;
+
+    const validationErrors = validation({ uniqueId, otp });
+    setError(validationErrors);
+
+    if (validationErrors.uniqueId) {
+      return;
+    }
+
+    dispatch(loading_reducer());
+    Auth.sign_in_by_otp({ token: newToken, otp })
+      .then((res: any) => {
+        if (res.status !== 200) {
+          throw new Error(res.data.message);
+        } else {
+          dispatch(success_reducer(res?.data?.data));
+          nav("/home");
+        }
+      })
+      .catch((err) => {
+        dispatch(error_reducer(err.message));
+      });
+  };
 
   const handleResendOtp = () => {
     if (!newToken) {
-      nav("/auth/signup")
+      nav("/auth/signup");
     } else {
-      dispatch(loading_reducer())
+      dispatch(loading_reducer());
       Auth.resendOtp({
         token: newToken,
       })
         .then((res: any) => {
           if (res.status !== 200) {
-            throw new Error(res.data.message)
+            throw new Error(res.data.message);
           } else {
-            setNewToken(res?.data?.data)
-            dispatch(remover_loading_reducer())
-            toast.success("Otp Resent Successfully")
+            setNewToken(res?.data?.data);
+            dispatch(remover_loading_reducer());
+            toast.success("Otp Resent Successfully");
           }
         })
         .catch((err) => {
-          dispatch(error_reducer(err.message))
-        })
+          dispatch(error_reducer(err.message));
+        });
     }
-  }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -197,7 +256,12 @@ export default function Otp(props: props) {
                       : "Sign in with otp"}
                   </Typography>
 
-                  <Box component="form" noValidate sx={{ mt: 1 }}>
+                  <Box
+                    component="form"
+                    noValidate
+                    onSubmit={showOtp ? verifySignOtp : sendOtp}
+                    sx={{ mt: 1 }}
+                  >
                     <CustomTextField
                       autofocus={true}
                       id="uniqueId"
@@ -223,8 +287,7 @@ export default function Otp(props: props) {
                     )}
                     {err.uniqueId ? (
                       <Typography style={{ color: "red" }}>
-                        {" "}
-                        {err.otp}{" "}
+                        {err.otp}
                       </Typography>
                     ) : (
                       <></>
@@ -241,28 +304,28 @@ export default function Otp(props: props) {
                     )}
                     {err.password ? (
                       <Typography style={{ color: "red" }}>
-                        {" "}
-                        {err.password}{" "}
+                        {err.password}
                       </Typography>
                     ) : (
                       <></>
                     )}
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      onClick={() => {
-                        setShowOtp(true)
-                      }}
-                      sx={{ mt: 3, mb: 2 }}
-                      style={{ backgroundColor: "#27AE60" }}
-                    >
-                      {showOtp ? "Submit" : "Send OTP"}
-                    </Button>
-
+                    {loading ? (
+                      <Loader />
+                    ) : (
+                      <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        style={{ backgroundColor: "#27AE60" }}
+                      >
+                        {showOtp ? "Submit" : "Send OTP"}
+                      </Button>
+                    )}
                     <Grid container>
                       <Grid item xs>
                         <Link
+                          onClick={handleResendOtp}
                           style={{
                             color: "#767A8A",
                             fontSize: "15px",
@@ -294,5 +357,7 @@ export default function Otp(props: props) {
         </Box>
       </Container>
     </ThemeProvider>
-  )
-}
+  );
+};
+
+export default Otp;

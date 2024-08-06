@@ -1,10 +1,10 @@
-import { lazy } from "react"
-import { Routes, Route, Navigate } from "react-router-dom"
-import Otp from "./Otp"
-import { ToastContainer } from "react-toastify"
+import { lazy } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Otp from "./Otp";
+import { ToastContainer } from "react-toastify";
 
-const Login = lazy(() => import("./Login"))
-const Signup = lazy(() => import("./SignUp"))
+const Login = lazy(() => import("./Login"));
+const Signup = lazy(() => import("./SignUp"));
 
 const Auth = () => {
   return (
@@ -25,7 +25,7 @@ const Auth = () => {
         <Route path="forget-password" element={<Otp type="forgetpassword" />} />
       </Routes>
     </>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

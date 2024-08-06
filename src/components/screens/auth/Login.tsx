@@ -13,24 +13,67 @@ import { useNavigate } from "react-router-dom";
 import image from "../../../assests/images/logo.png";
 import validation from "../../../utils/validation";
 import CustomTextField from "../../common/CustomTextField";
-import VisibilityIcon from "@mui/icons-material/Visibility"
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  loading_reducer,
+  success_reducer,
+  error_reducer,
+  remover_error_reducer,
+  remover_loading_reducer,
+} from "../../../redux/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Auth from "../../../apis/auth";
+import Loader from "../../common/Loader";
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
-export default function Login() {
-  const nav = useNavigate()
-  const [error, setError] = useState<Record<string, string>>({})
-  const [showPassword, setShowPassword] = useState(false)
-  const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const uniqueId = data.get("uniqueId")?.toString() ?? null
-    const password = data.get("password")?.toString() ?? null
-    setError(validation({ uniqueId, password }))
+const Login = () => {
+  //redux
+  const { loading, error } = useSelector((state: any) => state.auth);
 
-    console.log(error)
+  //toasts
+  if (error) {
+    toast.error(error);
   }
+
+  //constants
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+
+  //states
+  const [err, setError] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
+
+  //function
+  const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+    const uniqueId = data.get("uniqueId")?.toString() ?? null;
+    const password = data.get("password")?.toString() ?? null;
+
+    const validationErrors = validation({ uniqueId, password });
+    setError(validationErrors);
+
+    if (validationErrors.uniqueId || validationErrors.password) {
+      return;
+    }
+
+    dispatch(loading_reducer());
+    Auth.sign_in({ unique_id: uniqueId, password })
+      .then((res: any) => {
+        if (res.status !== 200) {
+          throw new Error(res.data.message);
+        } else {
+          dispatch(success_reducer(res?.data?.data));
+        }
+      })
+      .catch((err) => {
+        dispatch(error_reducer(err.message));
+      });
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -87,10 +130,9 @@ export default function Login() {
                   name="uniqueId"
                   label="Email or Phone"
                 />
-                {error.uniqueId ? (
+                {err.uniqueId ? (
                   <Typography style={{ color: "red" }}>
-                    {" "}
-                    {error.uniqueId}{" "}
+                    {err.uniqueId}
                   </Typography>
                 ) : (
                   <></>
@@ -111,22 +153,27 @@ export default function Login() {
                   }
                 />
 
-                {error.password ? (
+                {err.password ? (
                   <Typography style={{ color: "red" }}>
-                    {error.password}
+                    {err.password}
                   </Typography>
                 ) : (
                   <></>
                 )}
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  style={{ backgroundColor: "#27AE60" }}
-                >
-                  Sign In
-                </Button>
+
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    style={{ backgroundColor: "#27AE60" }}
+                  >
+                    Sign In
+                  </Button>
+                )}
                 <Grid container>
                   <Grid item xs>
                     <Link
@@ -173,5 +220,7 @@ export default function Login() {
         </Box>
       </Container>
     </ThemeProvider>
-  )
-}
+  );
+};
+
+export default Login;
