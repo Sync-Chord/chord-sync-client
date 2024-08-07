@@ -3,6 +3,8 @@ import React, { lazy } from "react"
 import SideBar from "../components/common/SideBar"
 import { Box } from "@mui/system"
 import { Grid } from "@mui/material"
+import NavBar from "../components/common/NavBar"
+import Sidebar from "../components/common/SideBar"
 
 const Home = lazy(() => import("../components/screens/home/Home"))
 
@@ -10,9 +12,10 @@ const PrivateRoutes = () => {
   return (
     <Grid container>
       <Grid item>
-        <SideBar />
+        <Sidebar />
       </Grid>
-      <Grid item>
+      <Grid item xs={10}>
+        <NavBar />
         <BrowserRouter>
           <Routes>
             <Route path="home" element={<Home />} />

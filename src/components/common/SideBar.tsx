@@ -86,7 +86,7 @@ const Sidebar: React.FC = () => {
   const [open, setOpen] = useState(false)
 
   return (
-    <Box sx={{ display: "flex", background: "transparent" }}>
+    <Box sx={{}}>
       <DrawerStyled
         variant="permanent"
         open={open}
@@ -98,19 +98,12 @@ const Sidebar: React.FC = () => {
         </DrawerHeader>
 
         <List>
-          <ListItem button key="Profile">
-            <Avatar
-              sx={{
-                bgcolor: "#27AE60",
-                // width: "2.5rem",
-                // height: "2.5rem",
-              }}
-            >
-              HR
-            </Avatar>
-            <ListItemText primary="Harsh" />
+          <ListItem button key="Home">
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Hello" />
           </ListItem>
-          <hr />
           <ListItem button key="Home">
             <ListItemIcon>
               <HomeIcon />
