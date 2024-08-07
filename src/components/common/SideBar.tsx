@@ -6,7 +6,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
-import { Badge, InputBase, Divider } from "@mui/material";
+import { Badge, InputBase, Divider, Menu, MenuItem } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -27,6 +27,7 @@ import {
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { useState } from "react";
 
 const drawerWidth = 240;
 
@@ -122,7 +123,7 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-  backgroundColor: "#27ae60",
+  backgroundColor: "#27AE60",
 }));
 
 const Drawer = styled(MuiDrawer, {
@@ -143,8 +144,16 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const Sidebar = () => {
+  //useStates
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isMenuOpen = Boolean(anchorEl);
+
+  // functions  for onClick event
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -153,6 +162,31 @@ const Sidebar = () => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -210,12 +244,14 @@ const Sidebar = () => {
               aria-controls={menuId}
               aria-haspopup="true"
               color="inherit"
+              onClick={handleProfileMenuOpen}
             >
               <AccountCircle />
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
+      {renderMenu}
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
