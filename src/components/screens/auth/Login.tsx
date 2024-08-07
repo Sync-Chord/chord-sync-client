@@ -1,3 +1,4 @@
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,22 +10,19 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Container } from "@mui/system";
 import * as React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import image from "../../../assests/images/logo.png";
-import validation from "../../../utils/validation";
-import CustomTextField from "../../common/CustomTextField";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import {
-  loading_reducer,
-  success_reducer,
-  error_reducer,
-  remover_error_reducer,
-  remover_loading_reducer,
-} from "../../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Auth from "../../../apis/auth";
-import Loader from "../../common/Loader";
+import image from "../../../assests/images/logo.png";
+import {
+  error_reducer,
+  loading_reducer,
+  success_reducer,
+} from "../../../redux/authReducer";
+import validation from "../../../utils/validation";
+import ButtonLoader from "../../common/ButtonLoader";
+import CustomTextField from "../../common/CustomTextField";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -162,7 +160,7 @@ const Login = () => {
                 )}
 
                 {loading ? (
-                  <Loader />
+                  <ButtonLoader />
                 ) : (
                   <Button
                     type="submit"

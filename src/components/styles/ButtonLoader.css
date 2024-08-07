@@ -1,0 +1,54 @@
+.colorful {
+    width: 24.6px;
+    height: 24.6px;
+    border-radius: 50%;
+    background: #474bff;
+    animation: colorful-o7soaomd 1.5s infinite linear;
+}
+
+@keyframes colorful-o7soaomd {
+    0% {
+        box-shadow: 0 -33.6px #ff6761, calc(33.6px*0.707) calc(-33.6px*0.707) #ffd82e, 33.6px 0 #ff6761, 0 0 #ffd82e,
+            0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e;
+    }
+
+    12.5% {
+        box-shadow: 0 0 #ff6761, calc(33.6px*0.707) calc(-33.6px*0.707) #ffd82e, 33.6px 0 #ff6761, calc(33.6px*0.707) calc(33.6px*0.707) #ffd82e,
+            0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e;
+    }
+
+    25% {
+        box-shadow: 0 0 #ff6761, 0 0 #ffd82e, 33.6px 0 #ff6761, calc(33.6px*0.707) calc(33.6px*0.707) #ffd82e,
+            0 33.6px #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e;
+    }
+
+    37.5% {
+        box-shadow: 0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, calc(33.6px*0.707) calc(33.6px*0.707) #ffd82e,
+            0 33.6px #ff6761, calc(-33.6px*0.707) calc(33.6px*0.707) #ffd82e, 0 0 #ff6761, 0 0 #ffd82e;
+    }
+
+    50% {
+        box-shadow: 0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e,
+            0 33.6px #ff6761, calc(-33.6px*0.707) calc(33.6px*0.707) #ffd82e, -33.6px 0 #ff6761, 0 0 #ffd82e;
+    }
+
+    62.5% {
+        box-shadow: 0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e,
+            0 0 #ff6761, calc(-33.6px*0.707) calc(33.6px*0.707) #ffd82e, -33.6px 0 #ff6761, calc(-33.6px*0.707) calc(-33.6px*0.707) #ffd82e;
+    }
+
+    75% {
+        box-shadow: 0 -33.6px #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e,
+            0 0 #ff6761, 0 0 #ffd82e, -33.6px 0 #ff6761, calc(-33.6px*0.707) calc(-33.6px*0.707) #ffd82e;
+    }
+
+    87.5% {
+        box-shadow: 0 -33.6px #ff6761, calc(33.6px*0.707) calc(-33.6px*0.707) #ffd82e, 0 0 #ff6761, 0 0 #ffd82e,
+            0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, calc(-33.6px*0.707) calc(-33.6px*0.707) #ffd82e;
+    }
+
+    100% {
+        box-shadow: 0 -33.6px #ff6761, calc(33.6px*0.707) calc(-33.6px*0.707) #ffd82e, 33.6px 0 #ff6761, 0 0 #ffd82e,
+            0 0 #ff6761, 0 0 #ffd82e, 0 0 #ff6761, 0 0 #ffd82e;
+    }
+}
