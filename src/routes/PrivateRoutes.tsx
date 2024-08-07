@@ -1,30 +1,37 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom"
-import React, { lazy } from "react"
-import SideBar from "../components/common/SideBar"
-import { Box } from "@mui/system"
-import { Grid } from "@mui/material"
-import NavBar from "../components/common/NavBar"
-import Sidebar from "../components/common/SideBar"
+import { styled } from "@mui/material/styles";
+import { Box } from "@mui/system";
+import { lazy } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Sidebar from "../components/common/SideBar";
 
-const Home = lazy(() => import("../components/screens/home/Home"))
+const Home = lazy(() => import("../components/screens/home/Home"));
+// for css Style
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
 
 const PrivateRoutes = () => {
   return (
-    <Grid container>
-      <Grid item>
+    <Box sx={{ display: "flex", flexFlow: "row nowrap" }}>
+      <Box>
         <Sidebar />
-      </Grid>
-      <Grid item xs={10}>
-        <NavBar />
+      </Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
         <BrowserRouter>
           <Routes>
             <Route path="home" element={<Home />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </BrowserRouter>
-      </Grid>
-    </Grid>
-  )
-}
+      </Box>
+    </Box>
+  );
+};
 
-export default PrivateRoutes
+export default PrivateRoutes;
