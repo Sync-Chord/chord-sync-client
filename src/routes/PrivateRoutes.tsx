@@ -1,35 +1,30 @@
-import { styled } from "@mui/material/styles";
 import { Box } from "@mui/system";
 import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Sidebar from "../components/common/SideBar";
+import TopBar from "../components/common/TopBar";
 
 const Home = lazy(() => import("../components/screens/home/Home"));
-// for css Style
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+const Chat = lazy(() => import("../components/screens/chat/Chat"));
 
 const PrivateRoutes = () => {
   return (
     <Box sx={{ display: "flex", flexFlow: "row nowrap" }}>
-      <Box>
-        <Sidebar />
-      </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <BrowserRouter>
+      <BrowserRouter>
+        <Box>
+          <Sidebar />
+        </Box>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Box>
+            <TopBar />
+          </Box>
           <Routes>
             <Route path="home" element={<Home />} />
+            <Route path="chat" element={<Chat />} />
             <Route path="*" element={<Home />} />
           </Routes>
-        </BrowserRouter>
-      </Box>
+        </Box>
+      </BrowserRouter>
     </Box>
   );
 };
