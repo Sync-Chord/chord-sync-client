@@ -1,8 +1,10 @@
+//module imports
 import { lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Otp from "./Otp";
 import { ToastContainer } from "react-toastify";
 
+//component imports
+import Otp from "./Otp";
 const Login = lazy(() => import("./Login"));
 const Signup = lazy(() => import("./SignUp"));
 

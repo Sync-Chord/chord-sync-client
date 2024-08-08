@@ -1,19 +1,30 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// modules imports
 import * as React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+
+// MUI imports
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  Link,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+// apis imports
 import Auth from "../../../apis/auth";
+
+// assets imports
 import image from "../../../assests/images/logo.png";
+
+// redux imports
 import {
   error_reducer,
   loading_reducer,
@@ -21,9 +32,13 @@ import {
   remover_loading_reducer,
   success_reducer,
 } from "../../../redux/authReducer";
+
+// functions imports
 import validation from "../../../utils/validation";
+
+//components imports
 import CustomTextField from "../../common/CustomTextField";
-import Loader from "../../common/Loader";
+import ButtonLoader from "../../common/ButtonLoader";
 
 interface props {
   type: String;
@@ -31,21 +46,27 @@ interface props {
 
 const defaultTheme = createTheme();
 
+// otp component
 const Otp = (props: props) => {
+  // redux selector
   const { loading, error } = useSelector((state: any) => state.auth);
 
   if (error) {
     toast.error(error);
   }
 
+  // constants
   const { token } = useParams();
   const nav = useNavigate();
   const dispatch = useDispatch();
+
+  // States
   const [showOtp, setShowOtp] = useState(false);
   const [newToken, setNewToken] = useState(token);
-
   const [err, setError] = useState<Record<string, string>>({});
 
+  // function
+  // verfiy OTP
   const handleVerifyOtp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -79,6 +100,7 @@ const Otp = (props: props) => {
     }
   };
 
+  // send OTP
   const sendOtp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -109,6 +131,7 @@ const Otp = (props: props) => {
       });
   };
 
+  // verfy OTP during sign in
   const verifySignOtp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -139,6 +162,7 @@ const Otp = (props: props) => {
       });
   };
 
+  // resend OTP
   const handleResendOtp = () => {
     if (!newToken) {
       nav("/auth/signup");
@@ -222,7 +246,17 @@ const Otp = (props: props) => {
                       <></>
                     )}
                     {loading ? (
-                      <Loader />
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          margin: "10px",
+                        }}
+                      >
+                        <ButtonLoader />
+                      </div>
                     ) : (
                       <>
                         <Button
@@ -310,7 +344,17 @@ const Otp = (props: props) => {
                       <></>
                     )}
                     {loading ? (
-                      <Loader />
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          margin: "10px",
+                        }}
+                      >
+                        <ButtonLoader />
+                      </div>
                     ) : (
                       <Button
                         type="submit"

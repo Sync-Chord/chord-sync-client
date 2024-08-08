@@ -1,30 +1,44 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Container } from "@mui/system";
+// module imports
 import * as React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Auth from "../../../apis/auth";
+
+// mui imports
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  Box,
+  Button,
+  CssBaseline,
+  Grid,
+  Link,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Container, width } from "@mui/system";
+
+// assets import
 import image from "../../../assests/images/logo.png";
+
+//redux imports
 import {
   error_reducer,
   loading_reducer,
   success_reducer,
 } from "../../../redux/authReducer";
+
+// functions imports
 import validation from "../../../utils/validation";
+
+//apis imports
+import Auth from "../../../apis/auth";
+
+//components imports
 import ButtonLoader from "../../common/ButtonLoader";
 import CustomTextField from "../../common/CustomTextField";
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 const Login = () => {
@@ -45,6 +59,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   //function
+  //login using credentials
   const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -160,7 +175,17 @@ const Login = () => {
                 )}
 
                 {loading ? (
-                  <ButtonLoader />
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "10px",
+                    }}
+                  >
+                    <ButtonLoader />
+                  </div>
                 ) : (
                   <Button
                     type="submit"
