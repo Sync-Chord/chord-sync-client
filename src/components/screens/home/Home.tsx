@@ -1,16 +1,7 @@
-import React from 'react'
-import { toast } from 'react-toastify'
-
+import React from "react";
 
 const Home = () => {
-const check = ()=>{
-  toast.success("welcome to home page")
-}
- check()
+  return <div>Home</div>;
+};
 
-  return (
-    <div>Home</div>
-  )
-}
-
-export default Home
+export default Home;

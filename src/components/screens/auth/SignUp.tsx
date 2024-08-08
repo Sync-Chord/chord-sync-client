@@ -1,18 +1,31 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
+// Module imports
 import * as React from "react";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+// MUI imports
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  Link,
+  Paper,
+  Typography,
+} from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+// assets imports
 import image from "../../../assests/images/logo.png";
+
+// function imports
 import validation from "../../../utils/validation";
-import CustomTextField from "../../common/CustomTextField";
+
+// redux imports
 import {
   loading_reducer,
   success_reducer,
@@ -20,11 +33,13 @@ import {
   remover_error_reducer,
   remover_loading_reducer,
 } from "../../../redux/authReducer";
-import { useDispatch, useSelector } from "react-redux";
+
+// apis imports
 import Auth from "../../../apis/auth";
-import { toast } from "react-toastify";
-import Loader from "../../common/Loader";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+
+// component imports
+import CustomTextField from "../../common/CustomTextField";
+import ButtonLoader from "../../common/ButtonLoader";
 
 const defaultTheme = createTheme();
 
@@ -189,7 +204,17 @@ const SignUp = () => {
                   </Grid>
                 </Grid>
                 {loading ? (
-                  <Loader />
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "10px",
+                    }}
+                  >
+                    <ButtonLoader />
+                  </div>
                 ) : (
                   <Button
                     type="submit"
