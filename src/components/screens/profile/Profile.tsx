@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -22,46 +15,58 @@ const Profile = () => {
     }));
   };
 
-  const toggleEditMode = () => {
-    if (editMode) {
-      // Here you can dispatch an action to save the changes, e.g.:
-      // dispatch(updateUserData(userData));
-    }
-    setEditMode(!editMode);
-  };
+  const toggleEditMode = () => {};
 
   return (
-    <Grid
-      container
+    <Box
       sx={{
-        bgcolor: "white",
-        borderRadius: 3,
-        boxShadow: 5,
-        width: "90%",
-        marginLeft: "5%",
+        display: "flex",
+        flexDirection: "row",
+        padding: 4,
+        gap: 2,
       }}
     >
-      <Grid container spacing={5}>
-        <Grid item spacing={5}>
-          <Avatar sx={{ width: 150, height: 150 }} src={user.image} />
-          <Button
-            variant="contained"
-            component="label"
-            sx={{
-              mt: 2,
-              borderRadius: 2,
-              bgcolor: "#27AE60",
-              "&:hover": {
-                backgroundColor: "#10632a",
-              },
-            }}
-          >
-            Change Photo
-            <input hidden accept="image/*" type="file" />
-          </Button>
-        </Grid>
-
-        <Grid item>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "40%",
+          bgcolor: "white",
+          borderRadius: 3,
+          boxShadow: 5,
+        }}
+      >
+        <Avatar sx={{ width: "65%", height: "70%" }} src={user.image} />
+        <Button
+          variant="contained"
+          component="label"
+          sx={{
+            mt: 2,
+            borderRadius: 2,
+            bgcolor: "#27AE60",
+            "&:hover": {
+              backgroundColor: "#10632a",
+            },
+          }}
+        >
+          Change Photo
+          <input hidden accept="image/*" type="file" />
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          padding: "1rem",
+          width: "60%",
+          bgcolor: "white",
+          borderRadius: 3,
+          boxShadow: 5,
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button
             sx={{
               mt: 2,
@@ -74,80 +79,53 @@ const Profile = () => {
             }}
             onClick={toggleEditMode}
           >
-            {editMode ? "Save Changes" : "Edit Profile"}
+            Save Changes
           </Button>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Box>
-          {editMode ? (
-            <Grid
-              spacing={2}
-              sx={{ "& .MuiTextField-root": { m: 1, width: "75ch" } }}
-            >
-              <Grid container>
-                <TextField
-                  label="Name"
-                  name="name"
-                  value={userData.name}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  label="Email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-              </Grid>
-              <Grid container>
-                <TextField
-                  label="Mobile"
-                  name="phone"
-                  value={userData.phone_number}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  label="Age"
-                  name="age"
-                  value={userData.age}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  label="Gender"
-                  name="gender"
-                  value={userData.gender}
-                  onChange={handleInputChange}
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          ) : (
-            <>
-              <Typography variant="h5" gutterBottom>
-                {user.name}
-              </Typography>
-              <Typography variant="h6" color="primary" gutterBottom>
-                {user.email}
-              </Typography>
-              <Typography variant="h5" gutterBottom>
-                {user.age ? user.age : "Age"}
-              </Typography>
-              <Typography variant="h6" color="primary" gutterBottom>
-                {user.gender ? user.gender : "Gender"}
-              </Typography>
-            </>
-          )}
         </Box>
-      </Grid>
-    </Grid>
+        <Box sx={{ padding: "0.5rem" }}>
+          <TextField
+            label="Name"
+            name="name"
+            value={userData.name}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={userData.email}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            label="Mobile"
+            name="phone"
+            value={userData.phone_number}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Age"
+            name="age"
+            value={userData.age}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Gender"
+            name="gender"
+            value={userData.gender}
+            onChange={handleInputChange}
+            fullWidth
+          />
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
