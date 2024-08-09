@@ -1,8 +1,9 @@
 .rhap_container {
-    background-color: #fff;
+    background-color: #ffffffbe;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
+    padding-bottom: 10px;
 }
 
 .rhap_progress-bar {
@@ -12,6 +13,9 @@
 
 .rhap_progress-indicator {
     background-color: #888;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
 
 .rhap_time {
@@ -21,18 +25,19 @@
 }
 
 .rhap_button-clear {
-    color: #666;
+    color: #fff;
 }
 
 .rhap_volume-button,
 .rhap_volume-controls {
-    display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .rhap_main-controls {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 
 .rhap_controls-section {
@@ -47,9 +52,10 @@
 
 .rhap_volume-indicator {
     background-color: #888;
+    height: 6px;
 }
 
 .rhap_button-clear svg {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
 }

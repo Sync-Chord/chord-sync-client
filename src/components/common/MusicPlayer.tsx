@@ -1,14 +1,14 @@
 import React from "react";
 import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import { Card, CardContent, Typography, Box, IconButton } from "@mui/material";
+import { Card, IconButton } from "@mui/material";
 import {
   PlayArrow,
   Pause,
   VolumeUp,
   VolumeOff,
-  SkipNext,
-  SkipPrevious,
+  SkipNextOutlined,
+  SkipPreviousOutlined,
 } from "@mui/icons-material";
 import "../styles/MusicPlayer.css";
 
@@ -21,19 +21,19 @@ interface MusicPlayerProps {
 
 const MusicPlayer = (props: MusicPlayerProps) => {
   const { title, artist, src, autoPlay = false } = props;
+
   return (
     <Card
       sx={{
-        boxShadow: 3,
+        boxShadow: 4,
         borderRadius: 2,
-        width: 700,
-
+        width: 750,
         padding: 2,
         backgroundColor: "#27AE60",
       }}
     >
       <AudioPlayer
-        style={{ height: 65 }}
+        style={{ height: 50, padding: "10px" }}
         autoPlay={autoPlay}
         src={src}
         onPlay={() => console.log("Playing")}
@@ -50,32 +50,32 @@ const MusicPlayer = (props: MusicPlayerProps) => {
         customControlsSection={[RHAP_UI.MAIN_CONTROLS, RHAP_UI.VOLUME_CONTROLS]}
         customIcons={{
           play: (
-            <IconButton>
+            <IconButton sx={{ color: "#fff" }}>
               <PlayArrow />
             </IconButton>
           ),
           pause: (
-            <IconButton>
+            <IconButton sx={{ color: "#fff" }}>
               <Pause />
             </IconButton>
           ),
-          rewind: (
-            <IconButton>
-              <SkipPrevious />
+          previous: (
+            <IconButton sx={{ color: "#fff" }}>
+              <SkipPreviousOutlined />
             </IconButton>
           ),
-          forward: (
-            <IconButton>
-              <SkipNext />
+          next: (
+            <IconButton sx={{ color: "#fff" }}>
+              <SkipNextOutlined />
             </IconButton>
           ),
           volume: (
-            <IconButton>
+            <IconButton sx={{ color: "#fff" }}>
               <VolumeUp />
             </IconButton>
           ),
           volumeMute: (
-            <IconButton>
+            <IconButton sx={{ color: "#fff" }}>
               <VolumeOff />
             </IconButton>
           ),

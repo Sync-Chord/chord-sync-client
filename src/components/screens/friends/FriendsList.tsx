@@ -188,80 +188,90 @@ const FriendsList = () => {
     },
   ];
 
+  const Requests = [
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Frank Miller",
+      joinedSince: "February 2018",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Bob Smith",
+      joinedSince: "June 2020",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Charlie Brown",
+      joinedSince: "August 2021",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "David Williams",
+      joinedSince: "December 2022",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Bob Smith",
+      joinedSince: "June 2020",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Charlie Brown",
+      joinedSince: "August 2021",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "David Williams",
+      joinedSince: "December 2022",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Bob Smith",
+      joinedSince: "June 2020",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Charlie Brown",
+      joinedSince: "August 2021",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "David Williams",
+      joinedSince: "December 2022",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Grace Lee",
+      joinedSince: "April 2019",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Hannah White",
+      joinedSince: "May 2020",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Ian Scott",
+      joinedSince: "July 2021",
+    },
+    {
+      profilePhoto: "https://via.placeholder.com/50",
+      userName: "Jack Turner",
+      joinedSince: "September 2022",
+    },
+  ];
+
   const handleAddFriend = () => {
     nav("/friend");
   };
 
   return (
     <Box sx={{ padding: 4, backgroundColor: "#fffff", minHeight: "100vh" }}>
-      <Box sx={{ marginBottom: 4 }}>
-        <TextField
-          placeholder="Search"
-          label="Search"
-          variant="outlined"
-          fullWidth
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "25px", // This will round only the edges
-            },
-          }}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
       <Grid container direction="row" spacing={2}>
-        <Grid
-          item
-          xs={6}
-          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
-        >
-          <Typography
-            variant="h4"
-            component="div"
-            sx={{ textAlign: "center", marginBottom: 2 }}
-          >
-            Suggestions
-          </Typography>
-
-          <Container
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              scrollbarWidth: "none", // Firefox
-              "&::-webkit-scrollbar": {
-                display: "none", // Chrome, Safari, Opera
-              },
-            }}
-          >
-            {friends
-              .filter((friend) =>
-                friend.userName.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((friend, index) => (
-                <FriendsCard
-                  key={index}
-                  profilePhoto={friend.profilePhoto}
-                  userName={friend.userName}
-                  joinedSince={friend.joinedSince}
-                  onAddFriend={handleAddFriend}
-                />
-              ))}
-          </Container>
-        </Grid>
-
         {/* Suggestions */}
         <Grid
           item
-          xs={6}
+          xs={4}
           sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
         >
           <Typography
@@ -291,6 +301,81 @@ const FriendsList = () => {
               />
             ))}
           </Container>
+        </Grid>
+
+        {/* Requests */}
+        <Grid
+          item
+          xs={4}
+          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
+        >
+          <Typography
+            variant="h4"
+            component="div"
+            sx={{ textAlign: "center", marginBottom: 2 }}
+          >
+            Requests
+          </Typography>
+          <Container
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              scrollbarWidth: "none", // Firefox
+              "&::-webkit-scrollbar": {
+                display: "none", // Chrome, Safari, Opera
+              },
+            }}
+          >
+            {Requests.map((Requests, index) => (
+              <FriendsCard
+                key={index}
+                profilePhoto={Requests.profilePhoto}
+                userName={Requests.userName}
+                joinedSince={Requests.joinedSince}
+                onAddFriend={handleAddFriend}
+              />
+            ))}
+          </Container>
+        </Grid>
+        {/* search */}
+        <Grid
+          item
+          xs={4}
+          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
+        >
+          <TextField
+            placeholder="Search Friends"
+            label="Search"
+            variant="outlined"
+            fullWidth
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "15px", // This will round only the edges
+              },
+            }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Container
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              scrollbarWidth: "none", // Firefox
+              "&::-webkit-scrollbar": {
+                display: "none", // Chrome, Safari, Opera
+              },
+            }}
+          ></Container>
         </Grid>
       </Grid>
     </Box>
