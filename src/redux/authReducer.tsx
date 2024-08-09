@@ -71,6 +71,7 @@ export const {
   error_reducer,
   remover_error_reducer,
   remover_loading_reducer,
+  logout_reducer,
 } = auth_slice.actions;
 
 export default auth_slice.reducer;

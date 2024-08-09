@@ -8,8 +8,8 @@ import { useSelector } from "react-redux";
 const Routes = () => {
   const { user } = useSelector((state: any) => state.auth);
 
-  return (
-    <Suspense fallback={<Loader />}>
+  return (<Suspense fallback={<Loader />}>
+    
       <ToastContainer
         pauseOnFocusLoss={false}
         position="top-center"
