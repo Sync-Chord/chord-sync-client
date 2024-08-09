@@ -18,27 +18,30 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout_reducer } from "../../redux/authReducer";
 import { useDispatch } from "react-redux";
+
+
+
 const SideBar = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [selectedIndex, setSelectedIndex] = useState<string>("");
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [selectedIndex, setSelectedIndex] = useState<string>("")
 
   const handleLogout = () => {
     // Clear the local storage
-    dispatch(logout_reducer());
+    dispatch(logout_reducer())
     // to navigate to login
-    navigate("/auth/login");
-  };
+    navigate("/auth/login")
+  }
   const handleListItemClick = (path: string) => {
-    setSelectedIndex(path);
-    navigate(path);
-  };
+    setSelectedIndex(path)
+    navigate(path)
+  }
 
   const DrawerHeader = styled("div")(() => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  }));
+  }))
 
   const navigations = [
     {
@@ -56,17 +59,36 @@ const SideBar = () => {
       path: "/friend",
       icon: <PeopleIcon />,
     },
-  ];
+  ]
 
   return (
     <Box sx={{ position: "relative", height: "100vh" }}>
       <Box>
-        <DrawerHeader>
+        <DrawerHeader
+          onClick={() => {
+            navigate("/home")
+          }}
+        >
           <img
             src={symbol}
             alt="Logo"
             style={{ maxHeight: "2rem", padding: "1rem" }}
+            onClick={() => {
+              navigate("/home")
+            }}
           />
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{
+              color: "#27AE60",
+              fontWeight: "700",
+              cursor: "pointer",
+            }}
+          >
+            SYNC
+          </Typography>
         </DrawerHeader>
         <List>
           {navigations.map((el) => (
@@ -120,7 +142,7 @@ const SideBar = () => {
         </Typography>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
 export default SideBar;

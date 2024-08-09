@@ -24,11 +24,9 @@ const FriendsCard = (props: CardProps) => {
         display: "flex",
         alignItems: "center",
         padding: 2,
-        maxWidth: 400,
-        height: 40,
+        width: 350,
+        height: 35,
         margin: "5px auto",
-        boxShadow: 10,
-        borderRadius: "20px",
       }}
     >
       <Avatar
@@ -69,7 +67,7 @@ const FriendsCard = (props: CardProps) => {
         </Button>
       </Grid>
     </Card>
-  );
+  )
 };
 
 export default FriendsCard;

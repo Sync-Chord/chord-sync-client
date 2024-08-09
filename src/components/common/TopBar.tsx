@@ -12,6 +12,10 @@ import Menu from "@mui/material/Menu"
 import SearchIcon from "@mui/icons-material/Search"
 import AccountCircle from "@mui/icons-material/AccountCircle"
 import PeopleIcon from "@mui/icons-material/People"
+import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import "../../assests/images/symbol.jpg"
+import { Avatar } from "@mui/material"
 
 // Styled components
 const Search = styled("div")(({ theme }) => ({
@@ -51,6 +55,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 const TopBar = () => {
+  const navigate = useNavigate()
+  const { user } = useSelector((state: any) => state.auth.user)
+  console.log(user)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null)
 
@@ -123,22 +130,7 @@ const TopBar = () => {
         sx={{ backgroundColor: "white", boxShadow: "none", border: "none" }}
       >
         <Toolbar>
-          <Box sx={{ display: { xs: "none", sm: "block" }, flexGrow: 1 }}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                color: "#27AE60",
-                fontWeight: "700",
-              }}
-            >
-              SYNC
-            </Typography>
-          </Box>
-          <Box
-            sx={{ flexGrow: 1, display: "flex", justifyContent: "flex-start" }}
-          >
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon
@@ -151,38 +143,44 @@ const TopBar = () => {
               />
             </Search>
           </Box>
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex", gap: 4, alignItems: "center" },
+            }}
+          >
             <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              color="inherit"
-              sx={{
-                color: "black",
-                "&:hover": {
-                  backgroundColor: "#27AE60",
-                  color: "white",
-                },
+              onClick={() => {
+                navigate("/friend")
               }}
-            >
-              <AccountCircle />
-            </IconButton>
-            <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
               sx={{
                 color: "black",
-                "&:hover": {
-                  backgroundColor: "#27AE60",
-                  color: "white",
-                },
               }}
             >
               <Badge badgeContent={17} color="error">
                 <PeopleIcon />
               </Badge>
             </IconButton>
+
+            <IconButton
+              size="large"
+              onClick={() => {
+                navigate("/profile")
+              }}
+              edge="end"
+              aria-label="account of current user"
+              color="inherit"
+              sx={{
+                color: "black",
+              }}
+            >
+              <Avatar sx={{ bgcolor: "#27AE60" }}>{user.name[0]}</Avatar>
+            </IconButton>
+            <Typography sx={{ color: "black", alignItems: "center" }}>
+              {user.name}
+            </Typography>
           </Box>
         </Toolbar>
       </AppBar>
