@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import symbol from "../../assests/images/symbol.jpg";
@@ -17,27 +18,30 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout_reducer } from "../../redux/authReducer";
 import { useDispatch } from "react-redux";
+
+
+
 const SideBar = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [selectedIndex, setSelectedIndex] = useState<string>("");
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [selectedIndex, setSelectedIndex] = useState<string>("")
 
   const handleLogout = () => {
     // Clear the local storage
-    dispatch(logout_reducer());
+    dispatch(logout_reducer())
     // to navigate to login
-    // navigate("/auth/login");
-  };
+    navigate("/auth/login")
+  }
   const handleListItemClick = (path: string) => {
-    setSelectedIndex(path);
-    navigate(path);
-  };
+    setSelectedIndex(path)
+    navigate(path)
+  }
 
   const DrawerHeader = styled("div")(() => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  }));
+  }))
 
   const navigations = [
     {
@@ -55,35 +59,40 @@ const SideBar = () => {
       path: "/friend",
       icon: <PeopleIcon />,
     },
-    {
-      name: "Chat",
-      path: "/chat",
-      icon: <Chat />,
-    },
-  ];
-
-  const lognav = [
-    {
-      name: "Settings",
-      path: "/settings",
-      icon: <SettingsIcon />,
-    },
-  ];
+  ]
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: "relative", height: "100vh" }}>
       <Box>
-        <DrawerHeader>
+        <DrawerHeader
+          onClick={() => {
+            navigate("/home")
+          }}
+        >
           <img
             src={symbol}
             alt="Logo"
-            style={{ maxHeight: "2rem", padding: "3px" }}
+            style={{ maxHeight: "2rem", padding: "1rem" }}
+            onClick={() => {
+              navigate("/home")
+            }}
           />
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{
+              color: "#27AE60",
+              fontWeight: "700",
+              cursor: "pointer",
+            }}
+          >
+            SYNC
+          </Typography>
         </DrawerHeader>
         <List>
           {navigations.map((el) => (
             <ListItem
-              button
               key={el.path}
               onClick={() => handleListItemClick(el.path)}
               sx={{
@@ -107,21 +116,33 @@ const SideBar = () => {
           ))}
         </List>
       </Box>
-      <Box sx={{ position: "absolute", top: "260%", width: "100%" }}>
-        <List>
-          <ListItemButton
-            sx={{ backgroundColor: "lightgreen", color: "white" }}
-            onClick={() => handleLogout()}
-          >
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItemButton>
-        </List>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: "1%",
+          width: "100%",
+          display: "flex",
+          backgroundColor: "#27AE60",
+          borderRadius: "0.5rem",
+          padding: "0.5rem",
+          alignItems: "center",
+          gap: "0.8rem",
+          justifyContent: "center",
+          cursor: "pointer",
+        }}
+        onClick={handleLogout}
+      >
+        <LogoutIcon />
+        <Typography
+          sx={{
+            fontWeight: "600",
+          }}
+        >
+          Logout
+        </Typography>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
 export default SideBar;

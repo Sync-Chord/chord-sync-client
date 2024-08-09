@@ -24,16 +24,15 @@ const FriendsCard = (props: CardProps) => {
         display: "flex",
         alignItems: "center",
         padding: 2,
-        maxWidth: 500,
-        margin: "10px auto",
-        boxShadow: 10,
-        borderRadius: "20px",
+        width: 350,
+        height: 35,
+        margin: "5px auto",
       }}
     >
       <Avatar
         src={profilePhoto}
         alt="Profile"
-        sx={{ width: 46, height: 46, marginRight: 2 }}
+        sx={{ width: 50, height: 50, marginRight: 1 }}
       />
       <Grid container direction="column" sx={{ flexGrow: 1 }}>
         <Typography variant="h6" component="div" sx={{ textAlign: "left" }}>
@@ -47,7 +46,7 @@ const FriendsCard = (props: CardProps) => {
           Joined since: {joinedSince}
         </Typography>
       </Grid>
-      <CardActions>
+      <Grid>
         <Button
           sx={{
             width: 70,
@@ -61,14 +60,14 @@ const FriendsCard = (props: CardProps) => {
         >
           <Typography
             component="div"
-            sx={{ textAlign: "center", fontSize: "10px" }}
+            sx={{ textAlign: "center", fontSize: "12px" }}
           >
             Add Friend
           </Typography>
         </Button>
-      </CardActions>
+      </Grid>
     </Card>
-  );
+  )
 };
 
 export default FriendsCard;

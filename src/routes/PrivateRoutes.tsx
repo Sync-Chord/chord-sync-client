@@ -3,14 +3,14 @@ import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 //components imports
 import Sidebar from "../components/common/SideBar";
-import TopBar from "../components/common/TopBar";
-import MusicPlayer from "../components/common/MusicPlayer";
+import TopBar from "../components/common/TopBar"
 
-const Home = lazy(() => import("../components/screens/home/Home"));
-const Chat = lazy(() => import("../components/screens/chat/Chat"));
+const Home = lazy(() => import("../components/screens/home/Home"))
+const Profile = lazy(() => import("../components/screens/profile/Profile"))
+const Chat = lazy(() => import("../components/screens/chat/Chat"))
 const FriendsList = lazy(
   () => import("../components/screens/friends/FriendsList")
-);
+)
 
 const PrivateRoutes = () => {
   return (
@@ -53,10 +53,11 @@ const PrivateRoutes = () => {
               <Route path="home" element={<Home />} />
               <Route path="chat" element={<Chat />} />
               <Route path="friend" element={<FriendsList />} />
+              <Route path="profile" element={<Profile />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               width: "100%",
               paddingLeft: 25,
@@ -70,11 +71,11 @@ const PrivateRoutes = () => {
               src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
               autoPlay={false}
             />
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </BrowserRouter>
-  );
-};
+  )
+}
 
 export default PrivateRoutes;
