@@ -56,7 +56,7 @@ const PrivateRoutes = () => {
               <Route path="*" element={<Home />} />
             </Routes>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               width: "100%",
               paddingLeft: 25,
@@ -70,7 +70,7 @@ const PrivateRoutes = () => {
               src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
               autoPlay={false}
             />
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </BrowserRouter>
