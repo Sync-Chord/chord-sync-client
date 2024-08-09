@@ -15,11 +15,18 @@ const FriendsList = lazy(
 const PrivateRoutes = () => {
   return (
     <BrowserRouter>
-      <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+      <Box
+        sx={{
+          display: "flex",
+          height: "100vh",
+          overflow: "hidden",
+          width: "100%",
+        }}
+      >
         <Box
           sx={{
             width: "15%",
-            height: "100vh",
+            height: "100%",
             backgroundColor: "white",
           }}
         >
@@ -30,13 +37,13 @@ const PrivateRoutes = () => {
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
-            height: "100vh",
+            height: "100%",
           }}
         >
           <Box
             sx={{
               width: "100%",
-              height: "8vh", // TopBar takes up 8% of the height
+              height: "8vh",
               backgroundColor: "blue",
             }}
           >
@@ -44,8 +51,8 @@ const PrivateRoutes = () => {
           </Box>
           <Box
             sx={{
-              flexGrow: 1,
-              height: "calc(100vh - 18vh)", // Content area takes the remaining height
+              width: "100%",
+              height: "80%",
               overflow: "hidden",
             }}
           >
