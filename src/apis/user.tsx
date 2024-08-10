@@ -61,6 +61,7 @@ class User {
 
   // user_list
   static user_list(payload: any, head: any) {
+    console.log(head);
     return new Promise((resolve) => {
       Axios.get("/user_list", {
         headers: {

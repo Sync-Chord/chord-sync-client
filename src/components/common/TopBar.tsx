@@ -1,23 +1,23 @@
-import { useState } from "react"
-import { styled } from "@mui/material/styles"
-import AppBar from "@mui/material/AppBar"
-import Box from "@mui/material/Box"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
-import Typography from "@mui/material/Typography"
-import InputBase from "@mui/material/InputBase"
-import Badge from "@mui/material/Badge"
+import { useState } from "react";
+import { styled } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import InputBase from "@mui/material/InputBase";
+import Badge from "@mui/material/Badge";
 
-import Menu from "@mui/material/Menu"
-import SearchIcon from "@mui/icons-material/Search"
-import AccountCircle from "@mui/icons-material/AccountCircle"
-import PeopleIcon from "@mui/icons-material/People"
-import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
-import "../../assests/images/symbol.jpg"
-import { Avatar, Divider, Grid, ListItemIcon, MenuItem } from "@mui/material"
-import { Logout, PersonAdd, Settings } from "@mui/icons-material"
-import FriendsCard from "./FriendsCard"
+import Menu from "@mui/material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import PeopleIcon from "@mui/icons-material/People";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import "../../assests/images/symbol.jpg";
+import { Avatar, Divider, Grid, ListItemIcon, MenuItem } from "@mui/material";
+import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import FriendsCard from "./FriendsCard";
 
 // Styled components
 const Search = styled("div")(({ theme }) => ({
@@ -31,7 +31,7 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: "70ch", // Adjust the width as needed
   },
-}))
+}));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -43,7 +43,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
   top: 0,
   bottom: 0,
-}))
+}));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "black",
@@ -54,20 +54,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
   },
-}))
+}));
 
 const TopBar = () => {
-  const navigate = useNavigate()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+    setAnchorEl(event.currentTarget);
+  };
   const handleClose = () => {
-    setAnchorEl(null)
-  }
-  const { user } = useSelector((state: any) => state.auth.user)
-  const [searchTerm, setSearchTerm] = useState("")
+    setAnchorEl(null);
+  };
+  const { user } = useSelector((state: any) => state.auth.user);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const friends = [
     {
@@ -109,12 +109,12 @@ const TopBar = () => {
       userName: "Eve Davis",
       joinedSince: "January 2021",
     },
-  ]
+  ];
 
   const handleAddFriend = () => {
-    console.log("heyyy")
+    console.log("heyyy");
     //nav("/friend");
-  }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -161,7 +161,7 @@ const TopBar = () => {
             <IconButton
               size="large"
               onClick={() => {
-                navigate("/profile")
+                navigate("/profile");
               }}
               edge="end"
               aria-label="account of current user"
@@ -227,7 +227,8 @@ const TopBar = () => {
                 sx={{
                   textAlign: "center",
                   fontWeight: "600",
-                  fontSize: "25px",
+
+                  fontSize: "20px",
                   color: "black",
                 }}
               >
@@ -250,7 +251,7 @@ const TopBar = () => {
         </Menu>
       </AppBar>
     </Box>
-  )
-}
+  );
+};
 
-export default TopBar
+export default TopBar;
