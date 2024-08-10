@@ -75,21 +75,19 @@ const FriendsList = () => {
           xs={6}
           sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
         >
-         
-            <Typography component="div" sx={{ textAlign: "center" }}>
-              My Friends
-            </Typography>
-            {friends.map((friend, index) => (
-              <FriendsCard
-                key={index}
-                profilePhoto={friend.profilePhoto}
-                userName={friend.userName}
-                joinedSince={friend.joinedSince}
-                onAddFriend={handleAddFriend}
-                type="friend"
-              />
-            ))}
-          
+          <Typography component="div" sx={{ textAlign: "center" }}>
+            My Friends
+          </Typography>
+          {friends.map((friend, index) => (
+            <FriendsCard
+              key={index}
+              profilePhoto={friend.profilePhoto}
+              userName={friend.userName}
+              joinedSince={friend.joinedSince}
+              onAddFriend={handleAddFriend}
+              type="friend"
+            />
+          ))}
         </Grid>
         {/* search */}
         <Grid
@@ -119,51 +117,7 @@ const FriendsList = () => {
               ),
             }}
           />
-
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{ padding: 2, height: "80vh", display: "flex", flexDirection: "column" }}
-          >
-            <TextField
-              placeholder="Search Friends"
-              label="Search Friends"
-              variant="outlined"
-              fullWidth
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "15px",
-                },
-                marginBottom: 2,
-              }}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <Container
-              sx={{
-                flexGrow: 1,
-                overflowY: "auto",
-                scrollbarWidth: "none",
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-              }}
-            >
-              {/* Display search results here */}
-            </Container>
-          </Paper>
         </Grid>
-      </Grid>
       </Grid>
     </Box>
   )
