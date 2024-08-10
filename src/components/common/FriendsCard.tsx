@@ -1,73 +1,49 @@
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardActions,
-  Avatar,
-  Typography,
-  Button,
-  Grid,
-} from "@mui/material";
+// FriendsCard.js
+import { Card, Avatar, Typography, Grid } from "@mui/material";
+import { Chat } from "@mui/icons-material";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 interface CardProps {
   profilePhoto: string;
   userName: string;
   joinedSince: string;
   onAddFriend: () => void;
+  type: string;
 }
 
 const FriendsCard = (props: CardProps) => {
-  const { profilePhoto, userName, joinedSince, onAddFriend } = props;
+  const { profilePhoto, userName, joinedSince, onAddFriend, type } = props;
   return (
     <Card
       sx={{
         display: "flex",
         alignItems: "center",
         padding: 2,
-        width: 350,
-        height: 35,
-        margin: "5px auto",
+        marginBottom: 2,
       }}
     >
-      <Avatar
-        src={profilePhoto}
-        alt="Profile"
-        sx={{ width: 50, height: 50, marginRight: 1 }}
-      />
+      <Avatar src={profilePhoto} alt="Profile" sx={{ width: 50, height: 50, marginRight: 2 }} />
       <Grid container direction="column" sx={{ flexGrow: 1 }}>
-        <Typography variant="h6" component="div" sx={{ textAlign: "left" }}>
+        <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
           {userName}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ textAlign: "left" }}
-        >
+        <Typography variant="body2" color="text.secondary">
           Joined since: {joinedSince}
         </Typography>
       </Grid>
-      <Grid>
-        <Button
-          sx={{
-            width: 70,
-            height: 40,
-            borderRadius: "10px",
-            boxShadow: "3px",
-            backgroundColor: "#27ae60",
+
+      {type === "friend" ? (
+        <Chat sx={{ color: "#27AE60", cursor: "pointer" }} />
+      ) : (
+        <PersonAddAlt1Icon
+          onClick={() => {
+            onAddFriend();
           }}
-          variant="contained"
-          onClick={onAddFriend}
-        >
-          <Typography
-            component="div"
-            sx={{ textAlign: "center", fontSize: "12px" }}
-          >
-            Add Friend
-          </Typography>
-        </Button>
-      </Grid>
+          sx={{ color: "blue", cursor: "pointer" }}
+        />
+      )}
     </Card>
-  )
+  );
 };
 
 export default FriendsCard;
