@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -38,7 +45,7 @@ const Profile = () => {
           boxShadow: 5,
         }}
       >
-        <Avatar sx={{ width: "65%", height: "70%" }} src={user.image} />
+        <Avatar sx={{ width: "70%", height: "50%" }} src={user.image} />
         <Button
           variant="contained"
           component="label"
@@ -88,8 +95,7 @@ const Profile = () => {
             name="name"
             value={userData.name}
             onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, width: "100%" }}
           />
           <TextField
             label="Email"
