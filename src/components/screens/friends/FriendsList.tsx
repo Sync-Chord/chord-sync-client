@@ -266,12 +266,12 @@ const FriendsList = () => {
   };
 
   return (
-    <Box sx={{ padding: 4, backgroundColor: "#fffff", minHeight: "100vh" }}>
-      <Grid container direction="row" spacing={2}>
+    <Box>
+      <Grid container direction="row" spacing={2} sx={{ padding: 4 }}>
         {/* Suggestions */}
         <Grid
           item
-          xs={4}
+          xs={6}
           sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
         >
           <Typography
@@ -302,45 +302,10 @@ const FriendsList = () => {
             ))}
           </Container>
         </Grid>
-
-        {/* Requests */}
-        <Grid
-          item
-          xs={4}
-          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
-        >
-          <Typography
-            variant="h4"
-            component="div"
-            sx={{ textAlign: "center", marginBottom: 2 }}
-          >
-            Requests
-          </Typography>
-          <Container
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              scrollbarWidth: "none", // Firefox
-              "&::-webkit-scrollbar": {
-                display: "none", // Chrome, Safari, Opera
-              },
-            }}
-          >
-            {Requests.map((Requests, index) => (
-              <FriendsCard
-                key={index}
-                profilePhoto={Requests.profilePhoto}
-                userName={Requests.userName}
-                joinedSince={Requests.joinedSince}
-                onAddFriend={handleAddFriend}
-              />
-            ))}
-          </Container>
-        </Grid>
         {/* search */}
         <Grid
           item
-          xs={4}
+          xs={6}
           sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
         >
           <TextField
@@ -379,7 +344,7 @@ const FriendsList = () => {
         </Grid>
       </Grid>
     </Box>
-  );
+  )
 };
 
 export default FriendsList;

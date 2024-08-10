@@ -52,31 +52,37 @@ const PrivateRoutes = () => {
             <Box
               sx={{
                 width: "100%",
-                height: "72vh",
+
                 overflow: "hidden",
+                display: "flex",
               }}
             >
-              <Routes>
-                <Route path="home" element={<Home />} />
-                <Route path="chat" element={<Chat />} />
-                <Route path="friend" element={<FriendsList />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="*" element={<Home />} />
-              </Routes>
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                height: "17vh",
-              }}
-            >
-              <MusicPlayer /> {/* create this music player */}
+              <Box
+                sx={{
+                  width: "70%",
+                }}
+              >
+                <Routes>
+                  <Route path="home" element={<Home />} />
+                  <Route path="chat" element={<Chat />} />
+                  <Route path="friend" element={<FriendsList />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="*" element={<Home />} />
+                </Routes>
+              </Box>
+              <Box
+                sx={{
+                  width: "27%",
+                }}
+              >
+                <MusicPlayer /> {/* create this music player */}
+              </Box>
             </Box>
           </Box>
         </Box>
       </BrowserRouter>
     </MusicPlayerProvider>
-  );
+  )
 };
 
 export default PrivateRoutes;
