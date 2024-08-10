@@ -1,7 +1,14 @@
 import { Chat } from "@mui/icons-material";
-import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import symbol from "../../assests/images/symbol.jpg";
+import logo from "../../assests/images/logo.png";
 import PeopleIcon from "@mui/icons-material/People";
 import HomeIcon from "@mui/icons-material/Home";
 import { useState } from "react";
@@ -44,20 +51,22 @@ const SideBar = () => {
     <Box sx={{ position: "relative", height: "100vh", padding: "0.5rem" }}>
       <Box>
         <Box
-          sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-          onClick={() => {
-            navigate("/home");
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <img
-            src={symbol}
+            src={logo}
             alt="Logo"
-            style={{ maxHeight: "2rem", padding: "1rem" }}
+            style={{ maxHeight: "2rem", padding: "1rem", cursor: "pointer" }}
             onClick={() => {
-              navigate("/home");
+              setSelectedIndex(navigations[0].id);
+              navigate(navigations[0].path);
             }}
           />
-          <Typography
+          {/* <Typography
             variant="h6"
             noWrap
             component="div"
@@ -66,9 +75,13 @@ const SideBar = () => {
               fontWeight: "700",
               cursor: "pointer",
             }}
+            onClick={() => {
+              setSelectedIndex(navigations[0].id);
+              navigate(navigations[0].path);
+            }}
           >
             SYNC
-          </Typography>
+          </Typography> */}
         </Box>
         <List sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {navigations.map((el) => (
@@ -81,13 +94,16 @@ const SideBar = () => {
               sx={{
                 borderRadius: "0.5rem",
                 cursor: "pointer",
-                backgroundColor: selectedIndex === el.id ? "#27AE60" : "inherit",
+                backgroundColor:
+                  selectedIndex === el.id ? "#27AE60" : "inherit",
                 "&:hover": {
                   backgroundColor: selectedIndex !== el.id ? "lightgrey" : "",
                 },
               }}
             >
-              <ListItemIcon sx={{ color: selectedIndex === el.id ? "white" : "inherit" }}>
+              <ListItemIcon
+                sx={{ color: selectedIndex === el.id ? "white" : "inherit" }}
+              >
                 {el.icon}
               </ListItemIcon>
               <ListItemText
