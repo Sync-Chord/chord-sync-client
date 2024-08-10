@@ -6,9 +6,14 @@ const Axios = axios.create({ baseURL: "http://localhost:3001/user" });
 
 class User {
   // edit profile
-  static edit_user_profile(payload: any) {
+  static edit_user_profile(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.patch("/edit_user_profile", payload)
+      Axios.patch("/edit_user_profile", payload, {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
@@ -19,9 +24,14 @@ class User {
   }
 
   // edit send_friend_request
-  static send_friend_request(payload: any) {
+  static send_friend_request(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.post("/send_friend_request", payload)
+      Axios.post("/send_friend_request", payload, {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
@@ -32,9 +42,14 @@ class User {
   }
 
   // accept_request
-  static accept_request(payload: any) {
+  static accept_request(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.post("/accept_request", payload)
+      Axios.patch("/accept_request", payload, {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
@@ -45,9 +60,14 @@ class User {
   }
 
   // user_list
-  static user_list(payload: any) {
+  static user_list(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.get("/user_list", payload)
+      Axios.get("/user_list", {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
@@ -58,9 +78,14 @@ class User {
   }
 
   // friends_list
-  static friends_list(payload: any) {
+  static friends_list(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.get("/friends_list", payload)
+      Axios.get("/friends_list", {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
@@ -71,9 +96,14 @@ class User {
   }
 
   // get_requests
-  static get_requests(payload: any) {
+  static get_requests(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.get("/get_requests", payload)
+      Axios.get("/get_requests", {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
@@ -84,9 +114,14 @@ class User {
   }
 
   // delete_request
-  static delete_request(payload: any) {
+  static delete_request(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.delete("/delete_request", payload)
+      Axios.delete("/delete_request", {
+        headers: {
+          token: head.token,
+          user: head.user,
+        },
+      })
         .then((response) => {
           resolve(response);
         })
