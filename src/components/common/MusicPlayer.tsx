@@ -6,12 +6,18 @@ import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import { useMusicPlayer } from "./MusicPlayerProvider";
-import logo from "../../assests/images/sada.jpg";
+import logo from "../../assests/images/hey.jpeg"
 
 const MusicPlayer: React.FC = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const { isPlaying, togglePlay, currentTime, duration, setCurrentTime, setDuration } =
-    useMusicPlayer();
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const {
+    isPlaying,
+    togglePlay,
+    currentTime,
+    duration,
+    setCurrentTime,
+    setDuration,
+  } = useMusicPlayer()
 
   // useEffect(() => {
   //   const audio = audioRef.current;
@@ -95,71 +101,88 @@ const MusicPlayer: React.FC = () => {
   // }, []);
 
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = audioRef.current
 
     if (audio) {
       const updateTime = () => {
-        setCurrentTime(audio.currentTime);
-      };
+        setCurrentTime(audio.currentTime)
+      }
 
-      audio.addEventListener("timeupdate", updateTime);
+      audio.addEventListener("timeupdate", updateTime)
 
       return () => {
-        audio.removeEventListener("timeupdate", updateTime);
-      };
+        audio.removeEventListener("timeupdate", updateTime)
+      }
     }
-  }, [setCurrentTime]);
+  }, [setCurrentTime])
 
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = audioRef.current
     if (audio) {
       const setAudioData = () => {
-        setDuration(audio.duration);
-      };
+        setDuration(audio.duration)
+      }
 
-      audio.addEventListener("loadedmetadata", setAudioData);
+      audio.addEventListener("loadedmetadata", setAudioData)
 
       return () => {
-        audio.removeEventListener("loadedmetadata", setAudioData);
-      };
+        audio.removeEventListener("loadedmetadata", setAudioData)
+      }
     }
-  }, [setDuration]);
+  }, [setDuration])
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    const audio = audioRef.current;
+    const audio = audioRef.current
     if (audio) {
-      audio.currentTime = newValue as number;
+      audio.currentTime = newValue as number
     }
-  };
+  }
 
   const handleNextTrack = () => {
-    console.log("Next track");
-  };
+    console.log("Next track")
+  }
 
   const handlePrevTrack = () => {
-    console.log("Previous track");
-  };
+    console.log("Previous track")
+  }
 
   return (
     <Box
       sx={{
+        height: "84vh",
         width: "97%",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         padding: "1rem",
-        backgroundColor: "#dedcce",
+        backgroundColor: "#c0eaca",
         borderRadius: "8px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
         transition: "transform 0.3s",
       }}
     >
-      <Box sx={{ display: "flex", gap: "1rem", alignItems: "center", marginRight: "1rem" }}>
+      <Typography
+        sx={{ padding: "5px", fontFamily: "cursive", fontWeight: "900" }}
+      >
+        Now Playing
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
+          width: "100%",
+          height: "40%",
+
+          marginBottom: "6rem",
+        }}
+      >
         <img
           src={logo}
           alt="Album Art"
           style={{
-            width: "5rem",
-            height: "5rem",
+            width: "100%",
+            height: "100%",
             borderRadius: "4px",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
             transition: "transform 0.3s",
@@ -167,8 +190,14 @@ const MusicPlayer: React.FC = () => {
         />
       </Box>
       <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-        <Typography variant="body1" sx={{ marginBottom: "0.5rem", fontWeight: "bold" }}>
+        <Typography
+          variant="body1"
+          sx={{ marginBottom: "0.5rem", fontWeight: "bold" }}
+        >
           Song Title
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
+          song author
         </Typography>
         <Slider
           value={currentTime}
@@ -177,7 +206,10 @@ const MusicPlayer: React.FC = () => {
           max={duration}
           sx={{ color: "#3f51b5" }}
         />
-        <Typography variant="caption" sx={{ marginTop: "0.5rem", color: "gray" }}>
+        <Typography
+          variant="caption"
+          sx={{ marginTop: "0.5rem", color: "gray" }}
+        >
           {Math.floor(currentTime / 60)}:
           {Math.floor(currentTime % 60)
             .toString()
@@ -187,24 +219,34 @@ const MusicPlayer: React.FC = () => {
             .toString()
             .padStart(2, "0")}
         </Typography>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <IconButton onClick={handlePrevTrack} sx={{ marginRight: "0.5rem" }}>
-          <SkipPreviousIcon />
-        </IconButton>
-        <IconButton
-          onClick={togglePlay}
-          sx={{ marginRight: "0.5rem", transform: isPlaying ? "scale(1.1)" : "scale(1)" }}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-        </IconButton>
-        <IconButton onClick={handleNextTrack}>
-          <SkipNextIcon />
-        </IconButton>
+          <IconButton onClick={handlePrevTrack} sx={{ marginRight: "0.5rem" }}>
+            <SkipPreviousIcon />
+          </IconButton>
+          <IconButton
+            onClick={togglePlay}
+            sx={{
+              marginRight: "0.5rem",
+              transform: isPlaying ? "scale(1.1)" : "scale(1)",
+            }}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          </IconButton>
+          <IconButton onClick={handleNextTrack}>
+            <SkipNextIcon />
+          </IconButton>
+        </Box>
       </Box>
+
       <audio ref={audioRef} />
     </Box>
-  );
-};
+  )
+}
 
 export default MusicPlayer;
