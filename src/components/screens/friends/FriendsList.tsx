@@ -67,13 +67,15 @@ const FriendsList = () => {
   };
 
   return (
-    <Box sx={{ padding: 4, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{ padding: 2, height: "80vh", overflowY: "auto", scrollbarWidth: "none" }}
-          >
+    <Box>
+      <Grid container direction="row" spacing={2} sx={{ padding: 4 }}>
+        {/* Suggestions */}
+        <Grid
+          item
+          xs={6}
+          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
+        >
+         
             <Typography component="div" sx={{ textAlign: "center" }}>
               My Friends
             </Typography>
@@ -87,29 +89,36 @@ const FriendsList = () => {
                 type="friend"
               />
             ))}
-          </Paper>
+          
         </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{ padding: 2, height: "80vh", overflowY: "auto", scrollbarWidth: "none" }}
-          >
-            <Typography component="div" sx={{ textAlign: "center" }}>
-              Requests
-            </Typography>
-            {friends.map((request, index) => (
-              <FriendsCard
-                key={index}
-                profilePhoto={request.profilePhoto}
-                userName={request.userName}
-                joinedSince={request.joinedSince}
-                onAddFriend={handleAddFriend}
-                type="user"
-              />
-            ))}
-          </Paper>
-        </Grid>
+        {/* search */}
+        <Grid
+          item
+          xs={6}
+          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
+        >
+          <TextField
+            placeholder="Search Friends"
+            label="Search"
+            variant="outlined"
+            fullWidth
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "15px", // This will round only the edges
+              },
+            }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
         <Grid item xs={12} md={4}>
           <Paper
@@ -155,8 +164,9 @@ const FriendsList = () => {
           </Paper>
         </Grid>
       </Grid>
+      </Grid>
     </Box>
-  );
+  )
 };
 
 export default FriendsList;
