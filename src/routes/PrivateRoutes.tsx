@@ -75,7 +75,7 @@ const PrivateRoutes = () => {
                   width: "27%",
                 }}
               >
-                <MusicPlayer /> {/* create this music player */}
+                <MusicPlayer /> 
               </Box>
             </Box>
           </Box>

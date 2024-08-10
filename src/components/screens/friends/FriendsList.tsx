@@ -73,21 +73,37 @@ const FriendsList = () => {
         <Grid
           item
           xs={6}
-          sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
+          sx={{
+            height: "80vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
-          <Typography component="div" sx={{ textAlign: "center" }}>
-            My Friends
-          </Typography>
-          {friends.map((friend, index) => (
-            <FriendsCard
-              key={index}
-              profilePhoto={friend.profilePhoto}
-              userName={friend.userName}
-              joinedSince={friend.joinedSince}
-              onAddFriend={handleAddFriend}
-              type="friend"
-            />
-          ))}
+          <Grid sx={{ height: "5rem" }}>
+            <Typography
+              component="div"
+              sx={{
+                textAlign: "center",
+                fontWeight: "800",
+                fontSize: "25px",
+                color: "#27AE60",
+              }}
+            >
+              My Friends
+            </Typography>
+          </Grid>
+          <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
+            {friends.map((friend, index) => (
+              <FriendsCard
+                key={index}
+                profilePhoto={friend.profilePhoto}
+                userName={friend.userName}
+                joinedSince={friend.joinedSince}
+                onAddFriend={handleAddFriend}
+                type="friend"
+              />
+            ))}
+          </Grid>
         </Grid>
         {/* search */}
         <Grid
@@ -95,32 +111,47 @@ const FriendsList = () => {
           xs={6}
           sx={{ height: "80vh", display: "flex", flexDirection: "column" }}
         >
-          <TextField
-            placeholder="Search Friends"
-            label="Search"
-            variant="outlined"
-            fullWidth
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "15px", // This will round only the edges
-              },
-            }}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Grid>
+            <TextField
+              placeholder="Search Friends"
+              label="Search"
+              variant="outlined"
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "15px",
+                },
+              }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
+            {/* serached item here */}
+            {friends.map((friend, index) => (
+              <FriendsCard
+                key={index}
+                profilePhoto={friend.profilePhoto}
+                userName={friend.userName}
+                joinedSince={friend.joinedSince}
+                onAddFriend={handleAddFriend}
+                type="friend"
+              />
+            ))}
+          </Grid>
         </Grid>
       </Grid>
     </Box>
-  )
+  );
 };
 
 export default FriendsList;
