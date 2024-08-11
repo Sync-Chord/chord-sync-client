@@ -10,7 +10,7 @@ const Profile = () => {
   const { user, token } = useSelector((state: any) => state.auth);
   const [loading, setLoading] = useState(false);
 
-  const [userData, setUserData] = useState({ ...user });
+  const [userData, setUserData] = useState<any>({ ...user });
   const dispatch = useDispatch();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,8 +68,8 @@ const Profile = () => {
           if (res.status !== 200) {
             throw new Error(res.data.message);
           } else {
-            toast.success("profile updated successfully")
-            dispatch(update_user_details_reducer(res.data.data))
+            toast.success("profile updated successfully");
+            dispatch(update_user_details_reducer(res.data.data));
           }
         })
         .catch((err) => {
@@ -78,6 +78,10 @@ const Profile = () => {
         });
     }
   };
+
+  // const removePhoto = () => {
+  //   setUserData((prev: any) => (prev["profile_photo"] = null));
+  // };
 
   return (
     <Box
@@ -124,6 +128,21 @@ const Profile = () => {
             type="file"
           />
         </Button>
+        {/* <Button
+          variant="contained"
+          component="label"
+          onClick={removePhoto}
+          sx={{
+            mt: 2,
+            borderRadius: 2,
+            bgcolor: "#27AE60",
+            "&:hover": {
+              backgroundColor: "#10632a",
+            },
+          }}
+        >
+          Remove Photo
+        </Button> */}
       </Box>
       <Box
         sx={{
@@ -170,6 +189,7 @@ const Profile = () => {
             value={userData.email}
             onChange={handleInputChange}
             fullWidth
+            disabled={user.unique_id === "email"}
             sx={{ mb: 2 }}
           />
 
@@ -178,6 +198,7 @@ const Profile = () => {
             name="phone_number"
             value={userData.phone_number}
             onChange={handleInputChange}
+            disabled={user.unique_id === "phone_number"}
             fullWidth
             sx={{ mb: 2 }}
           />

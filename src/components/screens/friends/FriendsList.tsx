@@ -173,7 +173,7 @@ const FriendsList = () => {
                   userName={suggestions.name}
                   joinedSince={suggestions.created_at}
                   onAddFriend={handleAddFriend}
-                  type="friend"
+                  type="suggestion"
                 />
               ))
             )}
