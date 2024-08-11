@@ -25,20 +25,14 @@ import Auth from "../../../apis/auth";
 import image from "../../../assests/images/logo.png";
 
 // redux imports
-import {
-  error_reducer,
-  loading_reducer,
-  remover_error_reducer,
-  remover_loading_reducer,
-  success_reducer,
-} from "../../../redux/authReducer";
+import { success_reducer } from "../../../redux/authReducer";
 
 // functions imports
 import validation from "../../../utils/validation";
 
 //components imports
-import CustomTextField from "../../common/CustomTextField";
 import ButtonLoader from "../../common/ButtonLoader";
+import CustomTextField from "../../common/CustomTextField";
 
 interface props {
   type: String;
@@ -49,11 +43,8 @@ const defaultTheme = createTheme();
 // otp component
 const Otp = (props: props) => {
   // redux selector
-  const { loading, error } = useSelector((state: any) => state.auth);
-
-  if (error) {
-    toast.error(error);
-  }
+  const { error } = useSelector((state: any) => state.auth);
+  const [loading, setLoading] = useState(false);
 
   // constants
   const { token } = useParams();
@@ -80,22 +71,23 @@ const Otp = (props: props) => {
       if (err.otp) {
         return;
       }
-      dispatch(loading_reducer());
+      setLoading(true);
       Auth.register_user({
         otp,
         token: newToken,
       })
         .then((res: any) => {
+          setLoading(false);
           if (res.status !== 200) {
             throw new Error(res.data.message);
           } else {
             dispatch(success_reducer(res?.data?.data));
-            nav("/home");
             toast.success("User Registered Successfully");
           }
         })
         .catch((err) => {
-          dispatch(error_reducer(err.message));
+          setLoading(false);
+          toast.error(err.message);
         });
     }
   };
@@ -113,21 +105,21 @@ const Otp = (props: props) => {
       return;
     }
 
-    dispatch(loading_reducer());
+    setLoading(true);
     Auth.generate_otp_sign_in({ unique_id: uniqueId })
       .then((res: any) => {
+        setLoading(false);
         if (res.status !== 200) {
           throw new Error(res.data.message);
         } else {
-          dispatch(remover_error_reducer());
-          dispatch(remover_loading_reducer());
           toast.success("Otp Sent Successfully");
           setNewToken(res?.data?.data);
           setShowOtp(true);
         }
       })
       .catch((err) => {
-        dispatch(error_reducer(err.message));
+        setLoading(false);
+        toast.error(err.message);
       });
   };
 
@@ -147,18 +139,19 @@ const Otp = (props: props) => {
       return;
     }
 
-    dispatch(loading_reducer());
+    setLoading(true);
     Auth.sign_in_by_otp({ token: newToken, otp })
       .then((res: any) => {
+        setLoading(false);
         if (res.status !== 200) {
           throw new Error(res.data.message);
         } else {
           dispatch(success_reducer(res?.data?.data));
-          nav("/home");
         }
       })
       .catch((err) => {
-        dispatch(error_reducer(err.message));
+        setLoading(false);
+        toast.error(err.message);
       });
   };
 
@@ -167,21 +160,22 @@ const Otp = (props: props) => {
     if (!newToken) {
       nav("/auth/signup");
     } else {
-      dispatch(loading_reducer());
+      setLoading(true);
       Auth.resendOtp({
         token: newToken,
       })
         .then((res: any) => {
+          setLoading(false);
           if (res.status !== 200) {
             throw new Error(res.data.message);
           } else {
             setNewToken(res?.data?.data);
-            dispatch(remover_loading_reducer());
             toast.success("Otp Resent Successfully");
           }
         })
         .catch((err) => {
-          dispatch(error_reducer(err.message));
+          setLoading(false);
+          toast.error(err.message);
         });
     }
   };

@@ -17,17 +17,13 @@ import {
   Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Container, width } from "@mui/system";
+import { Container } from "@mui/system";
 
 // assets import
 import image from "../../../assests/images/logo.png";
 
 //redux imports
-import {
-  error_reducer,
-  loading_reducer,
-  success_reducer,
-} from "../../../redux/authReducer";
+import { success_reducer } from "../../../redux/authReducer";
 
 // functions imports
 import validation from "../../../utils/validation";
@@ -40,15 +36,15 @@ import ButtonLoader from "../../common/ButtonLoader";
 import CustomTextField from "../../common/CustomTextField";
 
 const defaultTheme = createTheme();
+ const default_error_msg= "Something went wrong";
 
 const Login = () => {
   //redux
-  const { loading, error } = useSelector((state: any) => state.auth);
+  const { error } = useSelector((state: any) => state.auth);
 
-  //toasts
-  if (error) {
-    toast.error(error);
-  }
+  const [loading, setLoading] = useState(false);
+
+  
 
   //constants
   const nav = useNavigate();
@@ -67,16 +63,17 @@ const Login = () => {
     const uniqueId = data.get("uniqueId")?.toString() ?? null;
     const password = data.get("password")?.toString() ?? null;
 
-    const validationErrors = validation({ uniqueId, password });
+    const validationErrors = validation({ uniqueId });
     setError(validationErrors);
 
-    if (validationErrors.uniqueId || validationErrors.password) {
+    if (validationErrors.uniqueId) {
       return;
     }
 
-    dispatch(loading_reducer());
+    setLoading(true);
     Auth.sign_in({ unique_id: uniqueId, password })
       .then((res: any) => {
+        setLoading(false);
         if (res.status !== 200) {
           throw new Error(res.data.message);
         } else {
@@ -84,7 +81,8 @@ const Login = () => {
         }
       })
       .catch((err) => {
-        dispatch(error_reducer(err.message));
+        setLoading(false);
+        toast.error(err.message);
       });
   };
 

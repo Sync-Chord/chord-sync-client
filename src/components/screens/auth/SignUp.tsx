@@ -1,11 +1,12 @@
 // Module imports
 import * as React from "react";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // MUI imports
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   Box,
   Button,
@@ -16,7 +17,6 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // assets imports
@@ -26,31 +26,20 @@ import image from "../../../assests/images/logo.png";
 import validation from "../../../utils/validation";
 
 // redux imports
-import {
-  loading_reducer,
-  success_reducer,
-  error_reducer,
-  remover_error_reducer,
-  remover_loading_reducer,
-} from "../../../redux/authReducer";
+import { remover_loading_reducer } from "../../../redux/authReducer";
 
 // apis imports
 import Auth from "../../../apis/auth";
 
 // component imports
-import CustomTextField from "../../common/CustomTextField";
 import ButtonLoader from "../../common/ButtonLoader";
+import CustomTextField from "../../common/CustomTextField";
 
 const defaultTheme = createTheme();
 
 const SignUp = () => {
   //redux
-  const { loading, error } = useSelector((state: any) => state.auth);
-
-  //toasts
-  if (error) {
-    toast.error(error);
-  }
+  const { error } = useSelector((state: any) => state.auth);
 
   //constants
   const nav = useNavigate();
@@ -59,6 +48,7 @@ const SignUp = () => {
   //states
   const [err, setError] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //functions
   const signUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -81,20 +71,21 @@ const SignUp = () => {
       return;
     }
 
-    dispatch(loading_reducer());
+    setLoading(true);
     Auth.generate_otp_register({ unique_id: uniqueId, password, name })
       .then((res: any) => {
+        setLoading(false);
         if (res.status !== 200) {
           throw new Error(res.data.message);
         } else {
-          dispatch(remover_error_reducer());
           dispatch(remover_loading_reducer());
           nav(`/auth/verify-otp/${res?.data?.data}`);
           toast.success("Otp Sent Successfully");
         }
       })
       .catch((err) => {
-        dispatch(error_reducer(err.message));
+        setLoading(false);
+        toast.error(err.message);
       });
   };
 

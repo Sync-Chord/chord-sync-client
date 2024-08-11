@@ -18,6 +18,7 @@ import "../../assests/images/symbol.jpg";
 import { Avatar, Divider, Grid, ListItemIcon, MenuItem } from "@mui/material";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import FriendsCard from "./FriendsCard";
+import FriendRequestCard from "./FriendRequestCard";
 
 // Styled components
 const Search = styled("div")(({ theme }) => ({
@@ -66,7 +67,7 @@ const TopBar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { user } = useSelector((state: any) => state.auth.user);
+  const { user } = useSelector((state: any) => state.auth);
   const [searchTerm, setSearchTerm] = useState("");
 
   const friends = [
@@ -115,6 +116,10 @@ const TopBar = () => {
     console.log("heyyy");
     //nav("/friend");
   };
+  const handleRemoveFriend = () => {
+    console.log("removed");
+    //nav("/friend");
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -161,7 +166,7 @@ const TopBar = () => {
             <IconButton
               size="large"
               onClick={() => {
-                navigate("/profile");
+                navigate("/profile")
               }}
               edge="end"
               aria-label="account of current user"
@@ -170,7 +175,10 @@ const TopBar = () => {
                 color: "black",
               }}
             >
-              <Avatar sx={{ bgcolor: "#27AE60" }}>{user.name[0]}</Avatar>
+              <Avatar
+                sx={{ bgcolor: "#27AE60" }}
+                src={user.profile_photo ? user.profile_photo : user.name[0]}
+              />
             </IconButton>
             <Typography sx={{ color: "black", alignItems: "center" }}>
               {user.name}
@@ -190,8 +198,8 @@ const TopBar = () => {
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
               mt: 1.5,
               "& .MuiAvatar-root": {
-                width: 32,
-                height: 32,
+                width: 36,
+                height: 36,
                 ml: -0.5,
                 mr: 1,
               },
@@ -237,12 +245,13 @@ const TopBar = () => {
             </Grid>
             <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
               {friends.map((friend, index) => (
-                <FriendsCard
+                <FriendRequestCard
                   key={index}
                   profilePhoto={friend.profilePhoto}
                   userName={friend.userName}
                   joinedSince={friend.joinedSince}
                   onAddFriend={handleAddFriend}
+                  onRemoveFriend={handleRemoveFriend}
                   type="friend"
                 />
               ))}
@@ -251,7 +260,7 @@ const TopBar = () => {
         </Menu>
       </AppBar>
     </Box>
-  );
+  )
 };
 
 export default TopBar;
