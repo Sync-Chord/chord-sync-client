@@ -3,6 +3,10 @@ interface Data {
   uniqueId?: string | null;
   password?: string | null;
   otp?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  age?: number | null;
+  gender?: string | null;
 }
 
 const email_regex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
@@ -18,6 +22,27 @@ const validation = (data: Data) => {
   if (data.name && (data.name.length < 3 || data.name.length > 15)) {
     error["name"] = "Name should be in range 3-15";
   }
+   // age validation
+  if (data.age && (data.age < 5 || data.age > 100)) {
+    error["age"] = "Name should be in range 5-100";
+  }
+  
+   // age validation
+   if (data.gender && (data.gender==="MALE" || data.gender ==="male"|| data.gender ==="FEMALE" || data.gender ==="female")) {
+    error["gender"] = "gender should be all lowercase or uppercase";
+  }
+
+  // email validation
+  if (data.email){ 
+    if(!email_regex.test(data.email)) {
+    error["email"] = "Invalid phone or email";
+  }}
+
+  // phone validation
+  if (data.phone){
+      if(!phone_number_regex.test(data.phone)) {
+    error["phone"] = "Invalid phone or email";
+  }}
 
   //email or phone validation
   if (data.uniqueId){ 
