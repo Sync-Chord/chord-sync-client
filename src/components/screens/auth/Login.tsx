@@ -36,6 +36,7 @@ import ButtonLoader from "../../common/ButtonLoader";
 import CustomTextField from "../../common/CustomTextField";
 
 const defaultTheme = createTheme();
+ const default_error_msg= "Something went wrong";
 
 const Login = () => {
   //redux
@@ -43,10 +44,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  //toasts
-  if (error) {
-    toast.error(error);
-  }
+  
 
   //constants
   const nav = useNavigate();
@@ -65,10 +63,10 @@ const Login = () => {
     const uniqueId = data.get("uniqueId")?.toString() ?? null;
     const password = data.get("password")?.toString() ?? null;
 
-    const validationErrors = validation({ uniqueId, password });
+    const validationErrors = validation({ uniqueId });
     setError(validationErrors);
 
-    if (validationErrors.uniqueId || validationErrors.password) {
+    if (validationErrors.uniqueId) {
       return;
     }
 

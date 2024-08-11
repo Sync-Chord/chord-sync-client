@@ -9,10 +9,9 @@ interface Data {
   gender?: string | null;
 }
 
-const email_regex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
-//  /^(\+91|\+91\-|0)?[789]\d{9}$/  
-//  /^(\+?\d{1,2}\s?)?(\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{4}$/
-const phone_number_regex = /^[0]?[6789]\d{9}$/;// only 10 digit number
+const email_regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const phone_number_regex = /^[0]?[6789]\d{9}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/;
 
 const validation = (data: Data) => {
