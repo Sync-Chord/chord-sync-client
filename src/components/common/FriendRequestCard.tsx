@@ -1,7 +1,8 @@
 // FriendsCard.js
 import { Card, Avatar, Typography, Grid } from "@mui/material"
 import CancelIcon from "@mui/icons-material/Cancel"
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import { Box, display } from "@mui/system"
 
 interface CardProps {
   profilePhoto: string
@@ -26,40 +27,35 @@ const FriendRequestCard = (props: CardProps) => {
       sx={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
         padding: 2,
-        marginBottom: 2,
+        gap: "0.8rem",
       }}
     >
-      <Avatar
-        src={profilePhoto}
-        alt="Profile"
-        sx={{ width: 50, height: 50, marginRight: 2 }}
-      />
-      <Grid container direction="column" sx={{ flexGrow: 1 }}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          sx={{ fontWeight: "bold" }}
-        >
-          {userName}
-        </Typography>
+      <Avatar src={profilePhoto} alt="Profile" sx={{ width: 30, height: 30 }} />
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Typography sx={{}}>{userName}</Typography>
         <Typography variant="body2" color="text.secondary">
-          Joined since: {joinedSince}
+          Since:{joinedSince}
         </Typography>
-      </Grid>
+      </Box>
 
-      <PersonAddAlt1Icon
-        onClick={() => {
-          onAddFriend()
-        }}
-        sx={{ color: "blue", cursor: "pointer" }}
-      />
-      <CancelIcon
-        onClick={() => {
-          onRemoveFriend()
-        }}
-        sx={{ color: "red", cursor: "pointer" }}
-      />
+      <Box sx={{ display: "flex", gap: "0.5rem" }}>
+        <CheckCircleIcon
+          onClick={() => {
+            onAddFriend()
+          }}
+          fontSize="large"
+          sx={{ color: "#27AE60", cursor: "pointer" }}
+        />
+        <CancelIcon
+          onClick={() => {
+            onRemoveFriend()
+          }}
+          fontSize="large"
+          sx={{ color: "red", cursor: "pointer" }}
+        />
+      </Box>
     </Card>
   )
 }
