@@ -61,31 +61,27 @@ const Login = () => {
   //function
   //login using credentials
   const loginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const data = new FormData(event.currentTarget);
-    const uniqueId = data.get("uniqueId")?.toString() ?? null;
-    const password = data.get("password")?.toString() ?? null;
+    const data = new FormData(event.currentTarget)
+    const uniqueId = data.get("uniqueId")?.toString() ?? null
+    const password = data.get("password")?.toString() ?? null
 
-    const validationErrors = validation({ uniqueId, password });
-    setError(validationErrors);
+    const validationErrors = validation({ uniqueId, password })
+    setError(validationErrors)
 
     if (validationErrors.uniqueId || validationErrors.password) {
-      return;
+      return
     }
 
-    dispatch(loading_reducer());
-    Auth.sign_in({ unique_id: uniqueId, password })
-      .then((res: any) => {
-        if (res.status !== 200) {
-          throw new Error(res.data.message);
-        } else {
-          dispatch(success_reducer(res?.data?.data));
-        }
-      })
-      .catch((err) => {
-        dispatch(error_reducer(err.message));
-      });
+    dispatch(loading_reducer())
+    Auth.sign_in({ unique_id: uniqueId, password }).then((res: any) => {
+      if (res.status !== 200) {
+        throw new Error(res.data.message)
+      } else {
+        dispatch(success_reducer(res?.data?.data))
+      }
+    })
   };
 
   return (
