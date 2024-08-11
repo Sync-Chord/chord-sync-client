@@ -1,29 +1,22 @@
 // FriendsList.js
 import { useEffect, useState } from "react";
 //import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Grid,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Box,
-  Paper,
-} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import FriendsCard from "../../common/FriendsCard";
+import {
+  Box,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import User from "../../../apis/user";
-import { error_reducer, success_reducer } from "../../../redux/authReducer";
-import Loader from "../../common/Loader";
+import FriendsCard from "../../common/FriendsCard";
 import SkeletonLoading from "../../common/Skeleton";
 
 const FriendsList = () => {
-  const nav = useNavigate();
-  const dispatch = useDispatch();
-
   //use states
   const [searchTerm, setSearchTerm] = useState("");
   const [friends, setFriends] = useState([]);
@@ -31,11 +24,11 @@ const FriendsList = () => {
   const [loading2, setLoading2] = useState(false);
 
   const [suggestions, setSuggestions] = useState([]);
-  const { user } = useSelector((state: any) => state.auth);
+  const { user, token } = useSelector((state: any) => state.auth);
 
   const head = {
-    token: user.token,
-    user: user.user.id,
+    token: token,
+    user: user.id,
   };
 
   const payload = { limit: 2, offset: suggestions.length || 0 };
@@ -44,9 +37,7 @@ const FriendsList = () => {
     //nav("/friend");
   };
 
-  const handleSearch = (event: React.MouseEvent<HTMLElement>) => {
-    
-  };
+  const handleSearch = (event: React.MouseEvent<HTMLElement>) => {};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,9 +119,9 @@ const FriendsList = () => {
               friends.map((friend: any, index) => (
                 <FriendsCard
                   key={index}
-                  profilePhoto={friend.profilePhoto}
-                  userName={friend.userName}
-                  joinedSince={friend.joinedSince}
+                  profilePhoto={friend.profile_photo}
+                  userName={friend.name}
+                  joinedSince={friend.created_at}
                   onAddFriend={handleAddFriend}
                   type="friend"
                 />
@@ -152,7 +143,7 @@ const FriendsList = () => {
                 },
               }}
               value={searchTerm}
-              onChange={handleSearch}
+              // onChange={handleSearch}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

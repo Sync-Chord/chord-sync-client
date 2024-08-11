@@ -11,7 +11,7 @@ class User {
       Axios.patch("/edit_user_profile", payload, {
         headers: {
           token: head.token,
-          user: head.user,
+          user: head.id,
         },
       })
         .then((response) => {

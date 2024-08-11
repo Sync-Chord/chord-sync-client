@@ -17,17 +17,13 @@ import {
   Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Container, width } from "@mui/system";
+import { Container } from "@mui/system";
 
 // assets import
 import image from "../../../assests/images/logo.png";
 
 //redux imports
-import {
-  error_reducer,
-  loading_reducer,
-  success_reducer,
-} from "../../../redux/authReducer";
+import { success_reducer } from "../../../redux/authReducer";
 
 // functions imports
 import validation from "../../../utils/validation";
@@ -43,7 +39,9 @@ const defaultTheme = createTheme();
 
 const Login = () => {
   //redux
-  const { loading, error } = useSelector((state: any) => state.auth);
+  const { error } = useSelector((state: any) => state.auth);
+
+  const [loading, setLoading] = useState(false);
 
   //toasts
   if (error) {
@@ -74,9 +72,10 @@ const Login = () => {
       return;
     }
 
-    dispatch(loading_reducer());
+    setLoading(true);
     Auth.sign_in({ unique_id: uniqueId, password })
       .then((res: any) => {
+        setLoading(false);
         if (res.status !== 200) {
           throw new Error(res.data.message);
         } else {
@@ -84,7 +83,8 @@ const Login = () => {
         }
       })
       .catch((err) => {
-        dispatch(error_reducer(err.message));
+        setLoading(false);
+        toast.error(err.message);
       });
   };
 

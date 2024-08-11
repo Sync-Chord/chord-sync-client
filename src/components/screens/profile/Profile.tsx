@@ -1,28 +1,83 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import User from "../../../apis/user";
+import { update_user_details_reducer } from "../../../redux/authReducer";
+import ButtonLoader from "../../common/ButtonLoader";
 
 const Profile = () => {
-  const { user } = useSelector((state: any) => state.auth.user);
-  const [editMode, setEditMode] = useState(false);
+  const { user, token } = useSelector((state: any) => state.auth);
+  const [loading, setLoading] = useState(false);
+
   const [userData, setUserData] = useState({ ...user });
+  const dispatch = useDispatch();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUserData((prevData: any) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+
+    if (files && files.length > 0) {
+      const file = files[0];
+
+      setUserData((prevData: any) => ({
+        ...prevData,
+        profile_photo: URL.createObjectURL(file),
+        profile_photo_file: file,
+      }));
+    } else {
+      setUserData((prevData: any) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
-  const toggleEditMode = () => {};
+  const filterUnchangedFields = (updatedData: any, originalData: any) => {
+    const changedFields: any = {};
+
+    for (const key in updatedData) {
+      if (updatedData[key] !== originalData[key]) {
+        changedFields[key] = updatedData[key];
+      }
+    }
+
+    return changedFields;
+  };
+
+  const handleSave = () => {
+    const changedData = filterUnchangedFields(userData, user);
+
+    if (Object.keys(changedData).length > 0) {
+      const formData = new FormData();
+
+      if (
+        changedData.profile_photo &&
+        changedData.profile_photo.startsWith("blob:")
+      ) {
+        formData.append("file", userData.profile_photo_file);
+      }
+
+      delete changedData.profile_photo;
+
+      formData.append("update_data", JSON.stringify(changedData));
+
+      setLoading(true);
+      User.edit_user_profile(formData, { token: token, id: user.id })
+        .then((res: any) => {
+          setLoading(false);
+          if (res.status !== 200) {
+            throw new Error(res.data.message);
+          } else {
+            dispatch(update_user_details_reducer(res.data.data));
+            toast.success("profile updated successfully");
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.error(err.message);
+        });
+    }
+  };
 
   return (
     <Box
@@ -45,7 +100,10 @@ const Profile = () => {
           boxShadow: 5,
         }}
       >
-        <Avatar sx={{ width: "70%", height: "50%" }} src={user.image} />
+        <Avatar
+          sx={{ width: "70%", height: "50%" }}
+          src={userData.profile_photo}
+        />
         <Button
           variant="contained"
           component="label"
@@ -59,7 +117,12 @@ const Profile = () => {
           }}
         >
           Change Photo
-          <input hidden accept="image/*" type="file" />
+          <input
+            onChange={handleInputChange}
+            hidden
+            accept="image/*"
+            type="file"
+          />
         </Button>
       </Box>
       <Box
@@ -74,20 +137,24 @@ const Profile = () => {
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            sx={{
-              mt: 2,
-              borderRadius: 2,
-              backgroundColor: "#27AE60",
-              color: "white",
-              "&:hover": {
-                backgroundColor: "#10632a",
-              },
-            }}
-            onClick={toggleEditMode}
-          >
-            Save Changes
-          </Button>
+          {loading ? (
+            <ButtonLoader />
+          ) : (
+            <Button
+              sx={{
+                mt: 2,
+                borderRadius: 2,
+                backgroundColor: "#27AE60",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "#10632a",
+                },
+              }}
+              onClick={handleSave}
+            >
+              Save Changes
+            </Button>
+          )}
         </Box>
         <Box sx={{ padding: "0.5rem" }}>
           <TextField
@@ -108,7 +175,7 @@ const Profile = () => {
 
           <TextField
             label="Mobile"
-            name="phone"
+            name="phone_number"
             value={userData.phone_number}
             onChange={handleInputChange}
             fullWidth

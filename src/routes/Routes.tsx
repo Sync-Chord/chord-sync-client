@@ -1,15 +1,15 @@
-import React, { Suspense } from "react";
-import PublicRoutes from "./PublicRoutes";
-import PrivateRoutes from "./PrivateRoutes";
-import { toast, ToastContainer } from "react-toastify";
+import { Suspense } from "react";
+import { useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../components/common/Loader";
-import { useSelector } from "react-redux";
+import PrivateRoutes from "./PrivateRoutes";
+import PublicRoutes from "./PublicRoutes";
 const Routes = () => {
   const { user } = useSelector((state: any) => state.auth);
 
-  return (<Suspense fallback={<Loader />}>
-    
+  return (
+    <Suspense fallback={<Loader />}>
       <ToastContainer
         pauseOnFocusLoss={false}
         position="top-center"
