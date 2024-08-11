@@ -68,8 +68,8 @@ const Profile = () => {
           if (res.status !== 200) {
             throw new Error(res.data.message);
           } else {
-            dispatch(update_user_details_reducer(res.data.data));
-            toast.success("profile updated successfully");
+            toast.success("profile updated successfully")
+            dispatch(update_user_details_reducer(res.data.data))
           }
         })
         .catch((err) => {
