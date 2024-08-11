@@ -166,7 +166,7 @@ const TopBar = () => {
             <IconButton
               size="large"
               onClick={() => {
-                navigate("/profile");
+                navigate("/profile")
               }}
               edge="end"
               aria-label="account of current user"
@@ -175,7 +175,10 @@ const TopBar = () => {
                 color: "black",
               }}
             >
-              <Avatar sx={{ bgcolor: "#27AE60" }}>{user.name[0]}</Avatar>
+              <Avatar
+                sx={{ bgcolor: "#27AE60" }}
+                src={user.profile_photo ? user.profile_photo : user.name[0]}
+              />
             </IconButton>
             <Typography sx={{ color: "black", alignItems: "center" }}>
               {user.name}
@@ -257,7 +260,7 @@ const TopBar = () => {
         </Menu>
       </AppBar>
     </Box>
-  );
+  )
 };
 
 export default TopBar;
