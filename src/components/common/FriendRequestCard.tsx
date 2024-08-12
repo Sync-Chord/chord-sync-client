@@ -1,16 +1,17 @@
 // FriendsCard.js
-import { Card, Avatar, Typography, Grid } from "@mui/material"
-import CancelIcon from "@mui/icons-material/Cancel"
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"
-import { Box, display } from "@mui/system"
+import { Card, Avatar, Typography, Grid } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { Box, display } from "@mui/system";
+import moment from "moment";
 
 interface CardProps {
-  profilePhoto: string
-  userName: string
-  joinedSince: string
-  onAddFriend: () => void
-  onRemoveFriend: () => void
-  type: string
+  profilePhoto: string;
+  userName: string;
+  joinedSince: string;
+  onAddFriend: () => void;
+  onRemoveFriend: () => void;
+  type: string;
 }
 
 const FriendRequestCard = (props: CardProps) => {
@@ -21,7 +22,7 @@ const FriendRequestCard = (props: CardProps) => {
     onAddFriend,
     type,
     onRemoveFriend,
-  } = props
+  } = props;
   return (
     <Card
       sx={{
@@ -29,35 +30,41 @@ const FriendRequestCard = (props: CardProps) => {
         alignItems: "center",
         justifyContent: "space-between",
         padding: 2,
-        gap: "0.8rem",
+        marginBottom: 2,
       }}
     >
       <Avatar src={profilePhoto} alt="Profile" sx={{ width: 30, height: 30 }} />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography sx={{}}>{userName}</Typography>
+        <Typography
+          variant="subtitle1"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
+          {userName}
+        </Typography>
         <Typography variant="body2" color="text.secondary">
-          Since:{joinedSince}
+          Joined: {moment(joinedSince).format("MMM YYYY")}
         </Typography>
       </Box>
 
       <Box sx={{ display: "flex", gap: "0.5rem" }}>
         <CheckCircleIcon
           onClick={() => {
-            onAddFriend()
+            onAddFriend();
           }}
           fontSize="large"
           sx={{ color: "#27AE60", cursor: "pointer" }}
         />
         <CancelIcon
           onClick={() => {
-            onRemoveFriend()
+            onRemoveFriend();
           }}
           fontSize="large"
           sx={{ color: "red", cursor: "pointer" }}
         />
       </Box>
     </Card>
-  )
-}
+  );
+};
 
-export default FriendRequestCard
+export default FriendRequestCard;
