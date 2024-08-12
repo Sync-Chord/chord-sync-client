@@ -190,6 +190,8 @@ const Otp = (props: props) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            width: "100%",
+            maxWidth: "400px",
           }}
         >
           <Grid
