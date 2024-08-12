@@ -92,11 +92,11 @@ const FriendsList = () => {
     <Box
       sx={{
         width: "100%",
-        height: "86vh",
+        height: "87vh",
         overflow: "hidden",
       }}
     >
-      <Grid container spacing={2} sx={{ padding: 4, height: "100vh" }}>
+      <Grid container spacing={2} sx={{ padding: 4 }}>
         <Grid
           item
           xs={6}
@@ -111,7 +111,6 @@ const FriendsList = () => {
             sx={{
               width: "100%",
               typography: "body1",
-              height: "100vh",
               overflow: "hidden",
             }}
           >
@@ -173,103 +172,70 @@ const FriendsList = () => {
                 }}
               >
                 <TabPanel value="1" sx={{ height: "100%" }}>
-                  <Box
-                    sx={{
-                      padding: "6px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "6px",
-                      overflowY: "auto",
-                      scrollbarWidth: "none",
-                    }}
-                  >
-                    {loading2 ? (
-                      <>
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                      </>
-                    ) : (
-                      suggestions.map((suggestion: any, index) => (
-                        <FriendsCard
-                          key={index}
-                          profilePhoto={suggestion.profile_photo}
-                          userName={suggestion.name}
-                          joinedSince={suggestion.created_at}
-                          onAddFriend={handleAddFriend}
-                          type="suggestion"
-                        />
-                      ))
-                    )}
-                  </Box>
+                  {loading2 ? (
+                    <>
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                    </>
+                  ) : (
+                    suggestions.map((suggestion: any, index) => (
+                      <FriendsCard
+                        key={index}
+                        profilePhoto={suggestion.profile_photo}
+                        userName={suggestion.name}
+                        joinedSince={suggestion.created_at}
+                        onAddFriend={handleAddFriend}
+                        type="suggestion"
+                      />
+                    ))
+                  )}
                 </TabPanel>
                 <TabPanel value="2" sx={{ height: "100%" }}>
-                  <Box
-                    sx={{
-                      padding: "6px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "6px",
-                      overflowY: "auto",
-                      scrollbarWidth: "none",
-                    }}
-                  >
-                    {loading2 ? (
-                      <>
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                      </>
-                    ) : (
-                      suggestions.map((suggestion: any, index) => (
-                        <FriendsCard
-                          key={index}
-                          profilePhoto={suggestion.profile_photo}
-                          userName={suggestion.name}
-                          joinedSince={suggestion.created_at}
-                          onAddFriend={handleAddFriend}
-                          type="suggestion"
-                        />
-                      ))
-                    )}
-                  </Box>
+                  {loading2 ? (
+                    <>
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                    </>
+                  ) : (
+                    suggestions.map((suggestion: any, index) => (
+                      <FriendsCard
+                        key={index}
+                        profilePhoto={suggestion.profile_photo}
+                        userName={suggestion.name}
+                        joinedSince={suggestion.created_at}
+                        onAddFriend={handleAddFriend}
+                        type="suggestion"
+                      />
+                    ))
+                  )}
                 </TabPanel>
                 <TabPanel value="3" sx={{ height: "100%" }}>
-                  <Box
-                    sx={{
-                      padding: "6px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "6px",
-                      overflowY: "auto",
-                      scrollbarWidth: "none",
-                    }}
-                  >
-                    {loading2 ? (
-                      <>
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                        <SkeletonLoading />
-                      </>
-                    ) : (
-                      suggestions.map((suggestion: any, index) => (
-                        <FriendsCard
-                          key={index}
-                          profilePhoto={suggestion.profile_photo}
-                          userName={suggestion.name}
-                          joinedSince={suggestion.created_at}
-                          onAddFriend={handleAddFriend}
-                          type="suggestion"
-                        />
-                      ))
-                    )}
-                  </Box>
+                  {loading2 ? (
+                    <>
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                    </>
+                  ) : (
+                    suggestions.map((suggestion: any, index) => (
+                      <FriendsCard
+                        key={index}
+                        profilePhoto={suggestion.profile_photo}
+                        userName={suggestion.name}
+                        joinedSince={suggestion.created_at}
+                        onAddFriend={handleAddFriend}
+                        type="suggestion"
+                      />
+                    ))
+                  )}
                 </TabPanel>
               </Box>
             </TabContext>

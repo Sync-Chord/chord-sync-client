@@ -51,7 +51,10 @@ export const auth_slice = createSlice({
       state.logged_in = true;
       state.loading = false;
       state.error = null;
-      localStorage.setItem("user", JSON.stringify(state.user));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ user: state.user, token: state.token })
+      );
     },
     error_reducer: (state: AuthState, action: PayloadAction<string>) => {
       state.user = null;

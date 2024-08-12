@@ -36,15 +36,13 @@ import ButtonLoader from "../../common/ButtonLoader";
 import CustomTextField from "../../common/CustomTextField";
 
 const defaultTheme = createTheme();
- const default_error_msg= "Something went wrong";
+const default_error_msg = "Something went wrong";
 
 const Login = () => {
   //redux
   const { error } = useSelector((state: any) => state.auth);
 
   const [loading, setLoading] = useState(false);
-
-  
 
   //constants
   const nav = useNavigate();
@@ -96,6 +94,8 @@ const Login = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            width: "100%",
+            maxWidth: "400px",
           }}
         >
           <Grid
