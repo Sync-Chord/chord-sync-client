@@ -3,31 +3,27 @@ import { Box } from "@mui/system"
 import EmojiPicker from "emoji-picker-react"
 import React, { useState, useEffect } from "react"
 
-// Define a type for the message object
+
 interface Message {
   text: string
   sender: string
 }
 
 const ChatBox: React.FC = () => {
-  // Explicitly specify the type of messages state
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState<string>("")
 
-  // Simulate receiving a message from another user
   useEffect(() => {
     const receiveMessage = () => {
       const otherUserMessage: Message = {
         text: "Hello from the other side!",
-        sender: "Alex", // Example other user
+        sender: "Alex",
       }
       setMessages((prevMessages) => [...prevMessages, otherUserMessage])
     }
 
-    // Simulate receiving a message every 10 seconds (for demonstration)
     const interval = setInterval(receiveMessage, 10000)
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval)
   }, [])
 
