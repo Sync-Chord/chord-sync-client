@@ -23,17 +23,9 @@ const FriendsCard = (props: CardProps) => {
         marginBottom: 2,
       }}
     >
-      <Avatar
-        src={profilePhoto}
-        alt="Profile"
-        sx={{ width: 50, height: 50, marginRight: 2 }}
-      />
+      <Avatar src={profilePhoto} alt="Profile" sx={{ width: 50, height: 50, marginRight: 2 }} />
       <Grid container direction="column" sx={{ flexGrow: 1 }}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          sx={{ fontWeight: "bold" }}
-        >
+        <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
           {userName}
         </Typography>
         <Typography variant="body2" color="text.secondary">

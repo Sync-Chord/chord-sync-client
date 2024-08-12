@@ -75,14 +75,14 @@ const PrivateRoutes = () => {
                   width: "27%",
                 }}
               >
-                <MusicPlayer /> 
+                <MusicPlayer />
               </Box>
             </Box>
           </Box>
         </Box>
       </BrowserRouter>
     </MusicPlayerProvider>
-  )
+  );
 };
 
 export default PrivateRoutes;

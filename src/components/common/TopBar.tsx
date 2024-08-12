@@ -15,14 +15,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "../../assests/images/symbol.jpg";
-import {
-  Avatar,
-  Divider,
-  Grid,
-  InputAdornment,
-  ListItemIcon,
-  MenuItem,
-} from "@mui/material";
+import { Avatar, Divider, Grid, InputAdornment, ListItemIcon, MenuItem } from "@mui/material";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import FriendsCard from "./FriendsCard";
 import FriendRequestCard from "./FriendRequestCard";
@@ -129,9 +122,7 @@ const TopBar = () => {
     //nav("/friend");
   };
 
-  function handleSearch(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void {
+  function handleSearch(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     console.log(event.currentTarget);
   }
 
@@ -195,9 +186,7 @@ const TopBar = () => {
                 src={user.profile_photo ? user.profile_photo : user.name[0]}
               />
             </IconButton>
-            <Typography sx={{ color: "black", alignItems: "center" }}>
-              {user.name}
-            </Typography>
+            <Typography sx={{ color: "black", alignItems: "center" }}>{user.name}</Typography>
           </Box>
         </Toolbar>
 
@@ -259,19 +248,17 @@ const TopBar = () => {
                 Friend Requests
               </Typography>
             </Grid>
-            <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
+            {/* <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
               {friends.map((friend, index) => (
                 <FriendRequestCard
                   key={index}
                   profilePhoto={friend.profilePhoto}
                   userName={friend.userName}
                   joinedSince={friend.joinedSince}
-                  onAddFriend={handleAddFriend}
-                  onRemoveFriend={handleRemoveFriend}
                   type="friend"
                 />
               ))}
-            </Grid>
+            </Grid> */}
           </Grid>
         </Menu>
       </AppBar>

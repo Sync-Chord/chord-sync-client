@@ -63,48 +63,15 @@ class User {
   static user_list(payload: any, head: any) {
     console.log(head);
     return new Promise((resolve) => {
-      Axios.get("/user_list", {
-        headers: {
-          token: head.token,
-          user: head.user,
-        },
-      })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((err) => {
-          default_catch(err, resolve);
-        });
-    });
-  }
-
-  // friends_list
-  static friends_list(payload: any, head: any) {
-    return new Promise((resolve) => {
-      Axios.get("/friends_list", {
-        headers: {
-          token: head.token,
-          user: head.user,
-        },
-      })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((err) => {
-          default_catch(err, resolve);
-        });
-    });
-  }
-
-  // get_requests
-  static get_requests(payload: any, head: any) {
-    return new Promise((resolve) => {
-      Axios.get("/get_requests", {
-        headers: {
-          token: head.token,
-          user: head.user,
-        },
-      })
+      Axios.get(
+        `/user_list?limit=${payload.limit}&offset=${payload.offset}&keyword=${payload.keyword}`,
+        {
+          headers: {
+            token: head.token,
+            user: head.user,
+          },
+        }
+      )
         .then((response) => {
           resolve(response);
         })
@@ -123,6 +90,26 @@ class User {
           user: head.user,
         },
       })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((err) => {
+          default_catch(err, resolve);
+        });
+    });
+  }
+
+  static get_user_data(payload: any, head: any) {
+    return new Promise((resolve) => {
+      Axios.get(
+        `/get_user_data?type=${payload.type}&limit=${payload.limit}&offset=${payload.offset}`,
+        {
+          headers: {
+            token: head.token,
+            user: head.user,
+          },
+        }
+      )
         .then((response) => {
           resolve(response);
         })
