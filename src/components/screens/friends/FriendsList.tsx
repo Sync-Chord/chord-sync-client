@@ -1,17 +1,18 @@
 // FriendsList.js
-import { useEffect, useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 import SearchIcon from "@mui/icons-material/Search";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
   Box,
   Grid,
   IconButton,
   InputAdornment,
+  Tab,
   TextField,
-  Typography,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 import User from "../../../apis/user";
 import FriendsCard from "../../common/FriendsCard";
 import SkeletonLoading from "../../common/Skeleton";
@@ -37,7 +38,9 @@ const FriendsList = () => {
     //nav("/friend");
   };
 
-  const handleSearch = (event: React.MouseEvent<HTMLElement>) => {};
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,71 +82,190 @@ const FriendsList = () => {
     fetchData();
   }, []);
 
-  console.log(suggestions);
+  const [value, setValue] = useState("1");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   return (
-    <Box>
-      <Grid container direction="row" spacing={2} sx={{ padding: 4 }}>
-        {/* Suggestions */}
+    <Box
+      sx={{
+        width: "100%",
+        height: "87vh",
+        overflow: "hidden",
+      }}
+    >
+      <Grid container spacing={2} sx={{ padding: 4 }}>
         <Grid
           item
           xs={6}
           sx={{
             display: "flex",
             flexDirection: "column",
+            height: "100vh",
+            overflow: "hidden",
           }}
         >
-          <Grid sx={{ height: "3.70rem" }}>
-            <Typography
-              component="div"
-              sx={{
-                textAlign: "center",
-                fontWeight: "600",
-                fontSize: "20px",
-                color: "black",
-              }}
-            >
-              My Friends
-            </Typography>
-          </Grid>
-          <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
-            {loading1 ? (
-              <>
-                <SkeletonLoading />
-                <SkeletonLoading />
-                <SkeletonLoading />
-                <SkeletonLoading />
-                <SkeletonLoading />
-              </>
-            ) : (
-              friends.map((friend: any, index) => (
-                <FriendsCard
-                  key={index}
-                  profilePhoto={friend.profile_photo}
-                  userName={friend.name}
-                  joinedSince={friend.created_at}
-                  onAddFriend={handleAddFriend}
-                  type="friend"
-                />
-              ))
-            )}
-          </Grid>
+          <Box
+            sx={{
+              width: "100%",
+              typography: "body1",
+              overflow: "hidden",
+            }}
+          >
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="friend list"
+                  sx={{
+                    "& .MuiTabs-indicator": {
+                      backgroundColor: "#1f8f4e",
+                    },
+                  }}
+                >
+                  <Tab
+                    label={`Friends (${suggestions.length || ""})`}
+                    value="1"
+                    sx={{
+                      borderTopLeftRadius: "5px",
+                      borderTopRightRadius: "5px",
+                      "&.Mui-selected": {
+                        color: "white",
+                        backgroundColor: "#27ae60",
+                      },
+                    }}
+                  />
+
+                  <Tab
+                    label={`Sent (${suggestions.length || ""})`}
+                    value="2"
+                    sx={{
+                      borderTopLeftRadius: "5px",
+                      borderTopRightRadius: "5px",
+                      "&.Mui-selected": {
+                        color: "white",
+                        backgroundColor: "#27ae60",
+                      },
+                    }}
+                  />
+                  <Tab
+                    label={`Received (${suggestions.length || ""})`}
+                    value="3"
+                    sx={{
+                      borderTopLeftRadius: "5px",
+                      borderTopRightRadius: "5px",
+                      "&.Mui-selected": {
+                        color: "white",
+                        backgroundColor: "#27ae60",
+                      },
+                    }}
+                  />
+                </TabList>
+              </Box>
+              <Box
+                sx={{
+                  height: "100vh",
+                  overflow: "auto",
+                  scrollbarWidth: "none",
+                }}
+              >
+                <TabPanel value="1" sx={{ height: "100%" }}>
+                  {loading2 ? (
+                    <>
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                    </>
+                  ) : (
+                    suggestions.map((suggestion: any, index) => (
+                      <FriendsCard
+                        key={index}
+                        profilePhoto={suggestion.profile_photo}
+                        userName={suggestion.name}
+                        joinedSince={suggestion.created_at}
+                        onAddFriend={handleAddFriend}
+                        type="suggestion"
+                      />
+                    ))
+                  )}
+                </TabPanel>
+                <TabPanel value="2" sx={{ height: "100%" }}>
+                  {loading2 ? (
+                    <>
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                    </>
+                  ) : (
+                    suggestions.map((suggestion: any, index) => (
+                      <FriendsCard
+                        key={index}
+                        profilePhoto={suggestion.profile_photo}
+                        userName={suggestion.name}
+                        joinedSince={suggestion.created_at}
+                        onAddFriend={handleAddFriend}
+                        type="suggestion"
+                      />
+                    ))
+                  )}
+                </TabPanel>
+                <TabPanel value="3" sx={{ height: "100%" }}>
+                  {loading2 ? (
+                    <>
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                      <SkeletonLoading />
+                    </>
+                  ) : (
+                    suggestions.map((suggestion: any, index) => (
+                      <FriendsCard
+                        key={index}
+                        profilePhoto={suggestion.profile_photo}
+                        userName={suggestion.name}
+                        joinedSince={suggestion.created_at}
+                        onAddFriend={handleAddFriend}
+                        type="suggestion"
+                      />
+                    ))
+                  )}
+                </TabPanel>
+              </Box>
+            </TabContext>
+          </Box>
         </Grid>
-        {/* search */}
-        <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
+
+        {/* Search */}
+        <Grid
+          item
+          xs={6}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            overflow: "hidden",
+          }}
+        >
           <Grid>
             <TextField
               placeholder="Search Friends"
               label="Search"
               variant="outlined"
               fullWidth
+              onChange={handleSearch}
+              value={searchTerm}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "15px",
+                  borderRadius: "20px",
                 },
               }}
-              value={searchTerm}
-              // onChange={handleSearch}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -153,30 +275,43 @@ const FriendsList = () => {
                   </InputAdornment>
                 ),
               }}
-            />
+            ></TextField>
           </Grid>
-          <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
-            {/* serached item here */}
-            {loading2 ? (
-              <>
-                <SkeletonLoading />
-                <SkeletonLoading />
-                <SkeletonLoading />
-                <SkeletonLoading />
-                <SkeletonLoading />
-              </>
-            ) : (
-              suggestions.map((suggestions: any, index) => (
-                <FriendsCard
-                  key={index}
-                  profilePhoto={suggestions.profile_photo}
-                  userName={suggestions.name}
-                  joinedSince={suggestions.created_at}
-                  onAddFriend={handleAddFriend}
-                  type="suggestion"
-                />
-              ))
-            )}
+          <Grid
+            sx={{
+              marginTop: "1rem",
+              overflowY: "auto",
+              scrollbarWidth: "none",
+            }}
+          >
+            <Box
+              sx={{
+                flexGrow: 1,
+
+                padding: "6px",
+              }}
+            >
+              {loading2 ? (
+                <>
+                  <SkeletonLoading />
+                  <SkeletonLoading />
+                  <SkeletonLoading />
+                  <SkeletonLoading />
+                  <SkeletonLoading />
+                </>
+              ) : (
+                suggestions.map((suggestion: any, index) => (
+                  <FriendsCard
+                    key={index}
+                    profilePhoto={suggestion.profile_photo}
+                    userName={suggestion.name}
+                    joinedSince={suggestion.created_at}
+                    onAddFriend={handleAddFriend}
+                    type="suggestion"
+                  />
+                ))
+              )}
+            </Box>
           </Grid>
         </Grid>
       </Grid>

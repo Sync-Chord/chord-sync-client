@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
-
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -15,7 +15,14 @@ import PeopleIcon from "@mui/icons-material/People";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "../../assests/images/symbol.jpg";
-import { Avatar, Divider, Grid, ListItemIcon, MenuItem } from "@mui/material";
+import {
+  Avatar,
+  Divider,
+  Grid,
+  InputAdornment,
+  ListItemIcon,
+  MenuItem,
+} from "@mui/material";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import FriendsCard from "./FriendsCard";
 import FriendRequestCard from "./FriendRequestCard";
@@ -46,7 +53,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   bottom: 0,
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "black",
   width: "100%",
   "& .MuiInputBase-input": {
@@ -61,7 +68,8 @@ const TopBar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+
+  const handleNotification = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -121,6 +129,12 @@ const TopBar = () => {
     //nav("/friend");
   };
 
+  function handleSearch(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void {
+    console.log(event.currentTarget);
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -129,16 +143,21 @@ const TopBar = () => {
       >
         <Toolbar>
           <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon
-                  sx={{ color: "black", "&:hover": { color: "#27AE60" } }}
-                />
-              </SearchIconWrapper>
+            <Search sx={{ display: "flex", alignItems: "center" }}>
               <StyledInputBase
                 placeholder="Search Music…"
                 inputProps={{ "aria-label": "search" }}
               />
+              <IconButton
+                onClick={handleSearch}
+                sx={{
+                  color: "black",
+                  "&:hover": { color: "#27AE60" },
+                  marginLeft: 0.5,
+                }}
+              >
+                <SearchIcon />
+              </IconButton>
             </Search>
           </Box>
           <Box
@@ -147,33 +166,29 @@ const TopBar = () => {
             }}
           >
             <IconButton
-              onClick={handleClick}
+              onClick={handleNotification}
               aria-controls={open ? "account-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-              sx={{
-                color: "black",
-              }}
+              sx={{ color: "black" }}
             >
               <Badge badgeContent={17} color="error">
-                <PeopleIcon />
+                <NotificationsIcon />
               </Badge>
             </IconButton>
 
             <IconButton
               size="large"
               onClick={() => {
-                navigate("/profile")
+                navigate("/profile");
               }}
               edge="end"
               aria-label="account of current user"
               color="inherit"
-              sx={{
-                color: "black",
-              }}
+              sx={{ color: "black" }}
             >
               <Avatar
                 sx={{ bgcolor: "#27AE60" }}
@@ -185,6 +200,7 @@ const TopBar = () => {
             </Typography>
           </Box>
         </Toolbar>
+
         <Menu
           anchorEl={anchorEl}
           id="account-menu"
@@ -260,7 +276,7 @@ const TopBar = () => {
         </Menu>
       </AppBar>
     </Box>
-  )
+  );
 };
 
 export default TopBar;
