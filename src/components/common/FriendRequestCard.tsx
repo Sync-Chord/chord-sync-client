@@ -23,9 +23,10 @@ interface CardProps {
     status: string;
     user: UserProp;
   };
+  type: string;
 }
 
-const FriendRequestCard = ({ request }: CardProps) => {
+const FriendRequestCard = ({ request, type }: CardProps) => {
   const { user, token } = useSelector((state: any) => state.auth);
   const [loading, setLoading] = useState(false);
   const [userRequest, setUserRequest] = useState(request);
@@ -57,6 +58,33 @@ const FriendRequestCard = ({ request }: CardProps) => {
       });
   };
 
+  const handleDeleteRequest = () => {
+    setLoading(true);
+    User.delete_request(
+      { request_id: request.id },
+      {
+        token,
+        user: user.id,
+      }
+    )
+      .then((res: any) => {
+        setLoading(false);
+        if (res.status !== 200) {
+          throw new Error(res.data.message);
+        } else {
+          setUserRequest((prev) => ({
+            ...prev,
+            status: "deleted",
+          }));
+          toast.success("Request deleted successfully");
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.message);
+      });
+  };
+
   return (
     <Card
       sx={{
@@ -67,38 +95,56 @@ const FriendRequestCard = ({ request }: CardProps) => {
         marginBottom: 2,
       }}
     >
-      <Avatar src={userRequest.user.profile_photo} alt="Profile" sx={{ width: 30, height: 30 }} />
+      <Avatar src={userRequest?.user?.profile_photo} alt="Profile" sx={{ width: 30, height: 30 }} />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
-          {userRequest.user.name}
+          {userRequest?.user?.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Joined: {moment(userRequest.user.created_at).format("MMM YYYY")}
+          Joined: {moment(userRequest?.user?.created_at).format("MMM YYYY")}
         </Typography>
       </Box>
 
-      <Box sx={{ display: "flex", gap: "0.5rem" }}>
-        {loading ? (
-          <ButtonLoader />
-        ) : userRequest.status !== "accepted" && userRequest.status !== "rejected" ? (
-          <>
-            <CheckCircleIcon
-              onClick={() => handleAcceptOrReject(true)}
-              fontSize="large"
-              sx={{ color: "#27AE60", cursor: "pointer" }}
-            />
-            <CancelIcon
-              onClick={() => handleAcceptOrReject(false)}
-              fontSize="large"
-              sx={{ color: "red", cursor: "pointer" }}
-            />
-          </>
-        ) : (
-          <Typography color={userRequest.status === "rejected" ? "red" : "green"}>
-            {userRequest.status}
-          </Typography>
-        )}
-      </Box>
+      {type === "requests" ? (
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          {loading ? (
+            <ButtonLoader />
+          ) : userRequest?.status !== "accepted" && userRequest?.status !== "rejected" ? (
+            <>
+              <CheckCircleIcon
+                onClick={() => handleAcceptOrReject(true)}
+                fontSize="large"
+                sx={{ color: "#27AE60", cursor: "pointer" }}
+              />
+              <CancelIcon
+                onClick={() => handleAcceptOrReject(false)}
+                fontSize="large"
+                sx={{ color: "red", cursor: "pointer" }}
+              />
+            </>
+          ) : (
+            <Typography color={userRequest.status === "rejected" ? "red" : "green"}>
+              {userRequest?.status}
+            </Typography>
+          )}
+        </Box>
+      ) : (
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          {loading ? (
+            <ButtonLoader />
+          ) : userRequest?.status !== "deleted" ? (
+            <>
+              <CancelIcon
+                onClick={handleDeleteRequest}
+                fontSize="large"
+                sx={{ color: "red", cursor: "pointer" }}
+              />
+            </>
+          ) : (
+            <Typography color="red">{userRequest?.status}</Typography>
+          )}
+        </Box>
+      )}
     </Card>
   );
 };

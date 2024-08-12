@@ -84,7 +84,7 @@ class User {
   // delete_request
   static delete_request(payload: any, head: any) {
     return new Promise((resolve) => {
-      Axios.delete("/delete_request", {
+      Axios.delete(`/delete_request?request_id=${payload.request_id}`, {
         headers: {
           token: head.token,
           user: head.user,

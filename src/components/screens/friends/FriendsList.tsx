@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Grid, IconButton, InputAdornment, Tab, TextField } from "@mui/material";
+import { Box, Grid, IconButton, InputAdornment, Tab, TextField, Typography } from "@mui/material";
 
 import User from "../../../apis/user";
 import FriendsCard from "../../common/FriendsCard";
@@ -101,11 +101,12 @@ const FriendsList = () => {
   useEffect(() => {
     setSuggestions([]);
     setHasMoreSuggestions(true);
-    const debouncedFetch = debounce(fetchSuggestions, 1000);
+    const debouncedFetch = debounce(fetchSuggestions, 500);
     debouncedFetch();
   }, [searchTerm]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setHasMoreUserData(true);
     setType(newValue);
   };
 
@@ -132,9 +133,7 @@ const FriendsList = () => {
     };
   };
 
-  function handleAddFriend(): void {
-    throw new Error("Function not implemented.");
-  }
+  console.log(suggestions);
 
   return (
     <Box
@@ -229,16 +228,11 @@ const FriendsList = () => {
                       <SkeletonLoading />
                       <SkeletonLoading />
                     </>
+                  ) : userData.length <= 0 ? (
+                    <Typography>No Friends Added</Typography>
                   ) : (
                     userData.map((user: any, index) => (
-                      <FriendsCard
-                        key={index}
-                        profilePhoto={user?.profile_photo}
-                        userName={user?.name}
-                        joinedSince={user?.created_at}
-                        onAddFriend={handleAddFriend}
-                        type="friends"
-                      />
+                      <FriendsCard key={index} user_details={user} type="friends" />
                     ))
                   )}
                 </TabPanel>
@@ -251,16 +245,11 @@ const FriendsList = () => {
                       <SkeletonLoading />
                       <SkeletonLoading />
                     </>
+                  ) : userData.length <= 0 ? (
+                    <Typography>No Sent Requests found</Typography>
                   ) : (
                     userData.map((request: any, index) => (
-                      <FriendsCard
-                        key={index}
-                        profilePhoto={request?.user?.profile_photo}
-                        userName={request?.user?.name}
-                        joinedSince={request?.user?.created_at}
-                        onAddFriend={handleAddFriend}
-                        type="sent"
-                      />
+                      <FriendRequestCard request={request} key={index} type="sent" />
                     ))
                   )}
                 </TabPanel>
@@ -273,9 +262,11 @@ const FriendsList = () => {
                       <SkeletonLoading />
                       <SkeletonLoading />
                     </>
+                  ) : userData.length <= 0 ? (
+                    <Typography>No Requests Found</Typography>
                   ) : (
                     userData.map((request: any, index) => (
-                      <FriendRequestCard request={request} key={index} />
+                      <FriendRequestCard request={request} key={index} type="requests" />
                     ))
                   )}
                 </TabPanel>
@@ -341,16 +332,11 @@ const FriendsList = () => {
                   <SkeletonLoading />
                   <SkeletonLoading />
                 </>
+              ) : suggestions.length <= 0 ? (
+                <Typography>No User Found</Typography>
               ) : (
                 suggestions.map((suggestion: any, index) => (
-                  <FriendsCard
-                    key={index}
-                    profilePhoto={suggestion.profile_photo}
-                    userName={suggestion.name}
-                    joinedSince={suggestion.created_at}
-                    onAddFriend={handleAddFriend}
-                    type="suggestion"
-                  />
+                  <FriendsCard key={index} user_details={suggestion} type="suggestions" />
                 ))
               )}
             </Box>
