@@ -3,7 +3,15 @@ import { useSelector } from "react-redux";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Grid, IconButton, InputAdornment, Tab, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Tab,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import User from "../../../apis/user";
 import FriendsCard from "../../common/FriendsCard";
@@ -79,7 +87,9 @@ const FriendsList = () => {
         throw new Error(res.data.message);
       } else {
         const fetchedData = res?.data?.data;
-        setSuggestions((prev) => (searchTerm ? fetchedData : prev.concat(fetchedData)));
+        setSuggestions((prev) =>
+          searchTerm ? fetchedData : prev.concat(fetchedData)
+        );
 
         if (fetchedData.length < limit) {
           setHasMoreSuggestions(false);
@@ -173,7 +183,9 @@ const FriendsList = () => {
                   }}
                 >
                   <Tab
-                    label={`Friends ${type === "friends" ? "(" + userData.length + ")" : ""}`}
+                    label={`Friends ${
+                      type === "friends" ? "(" + userData.length + ")" : ""
+                    }`}
                     value="friends"
                     sx={{
                       borderTopLeftRadius: "5px",
@@ -186,7 +198,9 @@ const FriendsList = () => {
                   />
 
                   <Tab
-                    label={`Sent ${type === "sent" ? "(" + userData.length + ")" : ""}`}
+                    label={`Sent ${
+                      type === "sent" ? "(" + userData.length + ")" : ""
+                    }`}
                     value="sent"
                     sx={{
                       borderTopLeftRadius: "5px",
@@ -198,7 +212,9 @@ const FriendsList = () => {
                     }}
                   />
                   <Tab
-                    label={`Received ${type === "requests" ? "(" + userData.length + ")" : ""}`}
+                    label={`Received ${
+                      type === "requests" ? "(" + userData.length + ")" : ""
+                    }`}
                     value="requests"
                     sx={{
                       borderTopLeftRadius: "5px",
@@ -232,7 +248,11 @@ const FriendsList = () => {
                     <Typography>No Friends Added</Typography>
                   ) : (
                     userData.map((user: any, index) => (
-                      <FriendsCard key={index} user_details={user} type="friends" />
+                      <FriendsCard
+                        key={index}
+                        user_details={user}
+                        type="friends"
+                      />
                     ))
                   )}
                 </TabPanel>
@@ -246,10 +266,24 @@ const FriendsList = () => {
                       <SkeletonLoading />
                     </>
                   ) : userData.length <= 0 ? (
-                    <Typography>No Sent Requests found</Typography>
+                    <Typography
+                      sx={{
+                        marginTop: "50%",
+                        marginLeft: "20%",
+                        color: "lightgray",
+                        fontWeight: "600",
+                        fontSize: "18px",
+                      }}
+                    >
+                      No Sent Requests found
+                    </Typography>
                   ) : (
                     userData.map((request: any, index) => (
-                      <FriendRequestCard request={request} key={index} type="sent" />
+                      <FriendRequestCard
+                        request={request}
+                        key={index}
+                        type="sent"
+                      />
                     ))
                   )}
                 </TabPanel>
@@ -263,10 +297,24 @@ const FriendsList = () => {
                       <SkeletonLoading />
                     </>
                   ) : userData.length <= 0 ? (
-                    <Typography>No Requests Found</Typography>
+                    <Typography
+                      sx={{
+                        marginTop: "50%",
+                        marginLeft: "20%",
+                        color: "lightgray",
+                        fontWeight: "600",
+                        fontSize: "18px",
+                      }}
+                    >
+                      No Requests Found
+                    </Typography>
                   ) : (
                     userData.map((request: any, index) => (
-                      <FriendRequestCard request={request} key={index} type="requests" />
+                      <FriendRequestCard
+                        request={request}
+                        key={index}
+                        type="requests"
+                      />
                     ))
                   )}
                 </TabPanel>
@@ -333,10 +381,24 @@ const FriendsList = () => {
                   <SkeletonLoading />
                 </>
               ) : suggestions.length <= 0 ? (
-                <Typography>No User Found</Typography>
+                <Typography
+                  sx={{
+                    marginTop: "50%",
+                    marginLeft: "20%",
+                    color: "lightgray",
+                    fontWeight: "600",
+                    fontSize: "18px",
+                  }}
+                >
+                  No User Found
+                </Typography>
               ) : (
                 suggestions.map((suggestion: any, index) => (
-                  <FriendsCard key={index} user_details={suggestion} type="suggestions" />
+                  <FriendsCard
+                    key={index}
+                    user_details={suggestion}
+                    type="suggestions"
+                  />
                 ))
               )}
             </Box>

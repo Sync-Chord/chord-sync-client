@@ -88,6 +88,7 @@ const FriendRequestCard = ({ request, type }: CardProps) => {
   return (
     <Card
       sx={{
+        width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -95,9 +96,17 @@ const FriendRequestCard = ({ request, type }: CardProps) => {
         marginBottom: 2,
       }}
     >
-      <Avatar src={userRequest?.user?.profile_photo} alt="Profile" sx={{ width: 30, height: 30 }} />
+      <Avatar
+        src={userRequest?.user?.profile_photo}
+        alt="Profile"
+        sx={{ width: 50, height: 50, marginRight: 2 }}
+      />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
+        <Typography
+          variant="subtitle1"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
           {userRequest?.user?.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -109,7 +118,8 @@ const FriendRequestCard = ({ request, type }: CardProps) => {
         <Box sx={{ display: "flex", gap: "0.5rem" }}>
           {loading ? (
             <ButtonLoader />
-          ) : userRequest?.status !== "accepted" && userRequest?.status !== "rejected" ? (
+          ) : userRequest?.status !== "accepted" &&
+            userRequest?.status !== "rejected" ? (
             <>
               <CheckCircleIcon
                 onClick={() => handleAcceptOrReject(true)}
@@ -123,7 +133,9 @@ const FriendRequestCard = ({ request, type }: CardProps) => {
               />
             </>
           ) : (
-            <Typography color={userRequest.status === "rejected" ? "red" : "green"}>
+            <Typography
+              color={userRequest.status === "rejected" ? "red" : "green"}
+            >
               {userRequest?.status}
             </Typography>
           )}
