@@ -1,27 +1,46 @@
+import SearchIcon from "@mui/icons-material/Search"
 import {
+  Avatar,
   Button,
+  Card,
   Grid,
   IconButton,
   InputAdornment,
   TextField,
   Typography,
 } from "@mui/material"
+import Checkbox from "@mui/material/Checkbox"
 import { Box } from "@mui/system"
+import moment from "moment"
 import { useCallback, useEffect, useState } from "react"
-import FriendsCard from "../../common/FriendsCard"
-import SkeletonLoading from "../../common/Skeleton"
 import { useSelector } from "react-redux"
+import { toast } from "react-toastify"
+import Chat from "../../../apis/chat"
 import User from "../../../apis/user"
-import SearchIcon from "@mui/icons-material/Search"
+import ButtonLoader from "../../common/ButtonLoader"
+import SkeletonLoading from "../../common/Skeleton"
 
-const AddGroupModal = () => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [userData, setUserData] = useState([])
-  const [loading1, setLoading1] = useState(false)
+interface UserData {
+  id: number
+  name: string
+  profile_photo?: string
+  created_at: string
+}
 
-  const [type, setType] = useState("friends")
+// interface GroupArray {
+//   group_name: string
+//   ids: number[]
+//   type: "group"
+// }
 
-  const [hasMoreUserData, setHasMoreUserData] = useState(true)
+const AddGroupModal: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [userData, setUserData] = useState<UserData[]>([])
+  const [loading1, setLoading1] = useState<boolean>(false)
+  const [loading2, setLoading2] = useState<boolean>(false)
+  const [arrayObj, setArrayObj] = useState<{ name: string; id: number }[]>([])
+  const [groupName, setGroupName] = useState<string>("")
+  const [hasMoreUserData, setHasMoreUserData] = useState<boolean>(true)
 
   const { user, token } = useSelector((state: any) => state.auth)
 
@@ -29,6 +48,7 @@ const AddGroupModal = () => {
     token: token,
     user: user.id,
   }
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -52,7 +72,7 @@ const AddGroupModal = () => {
       const limit = 8
       const res: any = await User.get_user_data(
         {
-          type: type,
+          type: "friends",
           limit: limit,
           offset: userData.length,
         },
@@ -75,11 +95,63 @@ const AddGroupModal = () => {
       setLoading1(false)
     }
   }
+
   useEffect(() => {
     setUserData([])
     setHasMoreUserData(true)
     fetchUserData()
-  }, [type])
+  }, [])
+
+  const handleScroll = useCallback(
+    (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      const { scrollTop, clientHeight, scrollHeight } = event.currentTarget
+
+      if (scrollHeight - scrollTop <= clientHeight + 50) {
+        fetchUserData()
+      }
+    },
+    [userData]
+  )
+
+  const handleCheckbox = (
+    user: any,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.checked) {
+      setArrayObj((prev) => [...prev, { name: user.name, id: user.id }])
+    } else {
+      setArrayObj((prev) => prev.filter((item) => item.id !== user.id))
+    }
+  }
+
+  const handleGroupNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setGroupName(event.target.value)
+  }
+
+  const handleCreateGroup = () => {
+    setLoading2(true)
+    const payload = { group_name: groupName, ids: arrayObj, type: "group" }
+    console.log(head)
+    Chat.create_chat(payload, head)
+      .then((res: any) => {
+        setLoading2(false)
+        if (res.status !== 200) {
+          throw new Error(res.data.message)
+        } else {
+          toast.success("Group Created Enjoy....")
+        }
+      })
+      .catch((err) => {
+        setLoading2(false)
+        toast.error(err.message)
+      })
+  }
+
+  const isUserInGroup = (userId: number) => {
+    return arrayObj.some((el: any) => el.id === userId)
+  }
 
   return (
     <Box sx={style}>
@@ -91,8 +163,19 @@ const AddGroupModal = () => {
           padding: "6px",
         }}
       >
-        <TextField sx={{ width: "70%" }} placeholder="Write Group Name...." />{" "}
-        <Button variant="contained"> Create Group</Button>
+        <TextField
+          sx={{ width: "70%" }}
+          placeholder="Write Group Name...."
+          value={groupName}
+          onChange={handleGroupNameChange}
+        />
+        {loading2 ? (
+          <ButtonLoader />
+        ) : (
+          <Button variant="contained" onClick={handleCreateGroup}>
+            Create Group
+          </Button>
+        )}
       </Box>
       <Box
         sx={{
@@ -124,7 +207,7 @@ const AddGroupModal = () => {
                 </InputAdornment>
               ),
             }}
-          ></TextField>
+          />
         </Box>
 
         <Box
@@ -134,6 +217,7 @@ const AddGroupModal = () => {
             overflowY: "auto",
             scrollbarWidth: "none",
           }}
+          onScroll={handleScroll}
         >
           {loading1 ? (
             <>
@@ -146,8 +230,39 @@ const AddGroupModal = () => {
           ) : userData.length <= 0 ? (
             <Typography>No Friends Added</Typography>
           ) : (
-            userData.map((user: any, index) => (
-              <FriendsCard key={index} user_details={user} type="friends" />
+            userData.map((user) => (
+              <Card
+                key={user.id}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <Avatar
+                  src={user?.profile_photo}
+                  alt="Profile"
+                  sx={{ width: 50, height: 50, marginRight: 2 }}
+                />
+                <Grid container direction="column" sx={{ flexGrow: 1 }}>
+                  <Typography
+                    variant="subtitle1"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    {user?.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Joined: {moment(user?.created_at).format("MMM YYYY")}
+                  </Typography>
+                </Grid>
+                <Checkbox
+                  checked={isUserInGroup(user.id)}
+                  onChange={(event) => handleCheckbox(user, event)}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </Card>
             ))
           )}
         </Box>

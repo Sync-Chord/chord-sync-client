@@ -34,7 +34,7 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
   const navigate = useNavigate();
 
   const onAddFriend = () => {
-    setLoading(true);
+    setLoading(true)
     User.send_friend_request(
       { following: userData.id },
       {
@@ -43,22 +43,22 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
       }
     )
       .then((res: any) => {
-        setLoading(false);
+        setLoading(false)
         if (res.status !== 200) {
-          throw new Error(res.data.message);
+          throw new Error(res.data.message)
         } else {
           setUserData((prev) => ({
             ...prev,
             status: "added",
-          }));
-          toast.success("Request deleted successfully");
+          }))
+          toast.success("Request sent successfully")
         }
       })
       .catch((err) => {
-        setLoading(false);
-        toast.error(err.message);
-      });
-  };
+        setLoading(false)
+        toast.error(err.message)
+      })
+  }
 
   return (
     <Card
@@ -91,7 +91,7 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
         <Box sx={{ display: "flex", gap: "0.5rem" }}>
           {loading ? (
             <ButtonLoader />
-          ) : userData.status === "added" ? (
+          ) : userData.status === "Sent" ? (
             <Typography>Added</Typography>
           ) : (
             <PersonAddAlt1Icon
@@ -103,12 +103,12 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
       ) : (
         <Chat
           onClick={() => {
-            navigate("/chat");
+            navigate("/chat")
           }}
         />
       )}
     </Card>
-  );
+  )
 };
 
 export default FriendsCard;
