@@ -1,41 +1,55 @@
 import { Avatar, Button, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
+import ChatApi from "../../../apis/chat"
+import { useSelector } from "react-redux"
+import { toast } from "react-toastify"
 
 // Define a type for the message object
 interface Message {
-  text: string;
-  sender: string;
+  text: string
+  sender: string
 }
 
-const ChatBox: React.FC = () => {
- 
+const ChatBox = (props: any) => {
+  const { openChat } = props
+  const { token, user } = useSelector((state: any) => state.auth)
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState<string>("")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const receiveMessage = () => {
-      const otherUserMessage: Message = {
-        text: "Hello from the other side!",
-        sender: "Alex",
-      }
-      setMessages((prevMessages) => [...prevMessages, otherUserMessage])
+    if (openChat) {
+      setLoading(true)
+      ChatApi.get_messages(
+        { chat_id: openChat._id, limit: 10, offset: messages.length },
+        { token, user: user.id }
+      )
+        .then((res: any) => {
+          setLoading(false)
+          if (res.status !== 200) {
+            throw new Error(res.data.message)
+          } else {
+            console.log(res.data.data)
+            setMessages(res?.data?.data || [])
+          }
+        })
+        .catch((err: any) => {
+          setLoading(false)
+          toast.error(err.message)
+        })
     }
-
-    const interval = setInterval(receiveMessage, 10000)
-
-    return () => clearInterval(interval)
-  }, [])
+  }, [openChat])
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      const userMessage: Message = { text: newMessage, sender: "Harsh" };
-      setMessages((prevMessages) => [...prevMessages, userMessage]);
-      setNewMessage("");
+      const userMessage: Message = { text: newMessage, sender: "Harsh" }
+      setMessages((prevMessages) => [...prevMessages, userMessage])
+      setNewMessage("")
     }
-  };
+  }
 
-  return (
+  return openChat?._id ? (
     <Box
       sx={{
         width: "99%",
@@ -65,7 +79,7 @@ const ChatBox: React.FC = () => {
           }}
         >
           <Avatar>H</Avatar>
-          <Typography>Harsh</Typography>
+          <Typography>{openChat.group_name}</Typography>
         </Box>
         <Box>
           <Button
@@ -89,10 +103,22 @@ const ChatBox: React.FC = () => {
           padding: "10px",
           overflowY: "auto",
           scrollbarWidth: "none",
+          postion: "relative",
         }}
       >
         {messages.length === 0 ? (
-          <Typography>No messages yet. Start the conversation!</Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "42%",
+              color: "gray",
+              fontWeight: "600",
+              fontSize: "18px",
+            }}
+          >
+            No messages yet. Start the conversation!
+          </Typography>
         ) : (
           messages.map((message, index) => (
             <Box
@@ -102,10 +128,13 @@ const ChatBox: React.FC = () => {
                 backgroundColor: "#fff",
                 padding: "10px",
                 borderRadius: "5px",
-                alignSelf: message.sender === "Harsh" ? "flex-end" : "flex-start",
+                alignSelf:
+                  message.sender === "Harsh" ? "flex-end" : "flex-start",
               }}
             >
-              <Typography sx={{ fontWeight: "bold" }}>{message.sender}</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>
+                {message.sender}
+              </Typography>
               <Typography>{message.text}</Typography>
             </Box>
           ))
@@ -130,7 +159,7 @@ const ChatBox: React.FC = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") handleSendMessage();
+            if (e.key === "Enter") handleSendMessage()
           }}
           sx={{
             backgroundColor: "white",
@@ -148,7 +177,27 @@ const ChatBox: React.FC = () => {
         {/* <EmojiPicker /> */}
       </Box>
     </Box>
-  );
-};
+  ) : (
+    <Box
+      sx={{
+        width: "99%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+      }}
+    >
+      <Typography
+        sx={{
+          color: "lightgray",
+          fontWeight: "600",
+          fontSize: "18px",
+        }}
+      >
+        Click on chat to start conversation
+      </Typography>
+    </Box>
+  )
+}
 
 export default ChatBox;

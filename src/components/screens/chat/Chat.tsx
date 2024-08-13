@@ -12,20 +12,52 @@ import {
   Typography,
 } from "@mui/material"
 import { Box } from "@mui/system"
-import React, { lazy } from "react"
+import React, { lazy, useEffect, useState } from "react"
 import AddGroupModal from "./AddGroupModal"
+import ChatApis from "../../../apis/chat"
+import { useSelector } from "react-redux"
+import { toast } from "react-toastify"
+import ButtonLoader from "../../common/ButtonLoader"
 
-const ChatBox = lazy(() => import("./ChatBox"))
+import ChatBox from "./ChatBox"
+import moment from "moment"
 
 const Chat = () => {
-  const [value, setValue] = React.useState("1")
-  const [open, setOpen] = React.useState(false)
+  const { token, user } = useSelector((state: any) => state.auth)
+  const [value, setValue] = useState("1")
+  const [open, setOpen] = useState(false)
+  const [chats, setChats] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+  const [openChat, setOpenChat] = useState<any>(null)
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
+
+  useEffect(() => {
+    setLoading(true)
+    ChatApis.get_chat(
+      { type: value === "1" ? "single" : "group" },
+      { token, user: user.id }
+    )
+      .then((res: any) => {
+        setLoading(false)
+        if (res.status !== 200) {
+          throw new Error(res.data.message)
+        } else {
+          console.log(res.data.data)
+          setChats(res?.data?.data || [])
+        }
+      })
+      .catch((err: any) => {
+        setLoading(false)
+        toast.error(err.message)
+      })
+  }, [value])
+
   return (
     <>
       <Modal
@@ -34,15 +66,15 @@ const Chat = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <AddGroupModal type={value} />
+        <AddGroupModal type={value} setChats={setChats} setOpen={setOpen} />
       </Modal>
-      <Box sx={{ label: "main", display: "flex", height: "100%" }}>
+      <Box sx={{ display: "flex", height: "100%" }}>
         <Box
           sx={{
-            label: "list",
             display: "flex",
             flexDirection: "column",
             width: "30%",
+            height: "100%",
           }}
         >
           <TabContext value={value}>
@@ -58,11 +90,14 @@ const Chat = () => {
             >
               <TabList
                 sx={{
+                  display: "flex",
                   "& .MuiTabs-indicator": {
                     backgroundColor: "#1f8f4e",
                   },
                   alignItems: "center",
-                  width: "100%",
+                  "& .css-heg063-MuiTabs-flexContainer": {
+                    justifyContent: "space-between",
+                  },
                 }}
                 onChange={handleChange}
               >
@@ -73,7 +108,6 @@ const Chat = () => {
                     "&.Mui-selected": {
                       color: "white",
                       backgroundColor: "#27ae60",
-                      width: "50%",
                     },
                   }}
                   label="Chats"
@@ -86,68 +120,76 @@ const Chat = () => {
                     "&.Mui-selected": {
                       color: "white",
                       backgroundColor: "#27ae60",
-                      width: "50%",
                     },
                   }}
                   label="Groups"
                   value="2"
                 />
               </TabList>
-              {/* <GroupAddOutlinedIcon
-                sx={{ cursor: "pointer" }}
-                fontSize="large"
-                onClick={handleOpen}
-              /> */}
             </Box>
-            <TabPanel sx={{ padding: 0 }} value="1" aria-label="chat">
-              <List
-                sx={{ padding: 0, width: "100%", bgcolor: "background.paper" }}
-              >
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/1.jpg"
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Abhishek"
-                    secondary={
-                      <Typography
-                        sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        {"Chai pine chal bhai...."}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/1.jpg"
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Abhishek"
-                    secondary={
-                      <Typography
-                        sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        {"Chai pine chal bhai...."}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </List>
+            <TabPanel
+              sx={{ padding: 0, height: "100%" }}
+              value="1"
+              aria-label="chat"
+            >
+              {loading ? (
+                <Box
+                  sx={{
+                    marginTop: "50%",
+                    marginLeft: "20%",
+                  }}
+                >
+                  <ButtonLoader />
+                </Box>
+              ) : chats.length <= 0 ? (
+                <Typography
+                  sx={{
+                    marginTop: "50%",
+                    marginLeft: "20%",
+                    color: "lightgray",
+                    fontWeight: "600",
+                    fontSize: "18px",
+                  }}
+                >
+                  No Chats
+                </Typography>
+              ) : (
+                <List
+                  sx={{
+                    padding: 0,
+                    width: "100%",
+                    bgcolor: "background.paper",
+                    height: "100%",
+                  }}
+                >
+                  {chats.map((chat: any) => (
+                    <React.Fragment key={chat.id}>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar
+                            alt={chat.name}
+                            src={chat.avatar || "/static/images/avatar/1.jpg"}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={chat.group_name}
+                          secondary={
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {moment(chat.createdAt).format("MMM YYYY")}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                      <Divider />
+                    </React.Fragment>
+                  ))}
+                </List>
+              )}
               <Button
                 variant="contained"
                 sx={{
@@ -156,39 +198,75 @@ const Chat = () => {
                   bottom: "1%",
                   left: "20%",
                 }}
-                value="single"
                 onClick={handleOpen}
               >
                 Create Chat
               </Button>
             </TabPanel>
-            <TabPanel sx={{ padding: 0 }} aria-label="chat" value="2">
-              <List
-                sx={{ padding: 0, width: "100%", bgcolor: "background.paper" }}
-              >
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/1.jpg"
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Abhishek"
-                    secondary={
-                      <Typography
-                        sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        {"Chai pine chal bhai...."}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </List>
+            <TabPanel
+              sx={{ padding: 0, height: "100%" }}
+              aria-label="chat"
+              value="2"
+            >
+              {loading ? (
+                <Box
+                  sx={{
+                    marginTop: "50%",
+                    marginLeft: "20%",
+                  }}
+                >
+                  <ButtonLoader />
+                </Box>
+              ) : chats.length <= 0 ? (
+                <Typography
+                  sx={{
+                    marginTop: "50%",
+                    marginLeft: "20%",
+                    color: "lightgray",
+                    fontWeight: "600",
+                    fontSize: "18px",
+                  }}
+                >
+                  No Groups found
+                </Typography>
+              ) : (
+                <List
+                  sx={{
+                    padding: 0,
+                    width: "100%",
+                    bgcolor: "background.paper",
+                    height: "100%",
+                  }}
+                >
+                  {/* Render group items similarly */}
+                  {chats.map((chat: any) => (
+                    <React.Fragment key={chat.id}>
+                      <ListItem onClick={() => setOpenChat(chat)}>
+                        <ListItemAvatar>
+                          <Avatar
+                            alt={chat.name}
+                            src={chat.avatar || "/static/images/avatar/1.jpg"}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={chat.group_name}
+                          secondary={
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {moment(chat.createdAt).format("MMM YYYY")}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                      <Divider />
+                    </React.Fragment>
+                  ))}
+                </List>
+              )}
               <Button
                 variant="contained"
                 sx={{
@@ -197,7 +275,6 @@ const Chat = () => {
                   bottom: "1%",
                   left: "20%",
                 }}
-                value="group"
                 onClick={handleOpen}
               >
                 Create Group
@@ -205,8 +282,8 @@ const Chat = () => {
             </TabPanel>
           </TabContext>
         </Box>
-        <Box sx={{ label: "chat", display: "flex", width: "70%" }}>
-          <ChatBox />
+        <Box sx={{ display: "flex", width: "70%" }}>
+          <ChatBox openChat={openChat} />
         </Box>
       </Box>
     </>
