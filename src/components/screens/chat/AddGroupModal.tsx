@@ -20,6 +20,7 @@ import ChatApi from "../../../apis/chat"
 import User from "../../../apis/user"
 import ButtonLoader from "../../common/ButtonLoader"
 import SkeletonLoading from "../../common/Skeleton"
+import { useNavigate } from "react-router-dom"
 
 interface UserData {
   id: number
@@ -27,12 +28,6 @@ interface UserData {
   profile_photo?: string
   created_at: string
 }
-
-// interface GroupArray {
-//   group_name: string
-//   ids: number[]
-//   type: "group"
-// }
 
 const AddGroupModal = (props: any) => {
   const [searchTerm, setSearchTerm] = useState<string>("")
@@ -45,6 +40,7 @@ const AddGroupModal = (props: any) => {
 
   const { user, token } = useSelector((state: any) => state.auth)
 
+  const navigate = useNavigate()
   const head = {
     token: token,
     user: user.id,
@@ -134,7 +130,6 @@ const AddGroupModal = (props: any) => {
   const handleCreateGroup = () => {
     setLoading2(true)
     const payload = { group_name: groupName, ids: arrayObj, type: "group" }
-    console.log(head)
     ChatApi.create_chat(payload, head)
       .then((res: any) => {
         setLoading2(false)
@@ -142,6 +137,8 @@ const AddGroupModal = (props: any) => {
           throw new Error(res.data.message)
         } else {
           toast.success("Group Created Enjoy....")
+          props.setChats((prev: any) => [...prev, res?.data?.data])
+          props.setOpen(false)
         }
       })
       .catch((err) => {
@@ -153,7 +150,25 @@ const AddGroupModal = (props: any) => {
   const isUserInGroup = (userId: number) => {
     return arrayObj.some((el: any) => el.id === userId)
   }
-  console.log(props)
+
+  const handleChat = () => {
+    setLoading2(true)
+    const payload = { group_name: groupName, ids: arrayObj, type: "1" }
+    console.log(head)
+    ChatApi.create_chat(payload, head)
+      .then((res: any) => {
+        setLoading2(false)
+        if (res.status !== 200) {
+          throw new Error(res.data.message)
+        } else {
+          toast.success("Chat Created Enjoy....")
+        }
+      })
+      .catch((err) => {
+        setLoading2(false)
+        toast.error(err.message)
+      })
+  }
 
   return (
     <Box sx={style}>
@@ -268,7 +283,7 @@ const AddGroupModal = (props: any) => {
                   </Typography>
                 </Grid>
                 {props.type === "1" ? (
-                  <Chat sx={{ cursor: "pointer" }} />
+                  <Chat sx={{ cursor: "pointer" }} onClick={handleChat} />
                 ) : (
                   <Checkbox
                     checked={isUserInGroup(user.id)}
