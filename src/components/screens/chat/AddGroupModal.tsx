@@ -172,7 +172,11 @@ const AddGroupModal: React.FC = () => {
         {loading2 ? (
           <ButtonLoader />
         ) : (
-          <Button variant="contained" onClick={handleCreateGroup}>
+          <Button
+            variant="contained"
+            onClick={handleCreateGroup}
+            disabled={arrayObj.length === 0}
+          >
             Create Group
           </Button>
         )}
