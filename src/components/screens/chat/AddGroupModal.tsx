@@ -11,11 +11,12 @@ import {
 } from "@mui/material"
 import Checkbox from "@mui/material/Checkbox"
 import { Box } from "@mui/system"
+import { Chat } from "@mui/icons-material"
 import moment from "moment"
 import { useCallback, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
-import Chat from "../../../apis/chat"
+import ChatApi from "../../../apis/chat"
 import User from "../../../apis/user"
 import ButtonLoader from "../../common/ButtonLoader"
 import SkeletonLoading from "../../common/Skeleton"
@@ -33,7 +34,7 @@ interface UserData {
 //   type: "group"
 // }
 
-const AddGroupModal: React.FC = () => {
+const AddGroupModal = (props: any) => {
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [userData, setUserData] = useState<UserData[]>([])
   const [loading1, setLoading1] = useState<boolean>(false)
@@ -134,7 +135,7 @@ const AddGroupModal: React.FC = () => {
     setLoading2(true)
     const payload = { group_name: groupName, ids: arrayObj, type: "group" }
     console.log(head)
-    Chat.create_chat(payload, head)
+    ChatApi.create_chat(payload, head)
       .then((res: any) => {
         setLoading2(false)
         if (res.status !== 200) {
@@ -152,35 +153,40 @@ const AddGroupModal: React.FC = () => {
   const isUserInGroup = (userId: number) => {
     return arrayObj.some((el: any) => el.id === userId)
   }
+  console.log(props)
 
   return (
     <Box sx={style}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "6px",
-        }}
-      >
-        <TextField
-          sx={{ width: "70%" }}
-          placeholder="Write Group Name...."
-          value={groupName}
-          onChange={handleGroupNameChange}
-        />
-        {loading2 ? (
-          <ButtonLoader />
-        ) : (
-          <Button
-            variant="contained"
-            onClick={handleCreateGroup}
-            disabled={arrayObj.length === 0}
-          >
-            Create Group
-          </Button>
-        )}
-      </Box>
+      {props.type === "1" ? (
+        <></>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "6px",
+          }}
+        >
+          <TextField
+            sx={{ width: "70%" }}
+            placeholder="Write Group Name...."
+            value={groupName}
+            onChange={handleGroupNameChange}
+          />
+          {loading2 ? (
+            <ButtonLoader />
+          ) : (
+            <Button
+              variant="contained"
+              onClick={handleCreateGroup}
+              disabled={arrayObj.length === 0}
+            >
+              Create Group
+            </Button>
+          )}
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -261,11 +267,15 @@ const AddGroupModal: React.FC = () => {
                     Joined: {moment(user?.created_at).format("MMM YYYY")}
                   </Typography>
                 </Grid>
-                <Checkbox
-                  checked={isUserInGroup(user.id)}
-                  onChange={(event) => handleCheckbox(user, event)}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
+                {props.type === "1" ? (
+                  <Chat sx={{ cursor: "pointer" }} />
+                ) : (
+                  <Checkbox
+                    checked={isUserInGroup(user.id)}
+                    onChange={(event) => handleCheckbox(user, event)}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                )}
               </Card>
             ))
           )}
