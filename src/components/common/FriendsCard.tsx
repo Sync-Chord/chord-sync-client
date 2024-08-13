@@ -1,5 +1,5 @@
 // FriendsCard.js
-import { Card, Avatar, Typography, Grid } from "@mui/material";
+import { Card, Avatar, Typography, Grid, Box } from "@mui/material";
 import { Chat } from "@mui/icons-material";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import moment from "moment";
@@ -34,7 +34,7 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
   const navigate = useNavigate();
 
   const onAddFriend = () => {
-    setLoading(true);
+    setLoading(true)
     User.send_friend_request(
       { following: userData.id },
       {
@@ -43,22 +43,22 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
       }
     )
       .then((res: any) => {
-        setLoading(false);
+        setLoading(false)
         if (res.status !== 200) {
-          throw new Error(res.data.message);
+          throw new Error(res.data.message)
         } else {
           setUserData((prev) => ({
             ...prev,
             status: "added",
-          }));
-          toast.success("Request deleted successfully");
+          }))
+          toast.success("Request sent successfully")
         }
       })
       .catch((err) => {
-        setLoading(false);
-        toast.error(err.message);
-      });
-  };
+        setLoading(false)
+        toast.error(err.message)
+      })
+  }
 
   return (
     <Card
@@ -75,7 +75,11 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
         sx={{ width: 50, height: 50, marginRight: 2 }}
       />
       <Grid container direction="column" sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
+        <Typography
+          variant="subtitle1"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
           {userData?.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -84,22 +88,27 @@ const FriendsCard = ({ user_details, type }: CardProps) => {
       </Grid>
 
       {type === "suggestions" ? (
-        loading ? (
-          <ButtonLoader />
-        ) : userData.status === "added" ? (
-          <Typography>Added</Typography>
-        ) : (
-          <PersonAddAlt1Icon onClick={onAddFriend} sx={{ color: "#27AE60", cursor: "pointer" }} />
-        )
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          {loading ? (
+            <ButtonLoader />
+          ) : userData.status === "Sent" ? (
+            <Typography>Added</Typography>
+          ) : (
+            <PersonAddAlt1Icon
+              onClick={onAddFriend}
+              sx={{ color: "#27AE60", cursor: "pointer" }}
+            />
+          )}
+        </Box>
       ) : (
         <Chat
           onClick={() => {
-            navigate("/chat");
+            navigate("/chat")
           }}
         />
       )}
     </Card>
-  );
+  )
 };
 
 export default FriendsCard;

@@ -1,6 +1,7 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
   Avatar,
+  Button,
   Divider,
   List,
   ListItem,
@@ -12,7 +13,6 @@ import {
 } from "@mui/material"
 import { Box } from "@mui/system"
 import React, { lazy } from "react"
-import GroupAddOutlinedIcon from "@mui/icons-material/GroupAdd"
 import AddGroupModal from "./AddGroupModal"
 
 const ChatBox = lazy(() => import("./ChatBox"))
@@ -34,7 +34,7 @@ const Chat = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <AddGroupModal />
+        <AddGroupModal type={value} />
       </Modal>
       <Box sx={{ label: "main", display: "flex", height: "100%" }}>
         <Box
@@ -53,6 +53,7 @@ const Chat = () => {
                 borderBottom: 1,
                 borderColor: "divider",
                 alignItems: "center",
+                position: "relative",
               }}
             >
               <TabList
@@ -61,6 +62,7 @@ const Chat = () => {
                     backgroundColor: "#1f8f4e",
                   },
                   alignItems: "center",
+                  width: "100%",
                 }}
                 onChange={handleChange}
               >
@@ -71,6 +73,7 @@ const Chat = () => {
                     "&.Mui-selected": {
                       color: "white",
                       backgroundColor: "#27ae60",
+                      width: "50%",
                     },
                   }}
                   label="Chats"
@@ -83,17 +86,18 @@ const Chat = () => {
                     "&.Mui-selected": {
                       color: "white",
                       backgroundColor: "#27ae60",
+                      width: "50%",
                     },
                   }}
                   label="Groups"
                   value="2"
                 />
               </TabList>
-              <GroupAddOutlinedIcon
+              {/* <GroupAddOutlinedIcon
                 sx={{ cursor: "pointer" }}
                 fontSize="large"
                 onClick={handleOpen}
-              />
+              /> */}
             </Box>
             <TabPanel sx={{ padding: 0 }} value="1" aria-label="chat">
               <List
@@ -144,6 +148,19 @@ const Chat = () => {
                 </ListItem>
                 <Divider />
               </List>
+              <Button
+                variant="contained"
+                sx={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  bottom: "1%",
+                  left: "20%",
+                }}
+                value="single"
+                onClick={handleOpen}
+              >
+                Create Chat
+              </Button>
             </TabPanel>
             <TabPanel sx={{ padding: 0 }} aria-label="chat" value="2">
               <List
@@ -172,6 +189,19 @@ const Chat = () => {
                 </ListItem>
                 <Divider />
               </List>
+              <Button
+                variant="contained"
+                sx={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  bottom: "1%",
+                  left: "20%",
+                }}
+                value="group"
+                onClick={handleOpen}
+              >
+                Create Group
+              </Button>
             </TabPanel>
           </TabContext>
         </Box>

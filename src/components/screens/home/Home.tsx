@@ -1,17 +1,9 @@
-import { Box } from "@mui/system";
-import MusicCard from "../../common/MusicCard";
-import { Grid, Paper, styled } from "@mui/material";
-import sada from "../../../assests/images/sada.jpg";
+import { Grid } from "@mui/material"
+import { Box } from "@mui/system"
+import sada from "../../../assests/images/sada.jpg"
+import MusicCard from "../../common/MusicCard"
 
 const Home = () => {
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
-
   const musicCardsData = [
     {
       musicImage: sada,
@@ -73,9 +65,8 @@ const Home = () => {
       artist: "Artist 2",
       duration: "4:05",
     },
-  ];
+  ]
 
-  
   return (
     <Box
       sx={{
@@ -100,7 +91,7 @@ const Home = () => {
         ))}
       </Grid>
     </Box>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
