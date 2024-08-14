@@ -1,24 +1,19 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Menu from "@mui/material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import PeopleIcon from "@mui/icons-material/People";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "../../assests/images/symbol.jpg";
-import { Avatar, Divider, Grid, InputAdornment, ListItemIcon, MenuItem } from "@mui/material";
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
-import FriendsCard from "./FriendsCard";
-import FriendRequestCard from "./FriendRequestCard";
+import { useSelector, useDispatch } from "react-redux";
+import { room_id_reducer } from "../../redux/authReducer";
+import { Divider, Grid, Button, InputBase } from "@mui/material";
+import socket from "../../utils/socket";
 
 // Styled components
 const Search = styled("div")(({ theme }) => ({
@@ -30,20 +25,8 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: "70ch", // Adjust the width as needed
+    width: "70ch",
   },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  top: 0,
-  bottom: 0,
 }));
 
 export const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -59,72 +42,60 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const TopBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const notificationOpen = Boolean(anchorEl);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
   const handleNotification = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleNotificationClose = () => {
     setAnchorEl(null);
   };
+
   const { user } = useSelector((state: any) => state.auth);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const friends = [
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "Alice Johnson",
-      joinedSince: "March 2019",
-    },
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "Bob Smith",
-      joinedSince: "June 2020",
-      status: "accepted",
-    },
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "Charlie Brown",
-      joinedSince: "August 2021",
-      status: "accepted",
-    },
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "David Williams",
-      joinedSince: "December 2022",
-      status: "accepted",
-    },
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "Eve Davis",
-      joinedSince: "January 2021",
-      status: "accepted",
-    },
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "David Williams",
-      joinedSince: "December 2022",
-    },
-    {
-      profilePhoto: "https://via.placeholder.com/50",
-      userName: "Eve Davis",
-      joinedSince: "January 2021",
-    },
-  ];
-
-  const handleAddFriend = () => {
-    console.log("heyyy");
-    //nav("/friend");
-  };
-  const handleRemoveFriend = () => {
-    console.log("removed");
-    //nav("/friend");
+  const handleAcceptInvitation = (roomId: any) => {
+    socket.emit("accept_invitation", { roomId, userId: user.id });
+    dispatch(room_id_reducer(roomId));
+    setNotifications(notifications.filter((n) => n.roomId !== roomId));
+    handleNotificationClose();
   };
 
-  function handleSearch(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    console.log(event.currentTarget);
-  }
+  useEffect(() => {
+    const onRoomInvitation = (data: { roomId: string; inviterId: string }) => {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { roomId: data.roomId, inviterId: data.inviterId, type: "invitation" },
+      ]);
+    };
+
+    const onUserJoinedRoom = (data: { roomId: string; userId: string }) => {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { roomId: data.roomId, userId: data.userId, type: "joined" },
+      ]);
+    };
+
+    const onInvitationAccepted = (data: { roomId: string; userId: string }) => {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { roomId: data.roomId, userId: data.userId, type: "accepted" },
+      ]);
+    };
+
+    socket.on("room_invitation", onRoomInvitation);
+    socket.on("user_joined_room", onUserJoinedRoom);
+    socket.on("invitation_accepted", onInvitationAccepted);
+
+    return () => {
+      socket.off("room_invitation", onRoomInvitation);
+      socket.off("user_joined_room", onUserJoinedRoom);
+      socket.off("invitation_accepted", onInvitationAccepted);
+    };
+  }, [notifications, dispatch, user.id]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -139,16 +110,6 @@ const TopBar = () => {
                 placeholder="Search Music…"
                 inputProps={{ "aria-label": "search" }}
               />
-              <IconButton
-                onClick={handleSearch}
-                sx={{
-                  color: "black",
-                  "&:hover": { color: "#27AE60" },
-                  marginLeft: 0.5,
-                }}
-              >
-                <SearchIcon />
-              </IconButton>
             </Search>
           </Box>
           <Box
@@ -158,24 +119,22 @@ const TopBar = () => {
           >
             <IconButton
               onClick={handleNotification}
-              aria-controls={open ? "account-menu" : undefined}
+              aria-controls={notificationOpen ? "notification-menu" : undefined}
               aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
+              aria-expanded={notificationOpen ? "true" : undefined}
               size="large"
-              aria-label="show 17 new notifications"
+              aria-label="show notifications"
               color="inherit"
               sx={{ color: "black" }}
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={notifications.length} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
 
             <IconButton
               size="large"
-              onClick={() => {
-                navigate("/profile");
-              }}
+              onClick={() => navigate("/profile")}
               edge="end"
               aria-label="account of current user"
               color="inherit"
@@ -190,12 +149,12 @@ const TopBar = () => {
           </Box>
         </Toolbar>
 
+        {/* Notification Menu */}
         <Menu
           anchorEl={anchorEl}
-          id="account-menu"
-          open={open}
-          onClose={handleClose}
-          onClick={handleClose}
+          id="notification-menu"
+          open={notificationOpen}
+          onClose={handleNotificationClose}
           PaperProps={{
             elevation: 0,
             sx: {
@@ -229,36 +188,52 @@ const TopBar = () => {
             item
             xs={6}
             sx={{
-              height: "80vh",
+              maxHeight: "400px",
+              overflowY: "auto",
               display: "flex",
               flexDirection: "column",
+              p: 1,
             }}
           >
-            <Grid sx={{ height: "5rem" }}>
-              <Typography
-                component="div"
-                sx={{
-                  textAlign: "center",
-                  fontWeight: "600",
-
-                  fontSize: "20px",
-                  color: "black",
-                }}
-              >
-                Friend Requests
-              </Typography>
-            </Grid>
-            {/* <Grid sx={{ overflow: "auto", scrollbarWidth: "none" }}>
-              {friends.map((friend, index) => (
-                <FriendRequestCard
-                  key={index}
-                  profilePhoto={friend.profilePhoto}
-                  userName={friend.userName}
-                  joinedSince={friend.joinedSince}
-                  type="friend"
-                />
-              ))}
-            </Grid> */}
+            <Typography
+              component="div"
+              sx={{
+                textAlign: "center",
+                fontWeight: "600",
+                fontSize: "20px",
+                color: "black",
+                mb: 1,
+              }}
+            >
+              Notifications
+            </Typography>
+            <Divider />
+            {notifications.map((notification, index) => (
+              <Box key={index} sx={{ p: 1 }}>
+                {notification.type === "invitation" && (
+                  <>
+                    <Typography variant="h6">You have a new room invitation!</Typography>
+                    <Typography sx={{ mb: 1 }}>Inviter ID: {notification.inviterId}</Typography>
+                    <Button
+                      variant="contained"
+                      onClick={() => handleAcceptInvitation(notification.roomId)}
+                    >
+                      Accept
+                    </Button>
+                  </>
+                )}
+                {notification.type === "joined" && (
+                  <Typography variant="h6">
+                    User {notification.userId} has joined the room!
+                  </Typography>
+                )}
+                {notification.type === "accepted" && (
+                  <Typography variant="h6">
+                    Invitation accepted by user {notification.userId}.
+                  </Typography>
+                )}
+              </Box>
+            ))}
           </Grid>
         </Menu>
       </AppBar>

@@ -1,66 +1,66 @@
 import { Avatar, Button, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useRef, useState } from "react"
-import ChatApi from "../../../apis/chat"
-import { useSelector } from "react-redux"
-import { toast } from "react-toastify"
-import socket from "../../../utils/socket"
+import React, { useEffect, useRef, useState } from "react";
+import ChatApi from "../../../apis/chat";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import socket from "../../../utils/socket";
+import { room_id_reducer } from "../../../redux/authReducer";
 
-// Define a type for the message object
 interface Message {
-  message: string
-  sender: string
+  message: string;
+  sender: string;
 }
 
 const ChatBox = (props: any) => {
-  const { openChat } = props
-  const { token, user } = useSelector((state: any) => state.auth)
-  const [messages, setMessages] = useState<any[]>([])
-  const [newMessage, setNewMessage] = useState<string>("")
-  const [loading, setLoading] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const dispatch = useDispatch();
+  const { openChat } = props;
+  const { token, user, roomId } = useSelector((state: any) => state.auth);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newMessage, setNewMessage] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (openChat) {
-      setLoading(true)
+      setLoading(true);
       ChatApi.get_messages(
         { chat_id: openChat._id, limit: 10, offset: messages.length },
         { token, user: user.id }
       )
         .then((res: any) => {
-          setLoading(false)
+          setLoading(false);
           if (res.status !== 200) {
-            throw new Error(res.data.message)
+            throw new Error(res.data.message);
           } else {
             const sortedMessages = res.data.data.sort(
               (a: any, b: any) => a.createdAt - b.createdAt
-            )
-            console.log(sortedMessages)
-            setMessages(sortedMessages || [])
+            );
+            setMessages(sortedMessages || []);
           }
         })
         .catch((err: any) => {
-          setLoading(false)
-          toast.error(err.message)
-        })
+          setLoading(false);
+          toast.error(err.message);
+        });
     }
-  }, [openChat])
+  }, [openChat]);
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data])
-    })
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
 
     return () => {
-      socket.off("receive_message")
-    }
-  }, [])
+      socket.off("receive_message");
+    };
+  }, []);
 
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages])
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -68,15 +68,29 @@ const ChatBox = (props: any) => {
         chat_id: openChat._id,
         message: newMessage,
         user: user,
-      })
-      setNewMessage("")
+      });
+      setNewMessage("");
     }
-  }
+  };
+
   const getUserName = (userId: number): string => {
-    const user = openChat.ids.find((el: any) => el.id === userId)
-    return user ? user.name : "Other"
-  }
-  console.log(openChat)
+    const user = openChat.ids.find((el: any) => el.id === userId);
+    return user ? user.name : "Other";
+  };
+
+  // Create a room and invite users
+  const handleConnectMusic = () => {
+    const roomId = openChat._id;
+    const requestedUserIds: any = [];
+    openChat.ids.forEach((el: any) => {
+      if (el.id !== user.id) {
+        requestedUserIds.push(el.id);
+      }
+    });
+
+    socket.emit("create_room", { roomId, requestedUserIds });
+    dispatch(room_id_reducer(roomId));
+  };
 
   return openChat?._id ? (
     <Box
@@ -108,25 +122,32 @@ const ChatBox = (props: any) => {
           }}
         >
           <Avatar>
-            {openChat.type === "single"
-              ? openChat.ids[0].name[0]
-              : openChat.group_name[0]}
+            {openChat.type === "single" ? openChat.ids[0].name[0] : openChat.group_name[0]}
           </Avatar>
           <Typography sx={{ color: "white" }}>
-            {" "}
-            {openChat.type === "single"
-              ? openChat.ids[0].name
-              : openChat.group_name}
+            {openChat.type === "single" ? openChat.ids[0].name : openChat.group_name}
           </Typography>
         </Box>
         <Box>
-          <Button
-            size="small"
-            sx={{ backgroundColor: "white", color: "#27AE60" }}
-            variant="contained"
-          >
-            Connect Music
-          </Button>
+          {roomId === openChat._id ? (
+            <Button
+              size="small"
+              sx={{ backgroundColor: "gray", color: "white" }}
+              variant="contained"
+              disabled
+            >
+              Connected
+            </Button>
+          ) : (
+            <Button
+              size="small"
+              sx={{ backgroundColor: "white", color: "#27AE60" }}
+              variant="contained"
+              onClick={handleConnectMusic}
+            >
+              Connect Music
+            </Button>
+          )}
         </Box>
       </Box>
 
@@ -166,14 +187,11 @@ const ChatBox = (props: any) => {
                 backgroundColor: "#fff",
                 padding: "10px",
                 borderRadius: "5px",
-                alignSelf:
-                  message?.sender === user.id ? "flex-end" : "flex-start",
+                alignSelf: message?.sender === user.id ? "flex-end" : "flex-start",
               }}
             >
               <Typography sx={{ fontWeight: "bold" }}>
-                {message?.sender === user.id
-                  ? user.name
-                  : getUserName(message.sender)}
+                {message?.sender === user.id ? user.name : getUserName(message.sender)}
               </Typography>
               <Typography>{message?.message}</Typography>
               {/* <div ref={messagesEndRef} /> */}
@@ -200,7 +218,7 @@ const ChatBox = (props: any) => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") handleSendMessage()
+            if (e.key === "Enter") handleSendMessage();
           }}
           sx={{
             backgroundColor: "white",
@@ -238,7 +256,7 @@ const ChatBox = (props: any) => {
         Click on chat to start conversation
       </Typography>
     </Box>
-  )
-}
+  );
+};
 
-export default ChatBox
+export default ChatBox;

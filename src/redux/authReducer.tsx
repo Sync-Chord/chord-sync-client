@@ -15,6 +15,7 @@ interface User {
 
 interface AuthState {
   token: string | null;
+  room_id: string | null;
   user: User | null;
   logged_in: boolean;
   loading: boolean;
@@ -30,6 +31,7 @@ const user: User | null = user_data ? user_data.user : null;
 const initial_state: AuthState = {
   token: user_data ? user_data.token : null,
   user: user ? user : null,
+  room_id: null,
   logged_in: user ? true : false,
   loading: false,
   error: null,
@@ -51,10 +53,7 @@ export const auth_slice = createSlice({
       state.logged_in = true;
       state.loading = false;
       state.error = null;
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ user: state.user, token: state.token })
-      );
+      localStorage.setItem("user", JSON.stringify({ user: state.user, token: state.token }));
     },
     error_reducer: (state: AuthState, action: PayloadAction<string>) => {
       state.user = null;
@@ -74,16 +73,14 @@ export const auth_slice = createSlice({
       state.loading = false;
       localStorage.clear();
     },
-    update_user_details_reducer: (
-      state: AuthState,
-      action: PayloadAction<Partial<User>>
-    ) => {
+
+    room_id_reducer: (state: AuthState, payload: any) => {
+      state.room_id = payload.payload;
+    },
+    update_user_details_reducer: (state: AuthState, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ user: state.user, token: state.token })
-        );
+        localStorage.setItem("user", JSON.stringify({ user: state.user, token: state.token }));
       }
     },
   },
@@ -97,6 +94,7 @@ export const {
   remover_loading_reducer,
   logout_reducer,
   update_user_details_reducer,
+  room_id_reducer,
 } = auth_slice.actions;
 
 export default auth_slice.reducer;

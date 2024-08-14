@@ -45,7 +45,6 @@ const Chat = () => {
         if (res.status !== 200) {
           throw new Error(res.data.message);
         } else {
-          console.log(res.data.data);
           setChats(res?.data?.data || []);
         }
       })
@@ -288,7 +287,7 @@ const Chat = () => {
         </Box>
       </Box>
     </>
-  )
+  );
 };
 
 export default Chat;

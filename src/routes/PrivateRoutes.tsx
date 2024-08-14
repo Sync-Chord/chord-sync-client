@@ -3,12 +3,13 @@ import React, { useEffect } from "react";
 import { Box } from "@mui/system";
 import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import socket from "../utils/socket"; // Import the socket connection
+import socket from "../utils/socket";
 // components imports
 import Sidebar from "../components/common/SideBar";
 import TopBar from "../components/common/TopBar";
 import MusicPlayer from "../components/common/MusicPlayer";
 import { MusicPlayerProvider } from "../components/common/MusicPlayerProvider";
+import { useSelector } from "react-redux";
 
 const Home = lazy(() => import("../components/screens/home/Home"));
 const Profile = lazy(() => import("../components/screens/profile/Profile"));
@@ -16,13 +17,18 @@ const Chat = lazy(() => import("../components/screens/chat/Chat"));
 const FriendsList = lazy(() => import("../components/screens/friends/FriendsList"));
 
 const PrivateRoutes = () => {
+  const { user } = useSelector((state: any) => state.auth);
+
   useEffect(() => {
     socket.connect();
+
+    // Emit the user ID to the backend
+    socket.emit("user_connected", user.id);
 
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [user.id]);
 
   return (
     <MusicPlayerProvider>

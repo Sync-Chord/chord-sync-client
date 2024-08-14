@@ -1,9 +1,12 @@
-import { Grid } from "@mui/material"
-import { Box } from "@mui/system"
-import sada from "../../../assests/images/sada.jpg"
-import MusicCard from "../../common/MusicCard"
+import { Grid } from "@mui/material";
+import { Box } from "@mui/system";
+import sada from "../../../assests/images/sada.jpg";
+import MusicCard from "../../common/MusicCard";
+import { useSelector } from "react-redux";
+import socket from "../../../utils/socket";
 
 const Home = () => {
+  const { room_id } = useSelector((state: any) => state.auth);
   const musicCardsData = [
     {
       musicImage: sada,
@@ -65,7 +68,11 @@ const Home = () => {
       artist: "Artist 2",
       duration: "4:05",
     },
-  ]
+  ];
+
+  const handleSongClick = () => {
+    socket.emit("request_song", { roomId: room_id, songId: "1" });
+  };
 
   return (
     <Box
@@ -85,13 +92,13 @@ const Home = () => {
               title={musicCard.title}
               artist={musicCard.artist}
               duration={musicCard.duration}
-              handleClick={() => console.log(`Clicked on ${musicCard.title}`)}
+              handleClick={handleSongClick}
             />
           </Grid>
         ))}
       </Grid>
     </Box>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
