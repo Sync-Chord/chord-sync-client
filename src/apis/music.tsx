@@ -2,7 +2,7 @@ import axios from "axios";
 
 import default_catch from "../utils/error";
 
-const Axios = axios.create({ baseURL: "http://localhost:3001/user" });
+const Axios = axios.create({ baseURL: "https://chord-sync-server.onrender.com/user" });
 
 class Music {
   // create_palylist

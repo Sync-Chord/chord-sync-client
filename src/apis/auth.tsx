@@ -3,7 +3,7 @@ import axios from "axios";
 import default_catch from "../utils/error";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3001/auth",
+  baseURL: "https://chord-sync-server.onrender.com/auth",
 });
 
 class Auth {

@@ -1,8 +1,8 @@
-import axios from "axios"
+import axios from "axios";
 
-import default_catch from "../utils/error"
+import default_catch from "../utils/error";
 
-const Axios = axios.create({ baseURL: "http://localhost:3001/chat" })
+const Axios = axios.create({ baseURL: "https://chord-sync-server.onrender.com/chat" });
 
 class Chat {
   static create_chat(payload: any, head: any) {
@@ -14,12 +14,12 @@ class Chat {
         },
       })
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
 
   static get_chat(payload: any, head: any) {
@@ -31,12 +31,12 @@ class Chat {
         },
       })
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
 
   static get_messages(payload: any, head: any) {
@@ -48,13 +48,13 @@ class Chat {
         },
       })
         .then((response) => {
-          resolve(response)
+          resolve(response);
         })
         .catch((err) => {
-          default_catch(err, resolve)
-        })
-    })
+          default_catch(err, resolve);
+        });
+    });
   }
 }
 
-export default Chat
+export default Chat;
