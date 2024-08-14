@@ -1,7 +1,10 @@
+// src/routes/PrivateRoutes.js
+import React, { useEffect } from "react";
 import { Box } from "@mui/system";
 import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-//components imports
+import socket from "../utils/socket"; // Import the socket connection
+// components imports
 import Sidebar from "../components/common/SideBar";
 import TopBar from "../components/common/TopBar";
 import MusicPlayer from "../components/common/MusicPlayer";
@@ -13,6 +16,14 @@ const Chat = lazy(() => import("../components/screens/chat/Chat"));
 const FriendsList = lazy(() => import("../components/screens/friends/FriendsList"));
 
 const PrivateRoutes = () => {
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <MusicPlayerProvider>
       <BrowserRouter>
@@ -52,7 +63,6 @@ const PrivateRoutes = () => {
             <Box
               sx={{
                 width: "100%",
-
                 overflow: "hidden",
                 display: "flex",
               }}

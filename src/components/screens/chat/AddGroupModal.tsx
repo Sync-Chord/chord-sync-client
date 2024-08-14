@@ -1,4 +1,4 @@
-import SearchIcon from "@mui/icons-material/Search"
+import SearchIcon from "@mui/icons-material/Search";
 import {
   Avatar,
   Button,
@@ -8,43 +8,43 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from "@mui/material"
-import Checkbox from "@mui/material/Checkbox"
-import { Box } from "@mui/system"
-import { Chat } from "@mui/icons-material"
-import moment from "moment"
-import { useCallback, useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { toast } from "react-toastify"
-import ChatApi from "../../../apis/chat"
-import User from "../../../apis/user"
-import ButtonLoader from "../../common/ButtonLoader"
-import SkeletonLoading from "../../common/Skeleton"
-import { useNavigate } from "react-router-dom"
+} from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import { Box } from "@mui/system";
+import { Chat } from "@mui/icons-material";
+import moment from "moment";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import ChatApi from "../../../apis/chat";
+import User from "../../../apis/user";
+import ButtonLoader from "../../common/ButtonLoader";
+import SkeletonLoading from "../../common/Skeleton";
+import { useNavigate } from "react-router-dom";
 
 interface UserData {
-  id: number
-  name: string
-  profile_photo?: string
-  created_at: string
+  id: number;
+  name: string;
+  profile_photo?: string;
+  created_at: string;
 }
 
 const AddGroupModal = (props: any) => {
-  const [searchTerm, setSearchTerm] = useState<string>("")
-  const [userData, setUserData] = useState<UserData[]>([])
-  const [loading1, setLoading1] = useState<boolean>(false)
-  const [loading2, setLoading2] = useState<boolean>(false)
-  const [arrayObj, setArrayObj] = useState<{ name: string; id: number }[]>([])
-  const [groupName, setGroupName] = useState<string>("")
-  const [hasMoreUserData, setHasMoreUserData] = useState<boolean>(true)
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [userData, setUserData] = useState<UserData[]>([]);
+  const [loading1, setLoading1] = useState<boolean>(false);
+  const [loading2, setLoading2] = useState<boolean>(false);
+  const [arrayObj, setArrayObj] = useState<{ name: string; id: number }[]>([]);
+  const [groupName, setGroupName] = useState<string>("");
+  const [hasMoreUserData, setHasMoreUserData] = useState<boolean>(true);
 
-  const { user, token } = useSelector((state: any) => state.auth)
+  const { user, token } = useSelector((state: any) => state.auth);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const head = {
     token: token,
     user: user.id,
-  }
+  };
 
   const style = {
     position: "absolute" as "absolute",
@@ -59,14 +59,14 @@ const AddGroupModal = (props: any) => {
     p: 4,
     gap: 3,
     overflow: "hidden",
-  }
+  };
 
   const fetchUserData = async () => {
-    if (!hasMoreUserData) return
+    if (!hasMoreUserData) return;
 
-    setLoading1(true)
+    setLoading1(true);
     try {
-      const limit = 8
+      const limit = 8;
       const res: any = await User.get_user_data(
         {
           type: "friends",
@@ -74,101 +74,77 @@ const AddGroupModal = (props: any) => {
           offset: userData.length,
         },
         head
-      )
+      );
 
       if (!res || res.status !== 200) {
-        throw new Error(res.data.message)
+        throw new Error(res.data.message);
       } else {
-        const fetchedData = res?.data?.data
-        setUserData((prev) => prev.concat(fetchedData))
+        const fetchedData = res?.data?.data;
+        setUserData((prev) => prev.concat(fetchedData));
 
         if (fetchedData.length < limit) {
-          setHasMoreUserData(false)
+          setHasMoreUserData(false);
         }
       }
     } catch (err: any) {
-      console.error(err)
+      console.error(err);
     } finally {
-      setLoading1(false)
+      setLoading1(false);
     }
-  }
+  };
 
   useEffect(() => {
-    setUserData([])
-    setHasMoreUserData(true)
-    fetchUserData()
-  }, [])
+    setUserData([]);
+    setHasMoreUserData(true);
+    fetchUserData();
+  }, []);
 
   const handleScroll = useCallback(
     (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      const { scrollTop, clientHeight, scrollHeight } = event.currentTarget
+      const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
 
       if (scrollHeight - scrollTop <= clientHeight + 50) {
-        fetchUserData()
+        fetchUserData();
       }
     },
     [userData]
-  )
+  );
 
-  const handleCheckbox = (
-    user: any,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleCheckbox = (user: any, event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setArrayObj((prev) => [...prev, { name: user.name, id: user.id }])
+      setArrayObj((prev) => [...prev, { name: user.name, id: user.id }]);
     } else {
-      setArrayObj((prev) => prev.filter((item) => item.id !== user.id))
+      setArrayObj((prev) => prev.filter((item) => item.id !== user.id));
     }
-  }
+  };
 
-  const handleGroupNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setGroupName(event.target.value)
-  }
+  const handleGroupNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupName(event.target.value);
+  };
 
-  const handleCreateGroup = () => {
-    setLoading2(true)
-    const payload = { group_name: groupName, ids: arrayObj, type: "group" }
+  const handleCreateGroup = (type: string, user_ids: any) => {
+    setLoading2(true);
+    const payload = { group_name: groupName, ids: user_ids, type: type };
     ChatApi.create_chat(payload, head)
       .then((res: any) => {
-        setLoading2(false)
+        setLoading2(false);
         if (res.status !== 200) {
-          throw new Error(res.data.message)
+          throw new Error(res.data.message);
         } else {
-          toast.success("Group Created Enjoy....")
-          props.setChats((prev: any) => [...prev, res?.data?.data])
-          props.setOpen(false)
+          toast.success("Group Created Enjoy....");
+          props.setChats((prev: any) => [...prev, res?.data?.data]);
+          props.setOpen(false);
         }
       })
       .catch((err) => {
-        setLoading2(false)
-        toast.error(err.message)
-      })
-  }
+        setLoading2(false);
+        toast.error(err.message);
+      });
+  };
 
   const isUserInGroup = (userId: number) => {
-    return arrayObj.some((el: any) => el.id === userId)
-  }
-
-  const handleChat = () => {
-    setLoading2(true)
-    const payload = { group_name: groupName, ids: arrayObj, type: "1" }
-    console.log(head)
-    ChatApi.create_chat(payload, head)
-      .then((res: any) => {
-        setLoading2(false)
-        if (res.status !== 200) {
-          throw new Error(res.data.message)
-        } else {
-          toast.success("Chat Created Enjoy....")
-        }
-      })
-      .catch((err) => {
-        setLoading2(false)
-        toast.error(err.message)
-      })
-  }
+    return arrayObj.some((el: any) => el.id === userId);
+  };
 
   return (
     <Box sx={style}>
@@ -194,7 +170,7 @@ const AddGroupModal = (props: any) => {
           ) : (
             <Button
               variant="contained"
-              onClick={handleCreateGroup}
+              onClick={() => handleCreateGroup("group", arrayObj)}
               disabled={arrayObj.length === 0}
             >
               Create Group
@@ -271,11 +247,7 @@ const AddGroupModal = (props: any) => {
                   sx={{ width: 50, height: 50, marginRight: 2 }}
                 />
                 <Grid container direction="column" sx={{ flexGrow: 1 }}>
-                  <Typography
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ fontWeight: "bold" }}
-                  >
+                  <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
                     {user?.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -283,7 +255,13 @@ const AddGroupModal = (props: any) => {
                   </Typography>
                 </Grid>
                 {props.type === "1" ? (
-                  <Chat sx={{ cursor: "pointer" }} onClick={handleChat} />
+                  <Chat
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setArrayObj([user]);
+                      handleCreateGroup("single", [user]);
+                    }}
+                  />
                 ) : (
                   <Checkbox
                     checked={isUserInGroup(user.id)}
@@ -298,7 +276,7 @@ const AddGroupModal = (props: any) => {
       </Box>
       <Box></Box>
     </Box>
-  )
-}
+  );
+};
 
-export default AddGroupModal
+export default AddGroupModal;

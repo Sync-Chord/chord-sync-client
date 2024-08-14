@@ -10,53 +10,50 @@ import {
   Modal,
   Tab,
   Typography,
-} from "@mui/material"
-import { Box } from "@mui/system"
-import React, { lazy, useEffect, useState } from "react"
-import AddGroupModal from "./AddGroupModal"
-import ChatApis from "../../../apis/chat"
-import { useSelector } from "react-redux"
-import { toast } from "react-toastify"
-import ButtonLoader from "../../common/ButtonLoader"
+} from "@mui/material";
+import { Box } from "@mui/system";
+import React, { lazy, useEffect, useState } from "react";
+import AddGroupModal from "./AddGroupModal";
+import ChatApis from "../../../apis/chat";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import ButtonLoader from "../../common/ButtonLoader";
 
-import ChatBox from "./ChatBox"
-import moment from "moment"
+import ChatBox from "./ChatBox";
+import moment from "moment";
 
 const Chat = () => {
-  const { token, user } = useSelector((state: any) => state.auth)
-  const [value, setValue] = useState("1")
-  const [open, setOpen] = useState(false)
-  const [chats, setChats] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
-  const [openChat, setOpenChat] = useState<any>(null)
+  const { token, user } = useSelector((state: any) => state.auth);
+  const [value, setValue] = useState("1");
+  const [open, setOpen] = useState(false);
+  const [chats, setChats] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [openChat, setOpenChat] = useState<any>(null);
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   useEffect(() => {
-    setLoading(true)
-    ChatApis.get_chat(
-      { type: value === "1" ? "single" : "group" },
-      { token, user: user.id }
-    )
+    setLoading(true);
+    ChatApis.get_chat({ type: value === "1" ? "single" : "group" }, { token, user: user.id })
       .then((res: any) => {
-        setLoading(false)
+        setLoading(false);
         if (res.status !== 200) {
-          throw new Error(res.data.message)
+          throw new Error(res.data.message);
         } else {
-          console.log(res.data.data)
-          setChats(res?.data?.data || [])
+          console.log(res.data.data);
+          setChats(res?.data?.data || []);
         }
       })
       .catch((err: any) => {
-        setLoading(false)
-        toast.error(err.message)
-      })
-  }, [value])
+        setLoading(false);
+        toast.error(err.message);
+      });
+  }, [value]);
 
   return (
     <>
@@ -127,11 +124,7 @@ const Chat = () => {
                 />
               </TabList>
             </Box>
-            <TabPanel
-              sx={{ padding: 0, height: "100%" }}
-              value="1"
-              aria-label="chat"
-            >
+            <TabPanel sx={{ padding: 0, height: "100%" }} value="1" aria-label="chat">
               {loading ? (
                 <Box
                   sx={{
@@ -163,16 +156,16 @@ const Chat = () => {
                   }}
                 >
                   {chats.map((chat: any) => (
-                    <React.Fragment key={chat.id}>
-                      <ListItem>
+                    <React.Fragment key={chat._id}>
+                      <ListItem onClick={() => setOpenChat(chat)}>
                         <ListItemAvatar>
                           <Avatar
-                            alt={chat.name}
+                            alt={chat?.ids[0]?.name}
                             src={chat.avatar || "/static/images/avatar/1.jpg"}
                           />
                         </ListItemAvatar>
                         <ListItemText
-                          primary={chat.group_name}
+                          primary={chat?.ids[0]?.name}
                           secondary={
                             <Typography
                               sx={{ display: "inline" }}
@@ -203,11 +196,7 @@ const Chat = () => {
                 Create Chat
               </Button>
             </TabPanel>
-            <TabPanel
-              sx={{ padding: 0, height: "100%" }}
-              aria-label="chat"
-              value="2"
-            >
+            <TabPanel sx={{ padding: 0, height: "100%" }} aria-label="chat" value="2">
               {loading ? (
                 <Box
                   sx={{
@@ -287,7 +276,7 @@ const Chat = () => {
         </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
 export default Chat;
