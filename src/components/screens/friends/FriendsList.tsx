@@ -245,7 +245,17 @@ const FriendsList = () => {
                       <SkeletonLoading />
                     </>
                   ) : userData.length <= 0 ? (
-                    <Typography>No Friends Added</Typography>
+                    <Typography
+                      sx={{
+                        marginTop: "50%",
+                        marginLeft: "20%",
+                        color: "lightgray",
+                        fontWeight: "600",
+                        fontSize: "18px",
+                      }}
+                    >
+                      No Friends Added
+                    </Typography>
                   ) : (
                     userData.map((user: any, index) => (
                       <FriendsCard

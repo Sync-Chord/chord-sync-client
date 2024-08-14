@@ -65,7 +65,7 @@ const Chat = () => {
       >
         <AddGroupModal type={value} setChats={setChats} setOpen={setOpen} />
       </Modal>
-      <Box sx={{ display: "flex", height: "100%" }}>
+      <Box sx={{ display: "flex", height: "98%" }}>
         <Box
           sx={{
             display: "flex",
@@ -124,7 +124,11 @@ const Chat = () => {
                 />
               </TabList>
             </Box>
-            <TabPanel sx={{ padding: 0, height: "100%" }} value="1" aria-label="chat">
+            <TabPanel
+              sx={{ padding: 0, height: "100%", overflow: "hidden" }}
+              value="1"
+              aria-label="chat"
+            >
               {loading ? (
                 <Box
                   sx={{
@@ -153,6 +157,8 @@ const Chat = () => {
                     width: "100%",
                     bgcolor: "background.paper",
                     height: "100%",
+                    overflowY: "auto",
+                    scrollbarWidth: "none",
                   }}
                 >
                   {chats.map((chat: any) => (
@@ -196,7 +202,11 @@ const Chat = () => {
                 Create Chat
               </Button>
             </TabPanel>
-            <TabPanel sx={{ padding: 0, height: "100%" }} aria-label="chat" value="2">
+            <TabPanel
+              sx={{ padding: 0, height: "100%", overflow: "hidden" }}
+              aria-label="chat"
+              value="2"
+            >
               {loading ? (
                 <Box
                   sx={{
@@ -225,6 +235,8 @@ const Chat = () => {
                     width: "100%",
                     bgcolor: "background.paper",
                     height: "100%",
+                    overflowY: "auto",
+                    scrollbarWidth: "none",
                   }}
                 >
                   {/* Render group items similarly */}
@@ -276,7 +288,7 @@ const Chat = () => {
         </Box>
       </Box>
     </>
-  );
+  )
 };
 
 export default Chat;

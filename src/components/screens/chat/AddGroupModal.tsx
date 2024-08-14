@@ -247,7 +247,11 @@ const AddGroupModal = (props: any) => {
                   sx={{ width: 50, height: 50, marginRight: 2 }}
                 />
                 <Grid container direction="column" sx={{ flexGrow: 1 }}>
-                  <Typography variant="subtitle1" component="div" sx={{ fontWeight: "bold" }}>
+                  <Typography
+                    variant="subtitle1"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
                     {user?.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -255,13 +259,19 @@ const AddGroupModal = (props: any) => {
                   </Typography>
                 </Grid>
                 {props.type === "1" ? (
-                  <Chat
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setArrayObj([user]);
-                      handleCreateGroup("single", [user]);
-                    }}
-                  />
+                  <Box sx={{ display: "flex", gap: "0.5rem" }}>
+                    {loading2 ? (
+                      <ButtonLoader />
+                    ) : (
+                      <Chat
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setArrayObj([user])
+                          handleCreateGroup("single", [user])
+                        }}
+                      />
+                    )}
+                  </Box>
                 ) : (
                   <Checkbox
                     checked={isUserInGroup(user.id)}
@@ -276,7 +286,7 @@ const AddGroupModal = (props: any) => {
       </Box>
       <Box></Box>
     </Box>
-  );
+  )
 };
 
 export default AddGroupModal;
