@@ -29,36 +29,38 @@ const Chat = () => {
   const [chats, setChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [openChat, setOpenChat] = useState<any>(null);
-  const [selectedIndex, setSelectedIndex] = useState<any>(null)
+  const [selectedIndex, setSelectedIndex] = useState<any>(null);
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-    setOpenChat(null)
-    setSelectedIndex(null)
-  }
+    setValue(newValue);
+    setOpenChat(null);
+    setSelectedIndex(null);
+  };
 
   useEffect(() => {
-    setLoading(true)
-    ChatApis.get_chat(
-      { type: value === "1" ? "single" : "group" },
-      { token, user: user.id }
-    )
+    setLoading(true);
+    ChatApis.get_chat({ type: value === "1" ? "single" : "group" }, { token, user: user.id })
       .then((res: any) => {
-        setLoading(false)
+        setLoading(false);
         if (res.status !== 200) {
-          throw new Error(res.data.message)
+          throw new Error(res.data.message);
         } else {
-          setChats(res?.data?.data || [])
+          setChats(res?.data?.data || []);
         }
       })
       .catch((err: any) => {
-        setLoading(false)
-        toast.error(err.message)
-      })
-  }, [value])
+        setLoading(false);
+        toast.error(err.message);
+      });
+  }, [value]);
+
+  const handleGetName = (chat: any) => {
+    const found = chat.ids.find((el: any) => el.id !== user.id);
+    return found.name;
+  };
 
   return (
     <>
@@ -170,26 +172,24 @@ const Chat = () => {
                     <React.Fragment key={chat._id}>
                       <ListItem
                         sx={{
-                          backgroundColor:
-                            selectedIndex === chat._id ? "#27AE60" : "inherit",
+                          backgroundColor: selectedIndex === chat._id ? "#27AE60" : "inherit",
                           "&:hover": {
-                            backgroundColor:
-                              selectedIndex !== chat._id ? "lightgrey" : "",
+                            backgroundColor: selectedIndex !== chat._id ? "lightgrey" : "",
                           },
                         }}
                         onClick={() => {
-                          setSelectedIndex(chat._id)
-                          setOpenChat(chat)
+                          setSelectedIndex(chat._id);
+                          setOpenChat(chat);
                         }}
                       >
                         <ListItemAvatar>
                           <Avatar
-                            alt={chat?.ids[0]?.name}
+                            alt={handleGetName(chat)}
                             src={chat.avatar || "/static/images/avatar/1.jpg"}
                           />
                         </ListItemAvatar>
                         <ListItemText
-                          primary={chat?.ids[0]?.name}
+                          primary={handleGetName(chat)}
                           secondary={
                             <Typography
                               sx={{ display: "inline" }}
@@ -306,7 +306,7 @@ const Chat = () => {
         </Box>
       </Box>
     </>
-  )
+  );
 };
 
 export default Chat;
