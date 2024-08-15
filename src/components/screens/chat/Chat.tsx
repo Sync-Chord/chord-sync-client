@@ -29,30 +29,36 @@ const Chat = () => {
   const [chats, setChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [openChat, setOpenChat] = useState<any>(null);
+  const [selectedIndex, setSelectedIndex] = useState<any>(null)
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+    setOpenChat(null)
+    setSelectedIndex(null)
+  }
 
   useEffect(() => {
-    setLoading(true);
-    ChatApis.get_chat({ type: value === "1" ? "single" : "group" }, { token, user: user.id })
+    setLoading(true)
+    ChatApis.get_chat(
+      { type: value === "1" ? "single" : "group" },
+      { token, user: user.id }
+    )
       .then((res: any) => {
-        setLoading(false);
+        setLoading(false)
         if (res.status !== 200) {
-          throw new Error(res.data.message);
+          throw new Error(res.data.message)
         } else {
-          setChats(res?.data?.data || []);
+          setChats(res?.data?.data || [])
         }
       })
       .catch((err: any) => {
-        setLoading(false);
-        toast.error(err.message);
-      });
-  }, [value]);
+        setLoading(false)
+        toast.error(err.message)
+      })
+  }, [value])
 
   return (
     <>
@@ -162,7 +168,20 @@ const Chat = () => {
                 >
                   {chats.map((chat: any) => (
                     <React.Fragment key={chat._id}>
-                      <ListItem onClick={() => setOpenChat(chat)}>
+                      <ListItem
+                        sx={{
+                          backgroundColor:
+                            selectedIndex === chat._id ? "#27AE60" : "inherit",
+                          "&:hover": {
+                            backgroundColor:
+                              selectedIndex !== chat._id ? "lightgrey" : "",
+                          },
+                        }}
+                        onClick={() => {
+                          setSelectedIndex(chat._id)
+                          setOpenChat(chat)
+                        }}
+                      >
                         <ListItemAvatar>
                           <Avatar
                             alt={chat?.ids[0]?.name}
@@ -282,12 +301,12 @@ const Chat = () => {
             </TabPanel>
           </TabContext>
         </Box>
-        <Box sx={{ display: "flex", width: "70%" }}>
+        <Box sx={{ display: "flex", width: "70%", height: "88vh" }}>
           <ChatBox openChat={openChat} />
         </Box>
       </Box>
     </>
-  );
+  )
 };
 
 export default Chat;

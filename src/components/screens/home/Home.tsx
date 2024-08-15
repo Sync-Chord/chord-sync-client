@@ -1,78 +1,97 @@
 import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
-import sada from "../../../assests/images/sada.jpg";
-import MusicCard from "../../common/MusicCard";
-import { useSelector } from "react-redux";
-import socket from "../../../utils/socket";
+import pal from "../../../assests/images/paldopal.jpg"
+import barish from "../../../assests/images/Baarishein.jpg"
+import diltu from "../../../assests/images/Dil-Tu-Jaan-Tu.jpg"
+import gulabi from "../../../assests/images/Gulabi-Sadi-.jpg"
+import hanu from "../../../assests/images/Sankat-Mochan-Hanuman.jpg"
+import sun from "../../../assests/images/Suniyan-Suniyan.jpg"
+import dekha from "../../../assests/images/dekha ek khwab.jpg"
+import nad from "../../../assests/images/nadaaniyan.jpg"
+import sunflower from "../../../assests/images/sunflower.jpg"
+import zinda from "../../../assests/images/zinda.jpg"
+import MusicCard from "../../common/MusicCard"
+import { useSelector } from "react-redux"
+import socket from "../../../utils/socket"
 
 const Home = () => {
-  const { room_id } = useSelector((state: any) => state.auth);
+  const { room_id } = useSelector((state: any) => state.auth)
   const musicCardsData = [
     {
-      musicImage: sada,
-      title: "Song 1",
-      artist: "Artist 1",
-      duration: "3:45",
+      id: "8",
+      musicImage: sunflower,
+      title: "Sunflower",
+      artist: "Post Malone",
+      duration: "2:42",
     },
     {
-      musicImage: sada,
-      title: "Song 2",
+      id: "2",
+      musicImage: barish,
+      title: "Baarishein",
+      artist: "Anuv Jain",
+      duration: "3:27",
+    },
+    {
+      id: "3",
+      musicImage: diltu,
+      title: "Dil Tu Jaan Tu",
+      artist: "Gurnazar",
+      duration: "3:57",
+    },
+    {
+      id: "4",
+      musicImage: gulabi,
+      title: "Gulabi Sadi",
       artist: "Artist 2",
       duration: "4:05",
     },
     {
-      musicImage: sada,
-      title: "Song 1",
-      artist: "Artist 1",
-      duration: "3:45",
+      id: "5",
+      musicImage: zinda,
+      title: "Zinda",
+      artist: "Amit Trivedi",
+      duration: "5:02",
     },
     {
-      musicImage: sada,
-      title: "Song 2",
-      artist: "Artist 2",
+      id: "6",
+      musicImage: hanu,
+      title: "Sankat Mochan",
+      artist: "Gulshan Kumar",
       duration: "4:05",
     },
     {
-      musicImage: sada,
-      title: "Song 1",
-      artist: "Artist 1",
-      duration: "3:45",
+      id: "7",
+      musicImage: nad,
+      title: "Nadaaniyan",
+      artist: "Akshath Acharya",
+      duration: "2:50",
     },
     {
-      musicImage: sada,
-      title: "Song 2",
-      artist: "Artist 2",
-      duration: "4:05",
+      id: "1",
+      musicImage: pal,
+      title: "Pal Do Pal......",
+      artist: "Mukesh",
+      duration: "3:24",
     },
     {
-      musicImage: sada,
-      title: "Song 1",
-      artist: "Artist 1",
-      duration: "3:45",
+      id: "9",
+      musicImage: sun,
+      title: "Suniyan Suniyan",
+      artist: "MixSingh",
+      duration: "3:31",
     },
     {
-      musicImage: sada,
-      title: "Song 2",
-      artist: "Artist 2",
-      duration: "4:05",
+      id: "10",
+      musicImage: dekha,
+      title: "Dekha Ek Khwab",
+      artist: "Kishore Kumar",
+      duration: "4:27",
     },
-    {
-      musicImage: sada,
-      title: "Song 1",
-      artist: "Artist 1",
-      duration: "3:45",
-    },
-    {
-      musicImage: sada,
-      title: "Song 2",
-      artist: "Artist 2",
-      duration: "4:05",
-    },
-  ];
+  ]
 
-  const handleSongClick = () => {
-    socket.emit("request_song", { roomId: room_id, songId: "1" });
-  };
+  const handleSongClick = (id: any) => {
+    socket.emit("request_song", { roomId: room_id, songId: id })
+  }
 
   return (
     <Box
@@ -92,13 +111,13 @@ const Home = () => {
               title={musicCard.title}
               artist={musicCard.artist}
               duration={musicCard.duration}
-              handleClick={handleSongClick}
+              handleClick={() => handleSongClick(musicCard.id)}
             />
           </Grid>
         ))}
       </Grid>
     </Box>
-  );
-};
+  )
+}
 
 export default Home;
